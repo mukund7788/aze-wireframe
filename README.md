@@ -2,7 +2,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Live_Hub-GitHub_Pages-0D6EFD?style=for-the-badge&logo=github)](https://mukund7788.github.io/aze-wireframe/)
 [![Design System](https://img.shields.io/badge/Design_System-Zignuts_AZE-061D42?style=for-the-badge)](https://zignuts.com)
-[![Prototypes](https://img.shields.io/badge/Prototypes-7_Modules-10B981?style=for-the-badge)]()
+[![Prototypes](https://img.shields.io/badge/Prototypes-6_Modules-10B981?style=for-the-badge)]()
 
 Central catalog and live interactive prototype hub for the **AZE AI Voice Assessment & Automated CEFR Scoring Platform**.
 
@@ -15,7 +15,7 @@ Central catalog and live interactive prototype hub for the **AZE AI Voice Assess
 The **AZE Wireframe Hub** brings all interactive UX prototypes, feature simulators, and product specifications into a unified master application shell. It allows cross-functional teams (Product Managers, Technical BAs, Frontend/Backend Engineers, and Enterprise Stakeholders) to inspect, interact with, and validate system behaviors before code implementation.
 
 ### Key Capabilities
-* **Central Navigation Hub:** Switch seamlessly between all 7 platform wireframes via hash routing (`#self_service_demo`, `#cost_dashboard`, etc.).
+* **Central Navigation Hub:** Switch seamlessly between all 6 platform wireframes via hash routing (`#self_service_demo`, `#cost_dashboard`, etc.).
 * **Responsive Viewport Simulator:** Test layouts instantly across **Desktop (100%)**, **Tablet / Laptop (1024px)**, and **Mobile Device Frame (414px)**.
 * **Instant Standalone Access:** Open any wireframe directly in a standalone browser tab with one click (`↗ Open Standalone`).
 * **Real-Time Search:** Filter through prototypes and feature specifications directly in the sidebar.
@@ -29,7 +29,6 @@ The **AZE Wireframe Hub** brings all interactive UX prototypes, feature simulato
 | **Overview** | `#wireframe_info` | Built-in Hub Guide | Platform background, wireframing methodology, and architecture guide. |
 | **Client Portal** | `#self_service_demo` | [`self_service_demo_client_portal_wireframe.html`](self_service_demo_client_portal_wireframe.html) | Corporate email signup validation, pristine zero-state client account (15 students / 15 tests quota), Claude-style full-screen showcase overlay modal, Available Tests sidebar widget, and Buy Tests subscriptions. |
 | **Client Portal** | `#group_results` | [`group_results_client_portal_wireframe.html`](group_results_client_portal_wireframe.html) | Multi-candidate group performance reporting, CEFR score distributions across Speaking, Listening, Reading, and Writing, exportable summaries, and cohort filtering. |
-| **Authentication** | `#login_forms` | [`login_form_label_wireframe.html`](login_form_label_wireframe.html) | Enterprise authentication form patterns, floating label animations, password strength meters, and domain validation error states. |
 | **Cost Governance** | `#cost_dashboard` | [`third_party_cost_dashboard_wireframe.html`](third_party_cost_dashboard_wireframe.html) | Third-party AI cost and anomaly monitoring dashboard for OpenAI, AWS Bedrock, and SpeechAce USD billing with spike detection and student attribution. |
 | **Cost Governance** | `#cost_estimator` | [`cost_estimator_wireframe.html`](cost_estimator_wireframe.html) | Budget simulation tool calculating token consumption, audio processing duration, model pricing tiers, and projected per-assessment costs. |
 | **Assessment Studio** | `#question_clusters` | [`question_fields_cluster_wireframe.html`](question_fields_cluster_wireframe.html) | Assessment question authoring interface for multi-prompt voice items, rubric scoring weights, and recording constraints. |

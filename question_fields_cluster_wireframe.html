@@ -487,39 +487,57 @@
       height: 15px;
     }
 
-    /* Skills Segmented Bar matching Screenshot 1 (media_1791454128881.png) */
-    .skills-segmented-bar {
-      display: inline-flex;
+    /* Skills Pill Bar */
+    .skills-pill-bar {
+      display: flex;
       align-items: center;
-      background: #0d1527;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
-      padding: 3px;
-      gap: 2px;
-      margin-bottom: 18px;
+      gap: 6px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 4px;
     }
 
-    .skill-segment-btn {
-      padding: 5px 14px;
-      border-radius: 4px;
+    .skill-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
       font-size: 12.5px;
       font-weight: 500;
-      color: #94a3b8;
-      background: transparent;
-      border: none;
+      background: #070e20;
+      border: 1px solid var(--border-subtle);
+      color: var(--muted-text);
       cursor: pointer;
       transition: all 0.15s ease;
       white-space: nowrap;
     }
 
-    .skill-segment-btn:hover {
-      color: #f1f5f9;
+    .skill-btn .count-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: inherit;
     }
 
-    .skill-segment-btn.active {
+    .skill-btn:hover {
+      border-color: #334155;
+      color: #fff;
+    }
+
+    .skill-btn.active {
       background: #06b6d4;
-      color: #020817;
+      border-color: #06b6d4;
+      color: #04111d;
       font-weight: 600;
+      box-shadow: 0 2px 8px rgba(6, 182, 212, 0.25);
+    }
+
+    .skill-btn.active .count-badge {
+      background: rgba(4, 17, 29, 0.25);
+      color: #04111d;
     }
 
     /* Subtabs Line Bar */
@@ -704,76 +722,66 @@
       gap: 8px;
     }
 
-    /* ToggleGroup for View Mode (Table vs Grid) matching Screenshot 1 */
+    /* ToggleGroup for View Mode (Table vs Grid) */
     .view-toggle-group {
       display: flex;
       align-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
       overflow: hidden;
-      background: #141d2f;
-      height: 28px;
+      background: #070e20;
     }
 
     .view-toggle-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 100%;
+      gap: 5px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted-text);
       background: transparent;
       border: none;
       cursor: pointer;
       transition: all 0.15s ease;
-      padding: 0;
-      color: #64748b;
+    }
+
+    .view-toggle-btn.active {
+      background: rgba(6, 182, 212, 0.15);
+      color: #06b6d4;
+      font-weight: 600;
     }
 
     .view-toggle-btn svg {
       width: 14px;
       height: 14px;
-      stroke: #64748b;
     }
 
-    .view-toggle-btn.active {
-      background: #06b6d4;
-      color: #020817;
-    }
-
-    .view-toggle-btn.active svg {
-      stroke: #020817;
-    }
-
-    /* Density Switcher matching Screenshot 1 */
+    /* Density Switcher */
     .density-pill-group {
       display: flex;
       align-items: center;
-      background: #141d2f;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
+      background: #070e20;
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
       padding: 2px;
-      height: 28px;
-      box-sizing: border-box;
-      gap: 2px;
     }
 
     .density-btn {
-      padding: 2px 8px;
+      padding: 4px 10px;
       font-size: 11px;
       font-weight: 500;
-      color: #64748b;
+      color: var(--muted-text);
       background: transparent;
       border: none;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       transition: all 0.15s ease;
-      height: 22px;
-      line-height: 18px;
     }
 
     .density-btn.active {
       background: #06b6d4;
-      color: #020817;
+      color: #04111d;
       font-weight: 600;
     }
 
@@ -902,12 +910,12 @@
       letter-spacing: 0.04em;
     }
 
-    .cefr-badge.c2 { background: rgba(16, 185, 129, 0.16); color: #34d399; }
-    .cefr-badge.c1 { background: rgba(168, 85, 247, 0.16); color: #c084fc; }
-    .cefr-badge.b2 { background: rgba(20, 184, 166, 0.16); color: #2dd4bf; }
-    .cefr-badge.b1 { background: rgba(249, 115, 22, 0.16); color: #fb923c; }
-    .cefr-badge.a2 { background: rgba(245, 158, 11, 0.16); color: #fbbf24; }
-    .cefr-badge.a1 { background: rgba(129, 140, 248, 0.16); color: #a5b4fc; }
+    .cefr-badge.c2 { background: #065f46; color: #34d399; }
+    .cefr-badge.c1 { background: #4c1d95; color: #c084fc; }
+    .cefr-badge.b2 { background: #064e3b; color: #10b981; }
+    .cefr-badge.b1 { background: #78350f; color: #fbbf24; }
+    .cefr-badge.a2 { background: #7c2d12; color: #fb923c; }
+    .cefr-badge.a1 { background: #581c87; color: #e879f9; }
 
     .cluster-id-badge {
       display: inline-flex;
@@ -922,18 +930,17 @@
       font-weight: 600;
     }
 
-    /* GSE Range Badge matching Screenshot 1 */
     .gse-range-badge {
       display: inline-flex;
       align-items: center;
-      background: #172554;
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      color: #38bdf8;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-family: inherit;
-      font-weight: 600;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      color: #cbd5e1;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      font-weight: 500;
     }
 
     .attached-cefr-chip {
@@ -1761,80 +1768,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
-  
-    /* CEFR Table Hover Actions (Screenshot 1 alignment) */
-    .cefr-hover-actions {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-    }
-    .aze-data-table tbody tr:hover .cefr-hover-actions {
-      opacity: 1;
-    }
-
-    /* Modal Creation Mode Pills */
-    .modal-tab-pill-group {
-      display: flex;
-      align-items: center;
-      background: #070e20;
-      border: 1px solid var(--input-border);
-      border-radius: var(--radius-md);
-      padding: 3px;
-      margin-bottom: 16px;
-      gap: 4px;
-    }
-    .modal-tab-pill {
-      flex: 1;
-      padding: 6px 12px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--muted-text);
-      background: transparent;
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .modal-tab-pill.active {
-      background: #06b6d4;
-      color: #04111d;
-      font-weight: 600;
-    }
-
-    /* Batch CEFR Selection Grid */
-    .batch-cefr-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
-      max-height: 220px;
-      overflow-y: auto;
-      padding: 4px 1px;
-    }
-    .batch-cefr-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      background: #070e20;
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      font-size: 12px;
-    }
-    .batch-cefr-item:hover {
-      border-color: #06b6d4;
-      background: #0c1630;
-    }
-    .batch-cefr-item.selected {
-      border-color: #06b6d4;
-      background: rgba(6, 182, 212, 0.1);
-    }
-
   </style>
 </head>
 <body>
@@ -1894,32 +1827,18 @@
         <div class="sidebar-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           <span>User Management</span>
-          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
         </div>
         <div class="sidebar-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
           <span>Business Management</span>
-          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
         </div>
         <div class="sidebar-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
           <span>Pricing and plans</span>
-          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
         </div>
         <div class="sidebar-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
           <span>Assessment Operations</span>
-          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
-        </div>
-        <div class="sidebar-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>System & Security</span>
-          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
-        </div>
-        <div class="sidebar-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          <span>Audit & Monitoring</span>
-          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
         </div>
       </div>
 
@@ -1984,7 +1903,7 @@
   <script>
 
     // State Tracker
-    let activeSubTab = 'cefr-levels';
+    let activeSubTab = 'clusters';
     let activeSkill = 'Language Awareness';
     let viewMode = 'table';
     let currentDensity = 'cozy';
@@ -2674,17 +2593,17 @@
     /* Helper: Render Shared Shell (Header, Pills, Subtabs, Summary Bar) */
     function renderSharedHeader(title, primaryBtnLabel, primaryBtnFn) {
       const skills = [
-        'Language Awareness',
-        'Listening',
-        'Reading',
-        'Speaking',
-        'Writing'
+        { name: 'Language Awareness', count: '1,708' },
+        { name: 'Listening', count: '94' },
+        { name: 'Reading', count: '88' },
+        { name: 'Speaking', count: '30' },
+        { name: 'Writing', count: '157' }
       ];
 
       const subtabs = [
+        { key: 'clusters', label: 'Clusters' },
         { key: 'cefr-levels', label: 'CEFR Levels' },
         { key: 'can-do-statements', label: 'CEFR Can Do Statements' },
-        { key: 'clusters', label: 'Clusters' },
         { key: 'tasks', label: 'Tasks' },
         { key: 'topics', label: 'Topics' },
         { key: 'subtypes', label: 'Sub Types' },
@@ -2718,11 +2637,12 @@
           </div>
         </div>
 
-        <!-- Skills Segmented Bar matching Screenshot 1 (media_1791454128881.png) -->
-        <div class="skills-segmented-bar">
+        <!-- Skills Filter Bar -->
+        <div class="skills-pill-bar">
           ${skills.map(s => `
-            <button class="skill-segment-btn ${activeSkill === s ? 'active' : ''}" onclick="setSkill('${s}')">
-              ${s}
+            <button class="skill-btn ${activeSkill === s.name ? 'active' : ''}" onclick="setSkill('${s.name}')">
+              <span>${s.name}</span>
+              <span class="count-badge">${s.count}</span>
             </button>
           `).join('')}
         </div>
@@ -2764,39 +2684,32 @@
           </div>
 
           <div class="table-tools-right">
-            ${activeSubTab !== 'cefr-levels' ? `
-              <!-- Reorder Tool -->
-              <button class="icon-btn-ghost" title="Reorder items" onclick="showToast('Reorder mode active', 'info')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5-5"/><path d="M12 4v16"/></svg>
-              </button>
+            <!-- Reorder Tool -->
+            <button class="icon-btn-ghost" title="Reorder items" onclick="showToast('Reorder mode active', 'info')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5-5"/><path d="M12 4v16"/></svg>
+            </button>
 
-              <!-- Reset Filters -->
-              <button class="icon-btn-ghost" title="Reset Filters" onclick="resetFilters()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-              </button>
+            <!-- Reset Filters -->
+            <button class="icon-btn-ghost" title="Reset Filters" onclick="resetFilters()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
 
-              <!-- ToggleGroup: Grid vs Table -->
-              <div class="view-toggle-group">
-                <button class="view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}" onclick="setViewMode('grid')" title="Grid view">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
-                  <span>Grid</span>
-                </button>
-                <button class="view-toggle-btn ${viewMode === 'table' ? 'active' : ''}" onclick="setViewMode('table')" title="Table view">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>
-                  <span>Table</span>
-                </button>
-              </div>
-            ` : `
-              <!-- Table Icon directly matching Screenshot 1 -->
-              <button class="icon-btn-ghost active" title="Table view" style="color:#06b6d4;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>
+            <!-- ToggleGroup: Grid vs Table -->
+            <div class="view-toggle-group">
+              <button class="view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}" onclick="setViewMode('grid')" title="Grid view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                <span>Grid</span>
               </button>
-            `}
+              <button class="view-toggle-btn ${viewMode === 'table' ? 'active' : ''}" onclick="setViewMode('table')" title="Table view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>
+                <span>Table</span>
+              </button>
+            </div>
 
-            <!-- Density Switcher matching Screenshot 1 (cozy lowercase) -->
+            <!-- Density Switcher -->
             <div class="density-pill-group">
               <button class="density-btn ${currentDensity === 'compact' ? 'active' : ''}" onclick="setDensity('compact')">Compact</button>
-              <button class="density-btn ${currentDensity === 'cozy' ? 'active' : ''}" onclick="setDensity('cozy')">cozy</button>
+              <button class="density-btn ${currentDensity === 'cozy' ? 'active' : ''}" onclick="setDensity('cozy')">Cozy</button>
               <button class="density-btn ${currentDensity === 'comfortable' ? 'active' : ''}" onclick="setDensity('comfortable')">Comfortable</button>
             </div>
 
@@ -3052,8 +2965,8 @@
                     <span class="cefr-badge ${lvl.levelClass}">${lvl.level}</span>
                   </div>
                   <div class="action-btn-group">
-                    <button class="row-action-btn" title="Edit Level" onclick="openEditCefrLevelModal('${lvl.level}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
-                    <button class="row-action-btn btn-delete" title="Delete Level" onclick="deleteCefrLevel('${lvl.level}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+                    <button class="row-action-btn" title="Edit Level" onclick="openAddQuestionFieldModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+                    <button class="row-action-btn btn-delete" title="Delete Level" onclick="openDeleteModal('${lvl.level}', 'CEFR Level')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
                   </div>
                 </div>
 
@@ -3078,26 +2991,20 @@
       } else {
         let rowsHtml = '';
         if (filtered.length === 0) {
-          rowsHtml = `<tr><td colspan="5" style="text-align:center;padding:36px;color:var(--dim-text);">No CEFR levels found matching "${searchQuery}".</td></tr>`;
+          rowsHtml = `<tr><td colspan="6" style="text-align:center;padding:36px;color:var(--dim-text);">No CEFR levels found matching "${searchQuery}".</td></tr>`;
         } else {
           filtered.forEach(lvl => {
             rowsHtml += `
-              <tr style="position:relative;">
-                <td style="width:75px;color:var(--dim-text);font-family:var(--font-mono);">${lvl.no}</td>
-                <td style="width:140px;"><span class="cefr-badge ${lvl.levelClass}">${lvl.level}</span></td>
-                <td style="width:200px;font-family:var(--font-mono);color:#f1f5f9;font-weight:600;">${lvl.gseMin}</td>
-                <td style="width:200px;font-family:var(--font-mono);color:#f1f5f9;font-weight:600;">${lvl.gseMax}</td>
-                <td>
-                  <div style="display:flex;align-items:center;justify-content:space-between;">
-                    <span class="gse-range-badge">${lvl.gseRange}</span>
-                    <div class="cefr-hover-actions">
-                      <button class="row-action-btn" title="Edit Level" onclick="openEditCefrLevelModal('${lvl.level}')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-                      </button>
-                      <button class="row-action-btn btn-delete" title="Delete Level" onclick="deleteCefrLevel('${lvl.level}')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                      </button>
-                    </div>
+              <tr>
+                <td style="width:70px;color:var(--dim-text);font-family:var(--font-mono);">${lvl.no}</td>
+                <td style="width:120px;"><span class="cefr-badge ${lvl.levelClass}">${lvl.level}</span></td>
+                <td style="width:160px;font-family:var(--font-mono);color:#f1f5f9;font-weight:600;">${lvl.gseMin}</td>
+                <td style="width:160px;font-family:var(--font-mono);color:#f1f5f9;font-weight:600;">${lvl.gseMax}</td>
+                <td style="width:180px;"><span class="gse-range-badge">${lvl.gseRange}</span></td>
+                <td style="text-align:right;width:100px;">
+                  <div class="action-btn-group">
+                    <button class="row-action-btn" title="Edit Level" onclick="openAddQuestionFieldModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+                    <button class="row-action-btn btn-delete" title="Delete Level" onclick="openDeleteModal('${lvl.level}', 'CEFR Level')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
                   </div>
                 </td>
               </tr>
@@ -3110,11 +3017,12 @@
             <table class="aze-data-table density-${currentDensity}">
               <thead>
                 <tr>
-                  <th style="width:75px;">No. <span class="sort-eq">=</span></th>
-                  <th style="width:140px;">Level <span class="sort-eq">=</span></th>
-                  <th style="width:200px;">GSE Min <span class="sort-eq">=</span></th>
-                  <th style="width:200px;">GSE Max <span class="sort-eq">=</span></th>
-                  <th>GSE Range <span class="sort-eq">=</span></th>
+                  <th style="width:70px;">No. <span class="sort-eq">=</span></th>
+                  <th style="width:120px;">Level <span class="sort-eq">=</span></th>
+                  <th style="width:160px;">GSE Min <span class="sort-eq">=</span></th>
+                  <th style="width:160px;">GSE Max <span class="sort-eq">=</span></th>
+                  <th style="width:180px;">GSE Range <span class="sort-eq">=</span></th>
+                  <th style="text-align:right;width:100px;">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -3126,10 +3034,10 @@
       }
 
       container.innerHTML = `
-        ${renderSharedHeader('Question Fields', 'Add New Field', 'openAddQuestionFieldModal("CEFR Levels")')}
+        ${renderSharedHeader('Question Fields', 'Add New Field', 'openAddQuestionFieldModal()')}
 
         <div class="aze-card-container ${isFullscreen ? 'is-fullscreen' : ''}">
-          ${renderToolbar('Search by CEFR Levels')}
+          ${renderToolbar('Search by CEFR Levels...')}
           ${contentHtml}
 
           <div class="aze-table-footer">
@@ -3836,171 +3744,6 @@
     /* -------------------------------------------------------------
        3. ADD CEFR LEVEL MODAL (For CEFR Levels Tab)
        ------------------------------------------------------------- */
-    
-    // Standard CEFR Presets mapping
-    const CEFR_PRESETS = {
-      'C2': { min: 85, max: 90, range: '85 - 90', class: 'c2' },
-      'C1': { min: 76, max: 84, range: '76 - 84', class: 'c1' },
-      'B2': { min: 59, max: 75, range: '59 - 75', class: 'b2' },
-      'B1': { min: 43, max: 58, range: '43 - 58', class: 'b1' },
-      'A2': { min: 30, max: 42, range: '30 - 42', class: 'a2' },
-      'A1': { min: 10, max: 29, range: '10 - 29', class: 'a1' },
-      'Pre-A1': { min: 10, max: 21, range: '10 - 21', class: 'a1' },
-      'C2+': { min: 88, max: 90, range: '88 - 90', class: 'c2' }
-    };
-
-    let selectedQuestionFieldType = 'CEFR Levels';
-    let cefrModalMode = 'single'; // 'single' or 'batch'
-    let batchSelectedLevels = new Set(['C2', 'C1', 'B2', 'B1', 'A2', 'A1']);
-
-    function setCefrModalMode(mode) {
-      cefrModalMode = mode;
-      renderAddQuestionFieldContent();
-    }
-
-    function toggleBatchLevelSelection(lvl) {
-      if (batchSelectedLevels.has(lvl)) {
-        batchSelectedLevels.delete(lvl);
-      } else {
-        batchSelectedLevels.add(lvl);
-      }
-      renderAddQuestionFieldContent();
-    }
-
-    function handleFieldCefrLevelChange(val) {
-      const gseInput = document.getElementById('fieldGseScoreInput');
-      const minInput = document.getElementById('fieldGseMinInput');
-      const maxInput = document.getElementById('fieldGseMaxInput');
-      const preset = CEFR_PRESETS[val];
-
-      if (preset) {
-        if (gseInput) {
-          gseInput.value = preset.range;
-          gseInput.placeholder = preset.range;
-          gseInput.disabled = false;
-        }
-        if (minInput) minInput.value = preset.min;
-        if (maxInput) maxInput.value = preset.max;
-      } else if (val === 'custom') {
-        if (gseInput) {
-          gseInput.value = '';
-          gseInput.placeholder = 'e.g. 85 - 90';
-          gseInput.disabled = false;
-        }
-      } else {
-        if (gseInput) {
-          gseInput.value = '';
-          gseInput.placeholder = 'Select Level first';
-          gseInput.disabled = true;
-        }
-      }
-    }
-
-    function handleQuestionFieldTypeChange(val) {
-      selectedQuestionFieldType = val;
-      renderAddQuestionFieldContent();
-    }
-
-    function openEditCefrLevelModal(levelKey) {
-      const lvlObj = cefrLevelsData.find(x => x.level === levelKey);
-      if (!lvlObj) return;
-      openAddQuestionFieldModal('CEFR Levels', lvlObj);
-    }
-
-    function deleteCefrLevel(levelKey) {
-      openDeleteModal(`CEFR Level ${levelKey}`, 'CEFR Level', () => {
-        cefrLevelsData = cefrLevelsData.filter(x => x.level !== levelKey);
-        cefrLevelsData.forEach((item, idx) => { item.no = idx + 1; });
-        showToast(`CEFR Level "${levelKey}" deleted successfully.`, 'info');
-        render();
-      });
-    }
-
-    function handleSaveCefrFromModal(editingLevel = null) {
-      if (cefrModalMode === 'single') {
-        const lvlSelect = document.getElementById('fieldCefrLevelSelect');
-        const customInput = document.getElementById('fieldCustomLevelInput');
-        const levelVal = (lvlSelect && lvlSelect.value === 'custom' && customInput) ? customInput.value.trim() : (lvlSelect ? lvlSelect.value : '');
-        
-        if (!levelVal) {
-          showToast('Please select or specify a CEFR Level.', 'error');
-          return;
-        }
-
-        const minVal = parseInt(document.getElementById('fieldGseMinInput')?.value) || 10;
-        const maxVal = parseInt(document.getElementById('fieldGseMaxInput')?.value) || 90;
-        const domainVal = document.getElementById('fieldDomainSelect')?.value || 'General Adult';
-        const createAnother = document.getElementById('createAnotherCefrCheckbox')?.checked;
-
-        const preset = CEFR_PRESETS[levelVal] || { class: 'c1' };
-        const existing = cefrLevelsData.find(x => x.level === levelVal);
-
-        if (existing) {
-          existing.gseMin = minVal;
-          existing.gseMax = maxVal;
-          existing.gseRange = `${minVal} - ${maxVal}`;
-          existing.domain = domainVal;
-        } else {
-          cefrLevelsData.push({
-            no: cefrLevelsData.length + 1,
-            id: `LVL-${levelVal.toUpperCase()}`,
-            level: levelVal,
-            levelClass: preset.class || levelVal.toLowerCase(),
-            gseMin: minVal,
-            gseMax: maxVal,
-            gseRange: `${minVal} - ${maxVal}`,
-            domain: domainVal,
-            status: 'Active'
-          });
-        }
-
-        // Re-sort descending by gseMin
-        cefrLevelsData.sort((a, b) => (b.gseMin || 0) - (a.gseMin || 0));
-        cefrLevelsData.forEach((item, idx) => { item.no = idx + 1; });
-
-        if (createAnother) {
-          showToast(`CEFR Level "${levelVal}" added to table! Enter next level...`, 'success');
-          render();
-          // Reset form fields for rapid sequential addition
-          if (lvlSelect) lvlSelect.value = '';
-          const gseInput = document.getElementById('fieldGseScoreInput');
-          if (gseInput) { gseInput.value = ''; gseInput.placeholder = 'Select Level first'; gseInput.disabled = true; }
-        } else {
-          closeModal();
-          showToast(`CEFR Level "${levelVal}" saved successfully!`, 'success');
-          render();
-        }
-      } else {
-        // Batch Multi-Level creation
-        let count = 0;
-        batchSelectedLevels.forEach(lvl => {
-          const preset = CEFR_PRESETS[lvl] || { min: 10, max: 90, range: '10 - 90', class: 'c1' };
-          const existing = cefrLevelsData.find(x => x.level === lvl);
-          if (!existing) {
-            cefrLevelsData.push({
-              no: cefrLevelsData.length + 1,
-              id: `LVL-${lvl.toUpperCase()}`,
-              level: lvl,
-              levelClass: preset.class,
-              gseMin: preset.min,
-              gseMax: preset.max,
-              gseRange: preset.range,
-              domain: 'General Adult',
-              status: 'Active'
-            });
-            count++;
-          }
-        });
-
-        cefrLevelsData.sort((a, b) => (b.gseMin || 0) - (a.gseMin || 0));
-        cefrLevelsData.forEach((item, idx) => { item.no = idx + 1; });
-
-        closeModal();
-        showToast(`Successfully provisioned ${count} CEFR levels into the first tab!`, 'success');
-        render();
-      }
-    }
-
     function openAddCefrLevelModal(levelToEdit = null) {
       const modal = document.getElementById('modalContainer');
       if (!modal) return;
@@ -4118,316 +3861,151 @@
        Matches media_1791291313109.png & media_1791292101045.png
        Features Dynamic Evidence section with 100% validation!
        ------------------------------------------------------------- */
-    function openAddQuestionFieldModal(defaultType = null, levelToEdit = null) {
+    function openAddQuestionFieldModal() {
       const modal = document.getElementById('modalContainer');
       if (!modal) return;
-      if (defaultType) {
-        selectedQuestionFieldType = defaultType;
-      } else if (activeSubTab === 'cefr-levels') {
-        selectedQuestionFieldType = 'CEFR Levels';
-      } else if (activeSubTab === 'clusters') {
-        selectedQuestionFieldType = 'Clusters';
-      } else {
-        selectedQuestionFieldType = 'CEFR Can Do Statements';
-      }
-      cefrModalMode = 'single';
-      renderAddQuestionFieldContent(levelToEdit);
+      renderAddQuestionFieldContent();
       modal.style.display = 'flex';
     }
 
-    function renderAddQuestionFieldContent(levelToEdit = null) {
+    function renderAddQuestionFieldContent() {
       const modal = document.getElementById('modalContainer');
-      if (!modal) return;
       const totalWeight = evidenceEntries.reduce((sum, e) => sum + (parseInt(e.weight) || 0), 0);
       const isValid = totalWeight === 100;
-
-      const isCefrTab = selectedQuestionFieldType === 'CEFR Levels';
-      const isCanDoTab = selectedQuestionFieldType === 'CEFR Can Do Statements';
-      const isClustersTab = selectedQuestionFieldType === 'Clusters';
-
-      let innerFormHtml = '';
-
-      if (isCefrTab) {
-        // MATCHING SCREENSHOT 2 (media_1791451984582.png) + MULTI-LEVEL CREATION
-        innerFormHtml = `
-          <!-- Mode Tabs: Single Level vs Batch Multi-Level -->
-          <div class="modal-tab-pill-group">
-            <button class="modal-tab-pill ${cefrModalMode === 'single' ? 'active' : ''}" onclick="setCefrModalMode('single')">
-              Single CEFR Level
-            </button>
-            <button class="modal-tab-pill ${cefrModalMode === 'batch' ? 'active' : ''}" onclick="setCefrModalMode('batch')">
-              Batch Multi-Level Creator
-            </button>
-          </div>
-
-          ${cefrModalMode === 'single' ? `
-            <!-- 2-Column Row: Level & GSE Score matching Screenshot 2 -->
-            <div class="form-grid-2">
-              <div class="form-field-group">
-                <label class="field-label">Level <span class="req">*</span></label>
-                <select class="aze-select-field" id="fieldCefrLevelSelect" onchange="handleFieldCefrLevelChange(this.value)">
-                  <option value="" disabled ${!levelToEdit ? 'selected' : ''}>Select Level</option>
-                  <option value="C2" ${levelToEdit?.level === 'C2' ? 'selected' : ''}>C2</option>
-                  <option value="C1" ${levelToEdit?.level === 'C1' ? 'selected' : ''}>C1</option>
-                  <option value="B2" ${levelToEdit?.level === 'B2' ? 'selected' : ''}>B2</option>
-                  <option value="B1" ${levelToEdit?.level === 'B1' ? 'selected' : ''}>B1</option>
-                  <option value="A2" ${levelToEdit?.level === 'A2' ? 'selected' : ''}>A2</option>
-                  <option value="A1" ${levelToEdit?.level === 'A1' ? 'selected' : ''}>A1</option>
-                  <option value="Pre-A1" ${levelToEdit?.level === 'Pre-A1' ? 'selected' : ''}>Pre-A1 (A0)</option>
-                  <option value="C2+" ${levelToEdit?.level === 'C2+' ? 'selected' : ''}>C2+ (Mastery+)</option>
-                  <option value="custom">Custom Level...</option>
-                </select>
-              </div>
-
-              <div class="form-field-group">
-                <label class="field-label">GSE Score</label>
-                <input type="text" class="aze-input font-mono" id="fieldGseScoreInput" 
-                  value="${levelToEdit ? levelToEdit.gseRange : ''}" 
-                  placeholder="${levelToEdit ? levelToEdit.gseRange : 'Select Level first'}" 
-                  ${!levelToEdit ? 'disabled' : ''} style="color:#38bdf8;font-weight:600;">
-              </div>
-            </div>
-
-            <!-- Custom GSE Min & Max tuning -->
-            <div class="form-grid-2" style="margin-top:6px;">
-              <div class="form-field-group">
-                <label class="field-label" style="font-size:11px;color:var(--dim-text);">GSE Min Range</label>
-                <input type="number" class="aze-input font-mono" id="fieldGseMinInput" value="${levelToEdit ? levelToEdit.gseMin : 85}" min="10" max="90" oninput="document.getElementById('fieldGseScoreInput').value = this.value + ' - ' + document.getElementById('fieldGseMaxInput').value">
-              </div>
-              <div class="form-field-group">
-                <label class="field-label" style="font-size:11px;color:var(--dim-text);">GSE Max Range</label>
-                <input type="number" class="aze-input font-mono" id="fieldGseMaxInput" value="${levelToEdit ? levelToEdit.gseMax : 90}" min="10" max="90" oninput="document.getElementById('fieldGseScoreInput').value = document.getElementById('fieldGseMinInput').value + ' - ' + this.value">
-              </div>
-            </div>
-
-            <!-- Domain matching Screenshot 2 -->
-            <div class="form-field-group">
-              <label class="field-label">Domain</label>
-              <select class="aze-select-field" id="fieldDomainSelect">
-                <option value="" disabled>Select Domain</option>
-                <option value="General Adult" selected>General Adult</option>
-                <option value="Business English">Business English</option>
-                <option value="Academic English">Academic English</option>
-                <option value="Professional">Professional</option>
-              </select>
-            </div>
-
-            <!-- Continuous creation checkbox: Admin can create multiple CEFR levels in one session! -->
-            <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:6px;padding:10px 14px;margin-top:12px;display:flex;align-items:center;gap:10px;">
-              <input type="checkbox" id="createAnotherCefrCheckbox" checked style="accent-color:#06b6d4;width:15px;height:15px;">
-              <div>
-                <label for="createAnotherCefrCheckbox" style="font-size:12px;font-weight:600;color:#f1f5f9;cursor:pointer;">Create another CEFR level after saving</label>
-                <div style="font-size:11px;color:var(--dim-text);">Allows rapid creation of multiple CEFR levels without closing this modal.</div>
-              </div>
-            </div>
-          ` : `
-            <!-- BATCH MULTI-LEVEL CREATION MODE -->
-            <div style="font-size:12px;color:var(--muted-text);margin-bottom:10px;">
-              Select multiple standard CEFR levels to generate all at once for this skill:
-            </div>
-            <div class="batch-cefr-grid">
-              ${Object.keys(CEFR_PRESETS).map(lvl => {
-                const p = CEFR_PRESETS[lvl];
-                const isChecked = batchSelectedLevels.has(lvl);
-                return `
-                  <div class="batch-cefr-item ${isChecked ? 'selected' : ''}" onclick="toggleBatchLevelSelection('${lvl}')">
-                    <input type="checkbox" class="aze-checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); toggleBatchLevelSelection('${lvl}')">
-                    <span class="cefr-badge ${p.class}">${lvl}</span>
-                    <span class="font-mono" style="color:#cbd5e1;font-size:11.5px;">${p.range}</span>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-
-            <div class="form-field-group">
-              <label class="field-label">Default Domain for Batch</label>
-              <select class="aze-select-field" id="batchDomainSelect">
-                <option value="General Adult" selected>General Adult</option>
-                <option value="Business English">Business English</option>
-                <option value="Academic English">Academic English</option>
-              </select>
-            </div>
-            <div style="font-size:11px;color:#38bdf8;display:flex;align-items:center;gap:6px;margin-top:8px;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>${batchSelectedLevels.size} levels selected for instant creation.</span>
-            </div>
-          `}
-        `;
-      } else if (isClustersTab) {
-        // Redirection to cluster creator
-        innerFormHtml = `
-          <div style="padding:16px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:8px;margin-bottom:16px;">
-            <div style="font-weight:600;color:#fff;margin-bottom:4px;">Cluster Configuration Mode</div>
-            <div style="font-size:12px;color:var(--muted-text);">Creating a Cluster groups multiple CEFR Levels and Can Do Statements together without a Progressing Domain.</div>
-          </div>
-          <button class="btn-aze-primary" style="width:100%;justify-content:center;" onclick="closeModal(); openAddClusterModal();">
-            Open Advanced Cluster Builder &rarr;
-          </button>
-        `;
-      } else {
-        // CEFR CAN DO STATEMENTS FORM (with Dynamic Evidence section)
-        innerFormHtml = `
-          <div class="form-grid-2">
-            <div class="form-field-group">
-              <label class="field-label">Level</label>
-              <select class="aze-select-field" id="fieldCanDoLevelSelect">
-                <option value="C1">C1</option>
-                <option value="C2">C2</option>
-                <option value="B2">B2</option>
-                <option value="B1">B1</option>
-                <option value="A2">A2</option>
-                <option value="A1">A1</option>
-              </select>
-            </div>
-            <div class="form-field-group">
-              <label class="field-label">GSE Score</label>
-              <input type="number" class="aze-input" id="fieldCanDoGseInput" value="80" placeholder="e.g. 80">
-            </div>
-          </div>
-
-          <div class="form-field-group">
-            <label class="field-label">Can Do Statement Text <span class="req">*</span></label>
-            <textarea class="aze-textarea" id="fieldCanDoStatementText" placeholder="Enter clear, observable communicative Can Do descriptor..."></textarea>
-          </div>
-
-          <div class="form-field-group">
-            <label class="field-label">Domain</label>
-            <select class="aze-select-field" id="fieldDomainSelect" onchange="toggleEvidenceSection(this.value)">
-              <option value="Progressing" selected>Progressing</option>
-              <option value="Business English">Business English</option>
-              <option value="General English">General English</option>
-              <option value="Academic English">Academic English</option>
-            </select>
-          </div>
-
-          <div id="domainActiveHint" style="font-size:12px;color:#38bdf8;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>&quot;Progressing&quot; is active &mdash; Evidence section added below</span>
-          </div>
-
-          <!-- DYNAMIC EVIDENCE SECTION -->
-          <div id="evidenceRepeaterBlock" class="evidence-section-container">
-            <div class="evidence-header-line">
-              <div class="evidence-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:#06b6d4;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
-                <span>Evidence</span>
-              </div>
-              <span style="font-size:11.5px;color:var(--dim-text);">Add multiple Evidence entries</span>
-            </div>
-
-            <div id="evidenceRowsContainer">
-              ${evidenceEntries.map(e => `
-                <div class="evidence-row">
-                  <input type="text" class="aze-input" value="${e.text}" placeholder="Describe evidence..." oninput="updateEvidenceText(${e.id}, this.value)" style="flex:1;">
-                  <div class="evidence-weight-input-wrap">
-                    <input type="number" value="${e.weight}" min="1" max="100" oninput="updateEvidenceWeight(${e.id}, this.value)">
-                    <span>%</span>
-                  </div>
-                  <button class="row-action-btn btn-delete" onclick="removeEvidence(${e.id})" title="Delete entry">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                  </button>
-                </div>
-              `).join('')}
-            </div>
-
-            <button class="btn-add-evidence-dashed" onclick="addEvidence()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
-              <span>+ Add Evidence</span>
-            </button>
-
-            <!-- Validation Status Banner -->
-            <div class="evidence-weight-banner ${isValid ? 'valid' : 'invalid'}">
-              <div>
-                ${isValid ? `
-                  <div style="font-weight:600;display:flex;align-items:center;gap:6px;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>Total Weightage Valid (100%)</span>
-                  </div>
-                  <div style="font-size:11px;margin-top:2px;">All Evidence entries total 100%. Ready to save.</div>
-                ` : `
-                  <div style="font-weight:600;display:flex;align-items:center;gap:6px;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-                    <span>Total Weightage Invalid (${totalWeight}%)</span>
-                  </div>
-                  <div style="font-size:11px;margin-top:2px;">Sum must equal exactly 100%. Current shortfall: ${100 - totalWeight}%.</div>
-                `}
-              </div>
-              <strong style="font-family:var(--font-mono);font-size:14px;">${totalWeight}% / 100%</strong>
-            </div>
-          </div>
-        `;
-      }
 
       modal.innerHTML = `
         <div class="aze-dialog-backdrop" onclick="if(event.target === this) closeModal()">
           <div class="aze-dialog-box" style="max-width: 600px;">
             <div class="aze-dialog-header">
-              <span class="aze-dialog-title">${levelToEdit ? 'Edit CEFR Level' : 'Add New Question Field'}</span>
-              <div style="display:flex;align-items:center;gap:8px;">
-                <button class="icon-btn-ghost" title="Question field info" onclick="showToast('Configure question fields, taxonomy levels and CEFR scale mappings.', 'info')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                </button>
-                <button class="aze-dialog-close" onclick="closeModal()">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                </button>
-              </div>
+              <span class="aze-dialog-title">Add New Question Field</span>
+              <button class="aze-dialog-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
             </div>
 
             <div class="aze-dialog-body">
-              <!-- Select Language matching Screenshot 2 -->
               <div class="form-field-group">
                 <label class="field-label">Select Language</label>
                 <select class="aze-select-field">
-                  <option value="English" selected>English</option>
+                  <option value="English">English</option>
                   <option value="Arabic">Arabic</option>
-                  <option value="French">French</option>
                 </select>
               </div>
 
-              <!-- 2-Column Row: Skill * & Question Field * matching Screenshot 2 -->
               <div class="form-grid-2">
                 <div class="form-field-group">
                   <label class="field-label">Skill <span class="req">*</span></label>
-                  <select class="aze-select-field" id="fieldSkillSelect">
-                    <option value="Language Awareness" ${activeSkill === 'Language Awareness' ? 'selected' : ''}>Language Awareness</option>
-                    <option value="Listening" ${activeSkill === 'Listening' ? 'selected' : ''}>Listening</option>
-                    <option value="Reading" ${activeSkill === 'Reading' ? 'selected' : ''}>Reading</option>
-                    <option value="Speaking" ${activeSkill === 'Speaking' ? 'selected' : ''}>Speaking</option>
-                    <option value="Writing" ${activeSkill === 'Writing' ? 'selected' : ''}>Writing</option>
+                  <select class="aze-select-field">
+                    <option value="Language Awareness">Language Awareness</option>
+                    <option value="Listening">Listening</option>
+                    <option value="Reading">Reading</option>
+                    <option value="Speaking">Speaking</option>
+                    <option value="Writing">Writing</option>
                   </select>
                 </div>
                 <div class="form-field-group">
                   <label class="field-label">Question Field <span class="req">*</span></label>
-                  <select class="aze-select-field" id="fieldQuestionFieldSelect" onchange="handleQuestionFieldTypeChange(this.value)">
-                    <option value="CEFR Levels" ${selectedQuestionFieldType === 'CEFR Levels' ? 'selected' : ''}>CEFR Levels</option>
-                    <option value="CEFR Can Do Statements" ${selectedQuestionFieldType === 'CEFR Can Do Statements' ? 'selected' : ''}>CEFR Can Do Statements</option>
-                    <option value="Clusters" ${selectedQuestionFieldType === 'Clusters' ? 'selected' : ''}>Clusters</option>
-                    <option value="Tasks" ${selectedQuestionFieldType === 'Tasks' ? 'selected' : ''}>Tasks</option>
-                    <option value="Topics" ${selectedQuestionFieldType === 'Topics' ? 'selected' : ''}>Topics</option>
-                    <option value="Sub Types" ${selectedQuestionFieldType === 'Sub Types' ? 'selected' : ''}>Sub Types</option>
-                    <option value="Skill Focus" ${selectedQuestionFieldType === 'Skill Focus' ? 'selected' : ''}>Skill Focus</option>
+                  <select class="aze-select-field">
+                    <option value="CEFR Can Do Statements">CEFR Can Do Statements</option>
+                    <option value="Tasks">Tasks</option>
+                    <option value="Topics">Topics</option>
+                    <option value="Sub Types">Sub Types</option>
+                    <option value="Skill Focus">Skill Focus</option>
                   </select>
                 </div>
               </div>
 
-              ${innerFormHtml}
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="field-label">Level</label>
+                  <select class="aze-select-field">
+                    <option value="C1">C1</option>
+                    <option value="C2">C2</option>
+                    <option value="B2">B2</option>
+                    <option value="B1">B1</option>
+                    <option value="A2">A2</option>
+                    <option value="A1">A1</option>
+                  </select>
+                </div>
+                <div class="form-field-group">
+                  <label class="field-label">GSE Score</label>
+                  <input type="number" class="aze-input" value="80" placeholder="e.g. 80">
+                </div>
+              </div>
+
+              <div class="form-field-group">
+                <label class="field-label">Domain</label>
+                <!-- Selecting Progressing reveals the Evidence Section -->
+                <select class="aze-select-field" id="fieldDomainSelect" onchange="toggleEvidenceSection(this.value)">
+                  <option value="Progressing" selected>Progressing</option>
+                  <option value="Business English">Business English</option>
+                  <option value="General English">General English</option>
+                  <option value="Academic English">Academic English</option>
+                </select>
+              </div>
+
+              <div id="domainActiveHint" style="font-size:12px;color:#38bdf8;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>&quot;Progressing&quot; is active &mdash; Evidence section added below</span>
+              </div>
+
+              <!-- DYNAMIC EVIDENCE SECTION -->
+              <div id="evidenceRepeaterBlock" class="evidence-section-container">
+                <div class="evidence-header-line">
+                  <div class="evidence-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:#06b6d4;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
+                    <span>Evidence</span>
+                  </div>
+                  <span style="font-size:11.5px;color:var(--dim-text);">Add multiple Evidence entries</span>
+                </div>
+
+                <div id="evidenceRowsContainer">
+                  ${evidenceEntries.map(e => `
+                    <div class="evidence-row">
+                      <input type="text" class="aze-input" value="${e.text}" placeholder="Describe evidence..." oninput="updateEvidenceText(${e.id}, this.value)" style="flex:1;">
+                      <div class="evidence-weight-input-wrap">
+                        <input type="number" value="${e.weight}" min="1" max="100" oninput="updateEvidenceWeight(${e.id}, this.value)">
+                        <span>%</span>
+                      </div>
+                      <button class="row-action-btn btn-delete" onclick="removeEvidence(${e.id})" title="Delete entry">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                      </button>
+                    </div>
+                  `).join('')}
+                </div>
+
+                <button class="btn-add-evidence-dashed" onclick="addEvidence()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+                  <span>+ Add Evidence</span>
+                </button>
+
+                <!-- Validation Status Banner -->
+                <div class="evidence-weight-banner ${isValid ? 'valid' : 'invalid'}">
+                  <div>
+                    ${isValid ? `
+                      <div style="font-weight:600;display:flex;align-items:center;gap:6px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>Total Weightage Valid (100%)</span>
+                      </div>
+                      <div style="font-size:11px;margin-top:2px;">All Evidence entries total 100%. Ready to save.</div>
+                    ` : `
+                      <div style="font-weight:600;display:flex;align-items:center;gap:6px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                        <span>Total Weightage Invalid (${totalWeight}%)</span>
+                      </div>
+                      <div style="font-size:11px;margin-top:2px;">Sum must equal exactly 100%. Current shortfall: ${100 - totalWeight}%.</div>
+                    `}
+                  </div>
+                  <strong style="font-family:var(--font-mono);font-size:14px;">${totalWeight}% / 100%</strong>
+                </div>
+              </div>
             </div>
 
             <div class="aze-dialog-footer">
               <button class="btn-aze-outline" onclick="closeModal()">Cancel</button>
-              ${isCefrTab ? `
-                <button class="btn-aze-primary" onclick="handleSaveCefrFromModal('${levelToEdit ? levelToEdit.level : ''}')">
-                  ${levelToEdit ? 'Save CEFR Level' : '+ Add Question Field'}
-                </button>
-              ` : (isClustersTab ? `
-                <button class="btn-aze-primary" onclick="closeModal(); openAddClusterModal();">
-                  Open Cluster Builder
-                </button>
-              ` : `
-                <button class="btn-aze-primary" ${!isValid ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="handleSaveQuestionField(${isValid})">
-                  + Add Question Field
-                </button>
-              `)}
+              <button class="btn-aze-primary" ${!isValid ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="handleSaveQuestionField(${isValid})">
+                + Add Question Field
+              </button>
             </div>
           </div>
         </div>
@@ -4660,15 +4238,13 @@
     // Auto initialize on load
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
-      const tabParam = params.get('tab') || params.get('question_fields_tab');
+      const tabParam = params.get('tab');
       if (tabParam) {
         const tp = tabParam.toLowerCase();
-        if (tp === 'cefr' || tp === 'cefr-levels' || tp === 'cefr_levels' || tp === 'levels') activeSubTab = 'cefr-levels';
-        else if (tp === 'cando' || tp === 'can-do' || tp === 'can-do-statements' || tp === 'cefr_can_do_statements' || tp === 'statements') activeSubTab = 'can-do-statements';
-        else if (tp === 'clusters' || tp === 'cluster') activeSubTab = 'clusters';
+        if (tp === 'clusters' || tp === 'cluster') activeSubTab = 'clusters';
+        else if (tp === 'cefr' || tp === 'cefr-levels' || tp === 'levels') activeSubTab = 'cefr-levels';
+        else if (tp === 'cando' || tp === 'can-do' || tp === 'can-do-statements' || tp === 'statements') activeSubTab = 'can-do-statements';
         else activeSubTab = tp;
-      } else {
-        activeSubTab = 'cefr-levels'; // First tab default per requirement
       }
       const skillParam = params.get('skill');
       if (skillParam) activeSkill = skillParam;
