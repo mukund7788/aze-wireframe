@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AZE Student Assessment Portal — Candidate Exam Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --bg-surface: #060d1f;
+      --bg-card: #0a142c;
+      --border: #131f38;
+      --border-focus: #06b6d4;
+      --primary: #0D6EFD;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #a855f7;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Nunito', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── TOP CANDIDATE EXAM BAR ── */
+    .exam-header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #FE765A, #8E75D2, #2B98F9);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 15px;
+      color: #fff;
+    }
+
+    .test-name-box h1 {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .test-name-box p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .exam-status-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .timer-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent-amber);
+    }
+
+    .timer-pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-amber);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .proctor-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--accent-green);
+    }
+
+    .proctor-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent-green);
+      border-radius: 50%;
+    }
+
+    .candidate-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .candidate-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ── SKILLS STEPPER ── */
+    .skills-stepper {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .skill-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      font-family: var(--font-heading);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-subtle);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .skill-tab:hover {
+      color: var(--text-main);
+    }
+
+    .skill-tab.active {
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.04);
+    }
+
+    .skill-tab.completed {
+      color: var(--accent-green);
+    }
+
+    .skill-badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .skill-tab.active .skill-badge {
+      background: rgba(6, 182, 212, 0.2);
+      color: var(--accent-cyan);
+    }
+
+    .skill-tab.completed .skill-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--accent-green);
+    }
+
+    /* ── MAIN WORKSPACE ── */
+    .exam-workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      padding: 24px;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .question-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .q-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .q-number-pill {
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.12);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .q-type-badge {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .q-tools {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tool-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tool-btn:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .panel-content {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .view-content {
+      display: none;
+    }
+
+    .view-content.active {
+      display: block;
+    }
+
+    .reading-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .passage-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #cbd5e1;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .passage-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .q-prompt-box h3 {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .option-card:hover {
+      border-color: rgba(6, 182, 212, 0.5);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    .option-card.selected {
+      border-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.12);
+    }
+
+    .option-radio {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--text-subtle);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .option-card.selected .option-radio {
+      border-color: var(--accent-cyan);
+      background: var(--accent-cyan);
+    }
+
+    .option-card.selected .option-radio::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: #000;
+      border-radius: 50%;
+    }
+
+    .option-text {
+      font-size: 14px;
+      line-height: 1.4;
+      color: var(--text-main);
+    }
+
+    .speaking-box {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .speaking-prompt {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .speaking-subprompt {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    .waveform-visualizer {
+      height: 100px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 20px;
+      margin-bottom: 24px;
+    }
+
+    .wave-bar {
+      width: 5px;
+      height: 20px;
+      background: var(--accent-cyan);
+      border-radius: 3px;
+      animation: wave 1.2s infinite ease-in-out;
+    }
+
+    @keyframes wave {
+      0%, 100% { height: 12px; opacity: 0.4; }
+      50% { height: 65px; opacity: 1; }
+    }
+
+    .record-controls {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .record-btn {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+      transition: all 0.2s;
+    }
+
+    .record-btn:hover {
+      transform: scale(1.03);
+    }
+
+    .play-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .writing-editor {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .writing-prompt-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 13.5px;
+      color: #cbd5e1;
+    }
+
+    .writing-textarea {
+      width: 100%;
+      height: 240px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      color: var(--text-main);
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .writing-textarea:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .writing-meta-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .result-view {
+      padding: 10px;
+    }
+
+    .score-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .score-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .score-card-skill {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .score-card-val {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent-cyan);
+    }
+
+    .score-card-level {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--accent-green);
+      margin-top: 4px;
+    }
+
+    .exam-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .proctor-cam-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .cam-feed {
+      height: 170px;
+      background: #000;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cam-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #ef4444;
+    }
+
+    .cam-rec-dot {
+      width: 6px;
+      height: 6px;
+      background: #ef4444;
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+
+    .cam-avatar-sim {
+      font-size: 42px;
+      opacity: 0.8;
+    }
+
+    .cam-footer {
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .palette-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      flex: 1;
+    }
+
+    .palette-title {
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .q-pal-btn {
+      height: 36px;
+      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .q-pal-btn:hover {
+      border-color: var(--accent-cyan);
+      color: var(--text-main);
+    }
+
+    .q-pal-btn.answered {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .q-pal-btn.current {
+      background: rgba(6, 182, 212, 0.25);
+      border-color: var(--accent-cyan);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .q-pal-btn.flagged {
+      border-color: var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .exam-footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      bottom: 0;
+      z-index: 40;
+    }
+
+    .footer-left {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 9px 18px;
+      border-radius: 6px;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--text-subtle);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0D6EFD 0%, #06b6d4 100%);
+      color: white;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 6px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(13, 110, 253, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: 9px 24px;
+      border-radius: 6px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-submit:hover {
+      opacity: 0.95;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 460px;
+      max-width: 90%;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-box h2 {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .modal-box p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── EXAM HEADER ── -->
+  <header class="exam-header">
+    <div class="brand-section">
+      <div class="brand-badge">AZE</div>
+      <div class="test-name-box">
+        <h1>B2 Upper Intermediate — Diagnostic Assessment</h1>
+        <p>Candidate ID: CAND-2026-9481 &bull; Organization: Talent Global Solutions</p>
+      </div>
+    </div>
+
+    <div class="exam-status-group">
+      <div class="timer-pill">
+        <span class="timer-pulse"></span>
+        <span id="examTimer">48:22</span>
+      </div>
+      <div class="proctor-badge">
+        <span class="proctor-dot"></span>
+        <span>AI Proctoring Online</span>
+      </div>
+      <div class="candidate-pill">
+        <div class="candidate-avatar">AW</div>
+        <span>Alexander Wright</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── SKILLS STEPPER ── -->
+  <nav class="skills-stepper" id="skillsStepper">
+    <div class="skill-tab completed" onclick="switchSkill('la')">
+      <span>Language Awareness</span>
+      <span class="skill-badge">✓ 5/5</span>
+    </div>
+    <div class="skill-tab completed" onclick="switchSkill('listening')">
+      <span>Listening</span>
+      <span class="skill-badge">✓ 5/5</span>
+    </div>
+    <div class="skill-tab active" onclick="switchSkill('reading')">
+      <span>Reading</span>
+      <span class="skill-badge">4/5 In Progress</span>
+    </div>
+    <div class="skill-tab" onclick="switchSkill('writing')">
+      <span>Writing</span>
+      <span class="skill-badge">0/1 Pending</span>
+    </div>
+    <div class="skill-tab" onclick="switchSkill('speaking')">
+      <span>Speaking</span>
+      <span class="skill-badge">0/3 Pending</span>
+    </div>
+    <div class="skill-tab" onclick="switchSkill('results')">
+      <span>CEFR Scorecard</span>
+      <span class="skill-badge">Preview</span>
+    </div>
+  </nav>
+
+  <!-- ── MAIN EXAM WORKSPACE ── -->
+  <main class="exam-workspace">
+
+    <!-- LEFT QUESTION PANEL -->
+    <div class="question-panel">
+      <div class="panel-header">
+        <div class="q-meta">
+          <span class="q-number-pill" id="qNumberDisplay">Question 4 of 5</span>
+          <span class="q-type-badge" id="qTypeDisplay">Reading &bull; Multiple Choice Comprehension</span>
+        </div>
+        <div class="q-tools">
+          <button class="tool-btn" onclick="toggleFlag()" id="flagBtn">🚩 Flag for Review</button>
+          <button class="tool-btn" onclick="alert('Accessibility size adjusted.')">Aa Font</button>
+        </div>
+      </div>
+
+      <div class="panel-content">
+
+        <!-- 1. READING SPLIT VIEW (Default) -->
+        <div class="view-content active" id="view-reading">
+          <div class="reading-split">
+            <div class="passage-card">
+              <div class="passage-title">Passage: The Transition to Decarbonized Logistics</div>
+              <p>
+                In recent years, global supply chain operators have faced unprecedented regulatory pressure to lower scope 3 greenhouse gas emissions. While early decarbonization initiatives focused almost exclusively on fleet electrification, contemporary freight logistics models recognize that operational routing optimization delivers immediate and measurable carbon reductions.
+              </p>
+              <br>
+              <p>
+                Algorithmic route synthesis combines real-time maritime telemetry, port berth congestion forecasts, and multi-modal rail dispatch. By dynamically balancing fuel burn rates against arrival SLAs, logistics firms avoid the costly idling penalties historically observed during peak shipping quarters. Consequently, multinational enterprise procurement teams now demand transparent CEFR-aligned sustainability audit filings as mandatory criteria in vendor qualification scorecards.
+              </p>
+            </div>
+
+            <div class="q-prompt-box">
+              <h3>According to the passage, why have contemporary freight logistics shifted focus beyond fleet electrification alone?</h3>
+
+              <div class="options-list">
+                <div class="option-card" onclick="selectOption(this)">
+                  <div class="option-radio"></div>
+                  <div class="option-text">A) Electric vehicles have proved entirely ineffective in suburban delivery corridors.</div>
+                </div>
+                <div class="option-card selected" onclick="selectOption(this)">
+                  <div class="option-radio"></div>
+                  <div class="option-text">B) Dynamic route optimization produces immediate and measurable carbon reductions without fleet replacement lag.</div>
+                </div>
+                <div class="option-card" onclick="selectOption(this)">
+                  <div class="option-radio"></div>
+                  <div class="option-text">C) Maritime port berth authorities no longer permit hybrid diesel vessels to dock.</div>
+                </div>
+                <div class="option-card" onclick="selectOption(this)">
+                  <div class="option-radio"></div>
+                  <div class="option-text">D) Rail dispatch networks are unable to integrate multi-modal sensor telemetry.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. SPEAKING VIEW -->
+        <div class="view-content" id="view-speaking">
+          <div class="speaking-box">
+            <div class="speaking-prompt">Speaking Assessment: Professional Presentation Summary</div>
+            <div class="speaking-subprompt">
+              Listen to the executive voice prompt, then speak clearly into your microphone for up to 60 seconds explaining how automated AI evaluation eliminates human grader bias.
+            </div>
+
+            <div class="waveform-visualizer">
+              <div class="wave-bar" style="animation-delay: 0.1s"></div>
+              <div class="wave-bar" style="animation-delay: 0.3s"></div>
+              <div class="wave-bar" style="animation-delay: 0.2s"></div>
+              <div class="wave-bar" style="animation-delay: 0.5s"></div>
+              <div class="wave-bar" style="animation-delay: 0.4s"></div>
+              <div class="wave-bar" style="animation-delay: 0.1s"></div>
+              <div class="wave-bar" style="animation-delay: 0.6s"></div>
+              <div class="wave-bar" style="animation-delay: 0.2s"></div>
+              <div class="wave-bar" style="animation-delay: 0.4s"></div>
+              <div class="wave-bar" style="animation-delay: 0.3s"></div>
+            </div>
+
+            <div class="record-controls">
+              <button class="record-btn" onclick="toggleRecord()" id="recBtn">
+                <span>🎙️</span> <span id="recText">Start Recording (00:45)</span>
+              </button>
+              <button class="play-btn" onclick="alert('Playing back recorded candidate audio sample...')">
+                <span>▶</span> Listen Back
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. WRITING VIEW -->
+        <div class="view-content" id="view-writing">
+          <div class="writing-editor">
+            <div class="writing-prompt-card">
+              <strong>Writing Prompt:</strong> You are leading a cross-functional technical rollout for an enterprise client. Write an email to the client's CTO addressing unexpected API latency issues and outlining your engineering team's mitigation roadmap. (Recommended length: 150–200 words).
+            </div>
+            <textarea class="writing-textarea" placeholder="Compose your response here. Note that external copy-paste operations are disabled under exam security protocols..." oninput="updateWordCount(this)">Dear Marcus,
+
+I am writing to provide an executive update regarding the latency anomalies observed during yesterday's stress testing of the assessment scoring endpoint.
+
+Our engineering team conducted a root-cause telemetry audit and identified that cold-start model container initialization on the secondary cluster was causing sporadic delays exceeding 1,200ms. 
+
+To mitigate this, we have provisioned dedicated warm-standby GPU instances and instituted an automated Redis caching layer for validated rubric weights. Early benchmark results indicate 99th-percentile response latency has already normalized under 350ms.
+
+We will conduct end-to-end verification this afternoon and deliver a comprehensive post-mortem report by 5:00 PM EST.
+
+Best regards,
+Alexander Wright</textarea>
+            <div class="writing-meta-bar">
+              <span>Word Count: <strong id="wordCount">124 words</strong> (Target: 150–200)</span>
+              <span style="color: var(--accent-green);">● Copy-Paste Guard Active</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. RESULTS VIEW -->
+        <div class="view-content" id="view-results">
+          <div class="result-view">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <div style="font-size: 13px; color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Assessment Scorecard Summary</div>
+              <h2 style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: #fff; margin-top: 4px;">Overall Level: B2 High (Upper Intermediate)</h2>
+              <p style="color: var(--text-muted); font-size: 13px;">CEFR Scaled Score: <strong>72 / 100</strong> &bull; Percentile: <strong>88th Global Percentile</strong></p>
+            </div>
+
+            <div class="score-summary-grid">
+              <div class="score-card">
+                <div class="score-card-skill">Language Awareness</div>
+                <div class="score-card-val">78</div>
+                <div class="score-card-level">C1 Advanced</div>
+              </div>
+              <div class="score-card">
+                <div class="score-card-skill">Listening</div>
+                <div class="score-card-val">74</div>
+                <div class="score-card-level">B2 High</div>
+              </div>
+              <div class="score-card">
+                <div class="score-card-skill">Reading</div>
+                <div class="score-card-val">81</div>
+                <div class="score-card-level">C1 Advanced</div>
+              </div>
+              <div class="score-card">
+                <div class="score-card-skill">Speaking</div>
+                <div class="score-card-val">68</div>
+                <div class="score-card-level">B2 Upper Int</div>
+              </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; padding: 18px; font-size: 13.5px; line-height: 1.6; color: #cbd5e1;">
+              <strong>Diagnostic Summary:</strong> The candidate demonstrates fluent and spontaneous communication in professional and technical contexts. Lexical resource is broad with accurate application of domain-specific terminology. Phonological clarity is strong with accurate suprasegmental rhythm and minimal phonemic interference.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT EXAM SIDEBAR -->
+    <aside class="exam-sidebar">
+
+      <div class="proctor-cam-card">
+        <div class="cam-feed">
+          <div class="cam-overlay">
+            <span class="cam-rec-dot"></span>
+            <span>REC PROCTOR</span>
+          </div>
+          <div class="cam-avatar-sim">🧑‍💼</div>
+        </div>
+        <div class="cam-footer">
+          <span>Webcam: 1080p @ 30fps</span>
+          <span style="color: var(--accent-green);">● Face In Frame</span>
+        </div>
+      </div>
+
+      <div class="palette-card">
+        <div class="palette-title">
+          <span>Question Palette</span>
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">Section 3 of 5</span>
+        </div>
+        <div class="palette-grid">
+          <button class="q-pal-btn answered" onclick="alert('Question 1 (Answered)')">1</button>
+          <button class="q-pal-btn answered" onclick="alert('Question 2 (Answered)')">2</button>
+          <button class="q-pal-btn answered" onclick="alert('Question 3 (Answered)')">3</button>
+          <button class="q-pal-btn current" onclick="alert('Question 4 (Current Question)')">4</button>
+          <button class="q-pal-btn" onclick="alert('Question 5 (Not yet attempted)')">5</button>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- ── BOTTOM EXAM CONTROLS ── -->
+  <footer class="exam-footer">
+    <div class="footer-left">
+      <button class="btn-secondary" onclick="alert('Previous question loaded.')">← Previous</button>
+      <button class="btn-secondary" onclick="toggleFlag()">🚩 Flag Question</button>
+    </div>
+
+    <div class="footer-right">
+      <button class="btn-primary" onclick="alert('Answer saved. Moving to next question...')">Save &amp; Next →</button>
+      <button class="btn-submit" onclick="openSubmitModal()">Submit Assessment</button>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="submitModal">
+    <div class="modal-box">
+      <h2>Submit Your Assessment?</h2>
+      <p>
+        You have answered all required sections across Language Awareness, Listening, Reading, Writing, and Speaking. Once submitted, your responses will be processed by our automated AI scoring pipeline.
+      </p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeSubmitModal()">Review Questions</button>
+        <button class="btn-submit" onclick="submitExam()">Yes, Submit Assessment</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchSkill(skillKey) {
+      document.querySelectorAll(".skill-tab").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll(".view-content").forEach(view => view.classList.remove("active"));
+
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add("active");
+      }
+
+      const targetView = document.getElementById("view-" + skillKey) || document.getElementById("view-reading");
+      if (targetView) targetView.classList.add("active");
+
+      const qDisplay = document.getElementById("qNumberDisplay");
+      const qType = document.getElementById("qTypeDisplay");
+
+      if (skillKey === "speaking") {
+        qDisplay.textContent = "Speaking Prompt 1 of 3";
+        qType.textContent = "Speech & Fluency Evaluator";
+      } else if (skillKey === "writing") {
+        qDisplay.textContent = "Writing Task 1 of 1";
+        qType.textContent = "Written Communication & Vocabulary";
+      } else if (skillKey === "results") {
+        qDisplay.textContent = "Scorecard Verification";
+        qType.textContent = "Automated CEFR Diagnostic Output";
+      } else {
+        qDisplay.textContent = "Question 4 of 5";
+        qType.textContent = "Reading • Multiple Choice Comprehension";
+      }
+    }
+
+    function selectOption(el) {
+      document.querySelectorAll(".option-card").forEach(card => card.classList.remove("selected"));
+      el.classList.add("selected");
+    }
+
+    let isFlagged = false;
+    function toggleFlag() {
+      isFlagged = !isFlagged;
+      const btn = document.getElementById("flagBtn");
+      const curBtn = document.querySelector(".q-pal-btn.current");
+      if (isFlagged) {
+        btn.textContent = "🚩 Flagged";
+        btn.style.color = "#f59e0b";
+        btn.style.borderColor = "#f59e0b";
+        if (curBtn) curBtn.classList.add("flagged");
+      } else {
+        btn.textContent = "🚩 Flag for Review";
+        btn.style.color = "";
+        btn.style.borderColor = "";
+        if (curBtn) curBtn.classList.remove("flagged");
+      }
+    }
+
+    let recording = false;
+    function toggleRecord() {
+      recording = !recording;
+      const recText = document.getElementById("recText");
+      const btn = document.getElementById("recBtn");
+      if (recording) {
+        recText.textContent = "Stop Recording (00:32)";
+        btn.style.background = "#059669";
+      } else {
+        recText.textContent = "Start Recording (00:45)";
+        btn.style.background = "linear-gradient(135deg, #ef4444, #dc2626)";
+        alert("Recording captured successfully! SpeechAce engine analyzed 58 words.");
+      }
+    }
+
+    function updateWordCount(textarea) {
+      const words = textarea.value.trim().split(/\s+/).filter(Boolean).length;
+      document.getElementById("wordCount").textContent = `${words} words`;
+    }
+
+    function openSubmitModal() {
+      document.getElementById("submitModal").style.display = "flex";
+    }
+    function closeSubmitModal() {
+      document.getElementById("submitModal").style.display = "none";
+    }
+    function submitExam() {
+      closeSubmitModal();
+      switchSkill("results");
+      alert("Assessment successfully submitted! Displaying your automated CEFR Scorecard.");
+    }
+
+    let seconds = 2902;
+    setInterval(() => {
+      if (seconds > 0) {
+        seconds--;
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        document.getElementById("examTimer").textContent = `${m}:${s < 10 ? "0" : ""}${s}`;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
