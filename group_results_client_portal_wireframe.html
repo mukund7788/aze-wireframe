@@ -1,0 +1,2535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AZE Client Portal &mdash; Group Results &amp; Group Report Prototype</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+
+:root {
+  --bg-page: #080b18;
+  --bg-sidebar: #060919;
+  --bg-header: rgba(8, 11, 24, 0.85);
+  --bg-card: #0d1424;
+  --bg-card-subtle: rgba(255, 255, 255, 0.03);
+  --bg-card-hover: rgba(255, 255, 255, 0.06);
+  --bg-input: #0a1020;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-card: rgba(255, 255, 255, 0.07);
+  --border-primary: rgba(168, 85, 247, 0.35);
+  
+  --text-main: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-cyan: #38bdf8;
+  
+  --primary: #a855f7;
+  --accent: #ec4899;
+  --cyan: #06b6d4;
+  --emerald: #22c55e;
+  --amber: #f59e0b;
+  --rose: #f43f5e;
+  
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   TOP STAKEHOLDER / BA CONTROL BAR
+   ============================================================ */
+.stakeholder-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(6, 9, 25, 0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.stk-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stk-badge {
+  background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+.stk-tabs-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+}
+
+.stk-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.stk-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.stk-tab-btn.active {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(6, 182, 212, 0.15) 100%);
+  border-color: #a855f7;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
+}
+
+.permission-toggle-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 5px 12px;
+  font-size: 12px;
+}
+
+.permission-toggle-box label {
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.permission-toggle-box input[type="checkbox"] {
+  accent-color: #a855f7;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   MAIN PORTAL LAYOUT (MATCHING AZETEST.AI/CLIENT/RESULTS)
+   ============================================================ */
+.portal-container {
+  display: flex;
+  min-height: calc(100vh - 49px);
+}
+
+/* Left Sidebar (Matching media_1791438940800.png) */
+.portal-sidebar {
+  width: 220px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-row {
+  height: 64px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.brand-aze-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-aze-text {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #fff;
+}
+
+.btn-collapse-sidebar {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+.btn-collapse-sidebar:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-nav-list {
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+
+/* EXACT MATCH for Results active item from media_1791438940800.png */
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.16) 0%, rgba(236, 72, 153, 0.14) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.12);
+  color: #fff;
+  font-weight: 600;
+}
+
+.nav-item.active svg {
+  color: #c084fc;
+}
+
+.sidebar-footer-wrap {
+  padding: 16px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar-purple {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.user-text-meta {
+  flex: 1;
+  overflow: hidden;
+}
+
+.user-display-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-display-role {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.sign-out-btn-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.sign-out-btn-link:hover {
+  color: #f87171;
+}
+
+/* ============================================================
+   MAIN CONTENT & HEADER AREA
+   ============================================================ */
+.portal-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-page);
+  overflow-y: auto;
+}
+
+/* Top Navigation Bar */
+.top-portal-header {
+  height: 64px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-header);
+  backdrop-filter: blur(12px);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.header-title-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.header-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon-btn-header {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  position: relative;
+  transition: all 0.15s;
+}
+.icon-btn-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.header-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding-left: 14px;
+  cursor: pointer;
+}
+
+/* Password Warning Banner (Exact match to PasswordExpiryBanner.jsx) */
+.password-banner-container {
+  padding: 12px 32px 0;
+}
+
+.password-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 12px;
+}
+
+.pw-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fde68a;
+}
+
+.btn-change-pwd-amber {
+  background: #d97706;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+.btn-change-pwd-amber:hover {
+  background: #b45309;
+}
+
+/* Subtabs Row (Results | Feedbacks | Group Results) */
+.tabs-navigation-row {
+  padding: 20px 32px 14px;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.results-tabs-list {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.tab-trigger-button {
+  padding: 6px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-trigger-button:hover {
+  color: #fff;
+}
+
+.tab-trigger-button.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.badge-new-tab {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #06b6d4, #a855f7);
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* Main Container (max-w-7xl) */
+.portal-content-wrap {
+  padding: 0 32px 32px;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ============================================================
+   SKILL CARDS & STATS CARDS (EXACT MATCH TO ResultTable.jsx)
+   ============================================================ */
+.skills-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.group-kpi-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.skill-overview-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.skill-overview-box:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Exact Squircle Icon Container from ResultTable.jsx */
+.squircle-icon-container {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 2px solid;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.skill-big-grade {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+  line-height: 1.1;
+}
+
+.skill-label-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   TOOLBAR & TABLE STYLING
+   ============================================================ */
+.table-toolbar-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.toolbar-left-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolbar-right-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.view-switcher-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 7px 14px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.search-field-box {
+  position: relative;
+  width: 250px;
+}
+
+.search-field-box svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.search-input-control {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 7px 12px 7px 34px;
+  color: #fff;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  outline: none;
+}
+.search-input-control:focus {
+  border-color: #a855f7;
+}
+
+.dropdown-filter-select {
+  background: #0a1020;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 7px 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-family: var(--font-sans);
+  outline: none;
+  cursor: pointer;
+}
+
+.btn-filter-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+}
+.btn-filter-action:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-create-group-cyan {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #00CFE8;
+  color: #070e24;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+}
+.btn-create-group-cyan:hover {
+  background: #00bdd4;
+}
+
+/* ============================================================
+   TABLE STYLING (EXACT REPLICA)
+   ============================================================ */
+.portal-table-shell {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.table-custom-main {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-custom-main th {
+  background: rgba(255, 255, 255, 0.02);
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 13px 18px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.table-custom-main td {
+  padding: 13px 18px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #94a3b8;
+  vertical-align: middle;
+}
+
+.table-custom-main tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Magenta/Purple Gradient Score Text (Exact Match to ResultTable.jsx) */
+.score-gradient-text {
+  background: linear-gradient(90deg, #c084fc 0%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+}
+
+.btn-view-report-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+}
+.btn-view-report-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Badges */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+}
+.badge-active { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+.badge-upcoming { background: rgba(6, 182, 212, 0.15); color: #38bdf8; }
+.badge-completed { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+
+/* Table Pagination */
+.table-pagination-footer {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.pagination-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-pag-square {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.btn-pag-square.active {
+  background: #a855f7;
+  border-color: #a855f7;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ============================================================
+   GROUP DETAIL / REPORT VIEW
+   ============================================================ */
+.group-detail-view-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detail-header-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group-hero-card-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.group-folder-box {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid;
+}
+
+.group-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.group-title-txt {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* 5 KPI Summary Cards */
+.detail-5kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.kpi-metric-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.kpi-big-num {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+.kpi-label-text {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+/* Group Details 2-Column Grid */
+.group-details-meta-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.group-meta-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.meta-row-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+}
+.meta-row-line:last-child {
+  border-bottom: none;
+}
+
+/* Students In Group */
+.students-table-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.students-card-title-bar {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.student-record-row {
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.student-record-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Helper Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+  border: none;
+}
+
+.btn-cyan, .btn-create-group-cyan {
+  background: #00CFE8;
+  color: #070e24;
+}
+.btn-cyan:hover, .btn-create-group-cyan:hover {
+  background: #00bdd4;
+}
+
+.btn-outline {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: #fff;
+}
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-report-action, .btn-view-report-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+}
+.btn-report-action:hover, .btn-view-report-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Modals */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(3, 7, 18, 0.85);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-container, .modal-content-dialog {
+  background: #0d1424;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+}
+
+.modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-body {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.filter-input-text {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 13px;
+  font-family: var(--font-sans);
+  outline: none;
+}
+.filter-input-text:focus {
+  border-color: #a855f7;
+}
+
+.filter-select-dropdown {
+  width: 100%;
+  background: #0a1020;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  outline: none;
+  cursor: pointer;
+}
+
+/* CEFR Badges */
+.badge-a1 { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+.badge-a2 { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+.badge-b1 { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+.badge-b2 { background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+.badge-c1 { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+.badge-c2 { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+
+/* Avatar styles */
+.student-circle-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       TOP STAKEHOLDER / BA CONTROL BAR
+       ============================================================ -->
+  <header class="stakeholder-bar">
+    <div class="stk-title-wrap">
+      <span class="stk-badge">AZE SOLUTION</span>
+      <span style="font-size:13px; font-weight:700; color:#fff;">Client Portal &bull; Group Results Module</span>
+    </div>
+
+    <!-- TABS TO SWITCH VIEWS -->
+    <ul class="stk-tabs-nav">
+      <li>
+        <button class="stk-tab-btn active" id="stk-btn-results" onclick="window.switchTab('results')">
+          <span>Results (Existing)</span>
+        </button>
+      </li>
+      <li>
+        <button class="stk-tab-btn" id="stk-btn-feedbacks" onclick="window.switchTab('feedbacks')">
+          <span>Feedbacks</span>
+        </button>
+      </li>
+      <li>
+        <button class="stk-tab-btn" id="stk-btn-group-results" onclick="window.switchTab('group-results')">
+          <span style="background:#06b6d4; width:6px; height:6px; border-radius:50%; display:inline-block;"></span>
+          <span style="font-weight:700; color:#fff;">Group Results (New)</span>
+        </button>
+      </li>
+      <li>
+        <button class="stk-tab-btn" id="stk-btn-group-detail" onclick="window.navigateToGroupDetail('bike')">
+          <span>Group Detail / Report View</span>
+        </button>
+      </li>
+    </ul>
+
+    <!-- PERMISSION TOGGLE FOR TESTING -->
+    <div class="permission-toggle-box">
+      <label for="chk-perm-write">
+        <input type="checkbox" id="chk-perm-write" onchange="window.toggleWritePermission(this)">
+        <span>Simulate Write Permissions (<code style="font-size:10px; color:#38bdf8;">groups.write</code>)</span>
+      </label>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       CLIENT PORTAL MAIN LAYOUT
+       ============================================================ -->
+  <div class="portal-container">
+    
+    <!-- LEFT SIDEBAR (MATCHES azetest.ai/client/results) -->
+    <aside class="portal-sidebar">
+      <div class="sidebar-brand-row">
+        <div class="brand-aze-logo">
+          <span class="brand-aze-text">AZE</span>
+        </div>
+        <button class="btn-collapse-sidebar" title="Collapse sidebar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav-list">
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          <span>Dashboard</span>
+        </div>
+
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <span>Tests</span>
+        </div>
+
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          </svg>
+          <span>Students</span>
+        </div>
+
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+          <span>Requests</span>
+        </div>
+
+        <!-- RESULTS MODULE (ACTIVE) -->
+        <div class="nav-item active" onclick="window.switchTab('results')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          <span>Results</span>
+        </div>
+
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Settings</span>
+        </div>
+
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+          </svg>
+          <span>Branding</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer-wrap">
+        <div class="sidebar-user-pill">
+          <div class="user-avatar-purple">Z</div>
+          <div class="user-text-meta">
+            <div class="user-display-name">Zignuts Team</div>
+            <div class="user-display-role">Admin</div>
+          </div>
+        </div>
+        <div class="sign-out-btn-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Sign out</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN PORTAL BODY -->
+    <main class="portal-main">
+      
+      <!-- TOP HEADER (Results | Notifications, Dark mode, User) -->
+      <header class="top-portal-header">
+        <h1 class="header-title-heading">Results</h1>
+        <div class="header-actions-right">
+          <button class="icon-btn-header" title="Notifications">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </button>
+          <button class="icon-btn-header" title="Dark theme">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+          <div class="header-user-btn">
+            <div class="user-avatar-purple" style="width:28px; height:28px; font-size:11px;">Z</div>
+            <div style="text-align:left;">
+              <div style="font-size:12px; font-weight:600; color:#fff; line-height:1.2;">Zignuts Team</div>
+              <div style="font-size:10px; color:var(--text-muted); line-height:1.1;">Admin</div>
+            </div>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted);"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- PASSWORD WARNING BANNER (EXACT MATCH TO media_1791438940800.png) -->
+      <div class="password-banner-container">
+        <div class="password-banner-inner">
+          <div class="pw-banner-left">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div>
+              <span style="font-weight:700; color:#fff;">Your password has expired.</span>
+              <span style="color:#fde68a;"> Your password expired 50 day(s) ago (on Aug 19, 2026). Please change it to keep your account secure.</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button class="btn-change-pwd-amber">Change Password</button>
+            <button style="background:transparent; border:none; color:#fde68a; cursor:pointer; font-size:14px; padding:2px;" onclick="this.closest('.password-banner-container').style.display='none';">&times;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS SUBTABS (Results | Feedbacks | Group Results) -->
+      <div class="tabs-navigation-row">
+        <div class="results-tabs-list">
+          <button class="tab-trigger-button active" id="inner-subtab-results" onclick="window.switchTab('results')">
+            Results
+          </button>
+          <button class="tab-trigger-button" id="inner-subtab-feedbacks" onclick="window.switchTab('feedbacks')">
+            Feedbacks
+          </button>
+          <!-- NEW GROUP RESULTS TAB -->
+          <button class="tab-trigger-button" id="inner-subtab-group-results" onclick="window.switchTab('group-results')">
+            <span>Group Results</span>
+            <span class="badge-new-tab">NEW</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MAIN WRAPPER FOR CONTENT -->
+      <div class="portal-content-wrap">
+
+<div id="tab-content-results" class="tab-view-content">
+  <!-- 5 SKILL CARDS (EXACT MATCH TO media_1791438940800.png) -->
+  <div class="skills-cards-grid">
+    <div class="skill-overview-box">
+      <div class="squircle-icon-container" style="border-color: #06b6d4; color: #06b6d4;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+        </svg>
+      </div>
+      <div class="skill-big-grade">B1</div>
+      <div class="skill-label-name">Language Awareness</div>
+    </div>
+
+    <div class="skill-overview-box">
+      <div class="squircle-icon-container" style="border-color: #3b82f6; color: #3b82f6;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+      </div>
+      <div class="skill-big-grade">B1</div>
+      <div class="skill-label-name">Reading</div>
+    </div>
+
+    <div class="skill-overview-box">
+      <div class="squircle-icon-container" style="border-color: #22c55e; color: #22c55e;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+          <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+          <path d="M2 2l7.586 7.586"/>
+        </svg>
+      </div>
+      <div class="skill-big-grade">A2</div>
+      <div class="skill-label-name">Writing</div>
+    </div>
+
+    <div class="skill-overview-box">
+      <div class="squircle-icon-container" style="border-color: #f97316; color: #f97316;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+        </svg>
+      </div>
+      <div class="skill-big-grade">A2+</div>
+      <div class="skill-label-name">Listening</div>
+    </div>
+
+    <div class="skill-overview-box">
+      <div class="squircle-icon-container" style="border-color: #eab308; color: #eab308;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </div>
+      <div class="skill-big-grade">A2</div>
+      <div class="skill-label-name">Speaking</div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR ROW -->
+  <div class="table-toolbar-bar">
+    <div class="toolbar-left-group">
+      <div class="view-switcher-pill">
+        <span>All Views</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+
+    <div class="toolbar-right-group">
+      <div class="search-field-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input-control" placeholder="Search student or test...">
+      </div>
+
+      <button class="btn-filter-action">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <span>Filters</span>
+      </button>
+
+      <button class="btn-filter-action">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Export results</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- TABLE (MATCHES media_1791438940800.png) -->
+  <div class="portal-table-shell">
+    <table class="table-custom-main">
+      <thead>
+        <tr>
+          <th>STUDENT</th>
+          <th>TEST</th>
+          <th>SUBMISSION DATE</th>
+          <th>SCORE</th>
+          <th>LEVEL</th>
+          <th style="text-align:center;">LA</th>
+          <th style="text-align:center;">R</th>
+          <th style="text-align:center;">W</th>
+          <th style="text-align:center;">L</th>
+          <th style="text-align:center;">S</th>
+          <th style="text-align:right;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:28px; height:28px; border-radius:50%; background:#c084fc; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700;">AN</div>
+              <span style="font-weight:600; color:#fff;">Arame Ngom</span>
+            </div>
+          </td>
+          <td>ES World AI Placement Test</td>
+          <td>08 Oct 2026</td>
+          <td><span class="score-gradient-text">50</span></td>
+          <td>—</td>
+          <td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td>
+          <td style="text-align:right;">
+            <button class="btn-view-report-pill" onclick="alert('Viewing report for Arame Ngom')">View Report</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:28px; height:28px; border-radius:50%; background:#38bdf8; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700;">BG</div>
+              <span style="font-weight:600; color:#fff;">Bulat Gazizov</span>
+            </div>
+          </td>
+          <td>ES World AI Placement Test</td>
+          <td>07 Oct 2026</td>
+          <td><span class="score-gradient-text">44</span></td>
+          <td>—</td>
+          <td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td>
+          <td style="text-align:right;">
+            <button class="btn-view-report-pill" onclick="alert('Viewing report for Bulat Gazizov')">View Report</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:28px; height:28px; border-radius:50%; background:#fb923c; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700;">JP</div>
+              <span style="font-weight:600; color:#fff;">Jhojan Santiago Pereira Pardo</span>
+            </div>
+          </td>
+          <td>ES World AI Placement Test</td>
+          <td>07 Oct 2026</td>
+          <td><span class="score-gradient-text">44</span></td>
+          <td>—</td>
+          <td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td>
+          <td style="text-align:right;">
+            <button class="btn-view-report-pill" onclick="alert('Viewing report for Jhojan Santiago')">View Report</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:28px; height:28px; border-radius:50%; background:#f472b6; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700;">JA</div>
+              <span style="font-weight:600; color:#fff;">Juliana Andrea Loaiza Sanchez</span>
+            </div>
+          </td>
+          <td>ES World AI Placement Test</td>
+          <td>07 Oct 2026</td>
+          <td><span class="score-gradient-text">40</span></td>
+          <td>—</td>
+          <td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td>
+          <td style="text-align:right;">
+            <button class="btn-view-report-pill" onclick="alert('Viewing report for Juliana Andrea')">View Report</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:28px; height:28px; border-radius:50%; background:#22c55e; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700;">DM</div>
+              <span style="font-weight:600; color:#fff;">Daniela Mishelle Macas Castillo</span>
+            </div>
+          </td>
+          <td>ES World AI Placement Test</td>
+          <td>06 Oct 2026</td>
+          <td><span class="score-gradient-text">62</span></td>
+          <td>—</td>
+          <td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td>
+          <td style="text-align:right;">
+            <button class="btn-view-report-pill" onclick="alert('Viewing report for Daniela Mishelle')">View Report</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:28px; height:28px; border-radius:50%; background:#fb923c; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700;">TH</div>
+              <span style="font-weight:600; color:#fff;">Tiago Henrique De Oliveira</span>
+            </div>
+          </td>
+          <td>ES World AI Placement Test</td>
+          <td>06 Oct 2026</td>
+          <td><span class="score-gradient-text">32</span></td>
+          <td>—</td>
+          <td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td>
+          <td style="text-align:right;">
+            <button class="btn-view-report-pill" onclick="alert('Viewing report for Tiago Henrique')">View Report</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:28px; height:28px; border-radius:50%; background:#38bdf8; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700;">MI</div>
+              <span style="font-weight:600; color:#fff;">MADINA IBRAGIMOVA</span>
+            </div>
+          </td>
+          <td>ES World AI Placement Test</td>
+          <td>06 Oct 2026</td>
+          <td><span class="score-gradient-text">40</span></td>
+          <td>—</td>
+          <td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td>
+          <td style="text-align:right;">
+            <button class="btn-view-report-pill" onclick="alert('Viewing report for Madina Ibragimova')">View Report</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:28px; height:28px; border-radius:50%; background:#c084fc; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700;">MH</div>
+              <span style="font-weight:600; color:#fff;">Martina Horvat</span>
+            </div>
+          </td>
+          <td>ES World AI Placement Test</td>
+          <td>06 Oct 2026</td>
+          <td><span class="score-gradient-text">42</span></td>
+          <td>—</td>
+          <td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td>
+          <td style="text-align:right;">
+            <button class="btn-view-report-pill" onclick="alert('Viewing report for Martina Horvat')">View Report</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:28px; height:28px; border-radius:50%; background:#c084fc; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700;">AF</div>
+              <span style="font-weight:600; color:#fff;">Alessia Frezza</span>
+            </div>
+          </td>
+          <td>ES World AI Placement Test</td>
+          <td>06 Oct 2026</td>
+          <td><span class="score-gradient-text">53</span></td>
+          <td>—</td>
+          <td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td>
+          <td style="text-align:right;">
+            <button class="btn-view-report-pill" onclick="alert('Viewing report for Alessia Frezza')">View Report</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="table-pagination-footer">
+      <span>Showing 1 to 9 of 3,105 entries</span>
+      <div class="pagination-btn-group">
+        <button class="btn-pag-square">&laquo;</button>
+        <button class="btn-pag-square">&lsaquo;</button>
+        <button class="btn-pag-square active">1</button>
+        <button class="btn-pag-square">2</button>
+        <button class="btn-pag-square">3</button>
+        <button class="btn-pag-square">&rsaquo;</button>
+        <button class="btn-pag-square">&raquo;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+        <!-- TAB VIEW 2: FEEDBACKS (PLACEHOLDER) -->
+        <div id="tab-content-feedbacks" class="tab-view-content" style="display:none; padding:40px; text-align:center; color:var(--text-muted);">
+          <div style="font-size:32px; margin-bottom:12px;">💬</div>
+          <h3 style="color:#fff; font-size:16px;">Student Feedbacks Module</h3>
+          <p style="font-size:12px; margin-top:4px;">Existing student ratings, assessment survey feedback, and satisfaction metrics.</p>
+        </div>
+
+        <!-- TAB VIEW 3: NEW GROUP RESULTS LISTING -->
+
+<div id="tab-content-group-results" class="tab-view-content" style="display:none;">
+  
+  <!-- 4 GROUP KPI STAT CARDS (SQUIRCLE MATCHING media_1791438940800.png) -->
+  <div class="group-kpi-cards-grid">
+    <div class="skill-overview-box">
+      <div class="squircle-icon-container" style="border-color: #a855f7; color: #a855f7;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="skill-big-grade score-gradient-text">512</div>
+      <div class="skill-label-name">Total Groups</div>
+    </div>
+
+    <div class="skill-overview-box">
+      <div class="squircle-icon-container" style="border-color: #22c55e; color: #22c55e;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="skill-big-grade" style="color: #4ade80;">511</div>
+      <div class="skill-label-name">Active Groups</div>
+    </div>
+
+    <div class="skill-overview-box">
+      <div class="squircle-icon-container" style="border-color: #06b6d4; color: #06b6d4;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div class="skill-big-grade" style="color: #38bdf8;">1</div>
+      <div class="skill-label-name">Upcoming Groups</div>
+    </div>
+
+    <div class="skill-overview-box">
+      <div class="squircle-icon-container" style="border-color: #f97316; color: #f97316;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </div>
+      <div class="skill-big-grade score-gradient-text">1,063</div>
+      <div class="skill-label-name">Total Students</div>
+    </div>
+  </div>
+
+  <!-- TABLE TOOLBAR ROW -->
+  <div class="table-toolbar-bar">
+    <div class="toolbar-left-group">
+      <!-- Create Group Button (Shown conditionally based on write permission) -->
+      <button class="btn btn-cyan btn-create-group-cyan write-permission-only" onclick="window.openCreateGroupModal()" style="display:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        <span>Create Group</span>
+      </button>
+
+      <span id="read-only-indicator-badge" class="badge-status" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-subtle); padding: 5px 12px; font-weight: 500;">
+        🔒 Read-Only Reporting Access
+      </span>
+    </div>
+
+    <div class="toolbar-right-group">
+      <div class="search-field-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="group-search-input" class="search-input-control" placeholder="Search groups..." oninput="window.filterGroupsTable()">
+      </div>
+
+      <select id="group-campus-filter" class="dropdown-filter-select" onchange="window.filterGroupsTable()">
+        <option value="all">All Campuses</option>
+        <option value="esai">ESAI Headquarters</option>
+        <option value="campus11">Campus 11</option>
+        <option value="aagam">Aagam</option>
+      </select>
+
+      <select id="group-status-filter" class="dropdown-filter-select" onchange="window.filterGroupsTable()">
+        <option value="all">All Status</option>
+        <option value="active">Active</option>
+        <option value="upcoming">Upcoming</option>
+        <option value="completed">Completed</option>
+      </select>
+
+      <button class="btn btn-filter-action" onclick="alert('Exporting group list and metrics to CSV...')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span>Export CSV</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- GROUP RESULTS LISTING TABLE -->
+  <div class="portal-table-shell">
+    <table class="table-custom-main" id="groups-data-table">
+      <thead>
+        <tr>
+          <th>GROUP</th>
+          <th>CAMPUS</th>
+          <th>INSTRUCTOR</th>
+          <th style="text-align:center;">STUDENTS</th>
+          <th style="text-align:center;">AVG SCORE</th>
+          <th style="text-align:center;">STATUS</th>
+          <th style="text-align:right;">ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <!-- ROW 1: BIKE -->
+        <tr data-name="bike" data-campus="esai" data-status="active">
+          <td>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:36px; height:36px; border-radius:10px; background:rgba(236, 72, 153, 0.15); border:1px solid #ec4899; display:flex; align-items:center; justify-content:center; color:#ec4899; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <a href="javascript:void(0)" onclick="window.navigateToGroupDetail('bike')" style="font-weight:600; color:#fff; text-decoration:none;" class="group-row-link">bike</a>
+                <div style="font-size:11px; color:var(--text-muted);">ESAI Headquarters</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-weight:500; color:#cbd5e1;">ESAI Headquarters</div>
+            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-cyan);">ESAI-HEADQUARTERS</div>
+          </td>
+          <td>Ralph lauren</td>
+          <td style="text-align:center; font-weight:700; color:#fff;">1</td>
+          <td style="text-align:center;">
+            <span class="score-gradient-text" style="font-size:16px;">20</span>
+          </td>
+          <td style="text-align:center;">
+            <span class="badge-status badge-active">Active</span>
+          </td>
+          <td style="text-align:right;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <button class="btn-view-report-pill btn-report-action" onclick="window.navigateToGroupDetail('bike')">View Report</button>
+              
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; display:none;" title="Edit Group" onclick="alert('Editing group: bike')">
+                ✏️
+              </button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; color:#f87171; display:none;" title="Delete Group" onclick="alert('Delete confirmation for group: bike')">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- ROW 2: CARR -->
+        <tr data-name="carr" data-campus="esai" data-status="active">
+          <td>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:36px; height:36px; border-radius:10px; background:rgba(249, 115, 22, 0.15); border:1px solid #f97316; display:flex; align-items:center; justify-content:center; color:#f97316; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <a href="javascript:void(0)" onclick="window.navigateToGroupDetail('carr')" style="font-weight:600; color:#fff; text-decoration:none;" class="group-row-link">carr</a>
+                <div style="font-size:11px; color:var(--text-muted);">ESAI Headquarters</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-weight:500; color:#cbd5e1;">ESAI Headquarters</div>
+            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-cyan);">ESAI-HEADQUARTERS</div>
+          </td>
+          <td>Ralph lauren</td>
+          <td style="text-align:center; font-weight:700; color:#fff;">0</td>
+          <td style="text-align:center;">
+            <span style="font-weight:700; color:#64748b; font-family:var(--font-mono);">0</span>
+          </td>
+          <td style="text-align:center;">
+            <span class="badge-status badge-active">Active</span>
+          </td>
+          <td style="text-align:right;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <button class="btn-view-report-pill btn-report-action" onclick="window.navigateToGroupDetail('carr')">View Report</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; display:none;" title="Edit Group" onclick="alert('Editing group: carr')">✏️</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; color:#f87171; display:none;" title="Delete Group" onclick="alert('Delete confirmation for group: carr')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- ROW 3: AAGAM -->
+        <tr data-name="aagam" data-campus="aagam" data-status="active">
+          <td>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:36px; height:36px; border-radius:10px; background:rgba(16, 185, 129, 0.15); border:1px solid #10b981; display:flex; align-items:center; justify-content:center; color:#10b981; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <a href="javascript:void(0)" onclick="window.navigateToGroupDetail('aagam')" style="font-weight:600; color:#fff; text-decoration:none;" class="group-row-link">aagam</a>
+                <div style="font-size:11px; color:var(--text-muted);">Aagam</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-weight:500; color:#cbd5e1;">Aagam</div>
+            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-cyan);">A1</div>
+          </td>
+          <td>aagam jain</td>
+          <td style="text-align:center; font-weight:700; color:#fff;">1</td>
+          <td style="text-align:center;">
+            <span class="score-gradient-text" style="font-size:16px;">47</span>
+          </td>
+          <td style="text-align:center;">
+            <span class="badge-status badge-active">Active</span>
+          </td>
+          <td style="text-align:right;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <button class="btn-view-report-pill btn-report-action" onclick="window.navigateToGroupDetail('aagam')">View Report</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; display:none;" title="Edit Group" onclick="alert('Editing group: aagam')">✏️</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; color:#f87171; display:none;" title="Delete Group" onclick="alert('Delete confirmation for group: aagam')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- ROW 4: TEST ASSIGNMENT GROUP -->
+        <tr data-name="test assignment group" data-campus="campus11" data-status="active">
+          <td>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:36px; height:36px; border-radius:10px; background:rgba(168, 85, 247, 0.15); border:1px solid #a855f7; display:flex; align-items:center; justify-content:center; color:#a855f7; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <a href="javascript:void(0)" onclick="window.navigateToGroupDetail('test-assignment')" style="font-weight:600; color:#fff; text-decoration:none;" class="group-row-link">Test Assignment gr...</a>
+                <div style="font-size:11px; color:var(--text-muted);">Mon</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-weight:500; color:#cbd5e1;">Campus 11</div>
+            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-cyan);">01</div>
+          </td>
+          <td>Platform Support</td>
+          <td style="text-align:center; font-weight:700; color:#fff;">0</td>
+          <td style="text-align:center;">
+            <span style="font-weight:700; color:#64748b; font-family:var(--font-mono);">0</span>
+          </td>
+          <td style="text-align:center;">
+            <span class="badge-status badge-active">Active</span>
+          </td>
+          <td style="text-align:right;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <button class="btn-view-report-pill btn-report-action" onclick="window.navigateToGroupDetail('test-assignment')">View Report</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; display:none;" title="Edit Group" onclick="alert('Editing group: Test Assignment')">✏️</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; color:#f87171; display:none;" title="Delete Group" onclick="alert('Delete confirmation for group')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- ROW 5: LEAVES -->
+        <tr data-name="leaves" data-campus="esai" data-status="active">
+          <td>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:36px; height:36px; border-radius:10px; background:rgba(236, 72, 153, 0.15); border:1px solid #ec4899; display:flex; align-items:center; justify-content:center; color:#ec4899; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <a href="javascript:void(0)" onclick="window.navigateToGroupDetail('leaves')" style="font-weight:600; color:#fff; text-decoration:none;" class="group-row-link">Leaves</a>
+                <div style="font-size:11px; color:var(--text-muted);">Mon</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-weight:500; color:#cbd5e1;">ESAI Headquarters</div>
+            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-cyan);">ESAI-HEADQUARTERS</div>
+          </td>
+          <td>Hardik teacher</td>
+          <td style="text-align:center; font-weight:700; color:#fff;">0</td>
+          <td style="text-align:center;">
+            <span style="font-weight:700; color:#64748b; font-family:var(--font-mono);">0</span>
+          </td>
+          <td style="text-align:center;">
+            <span class="badge-status badge-active">Active</span>
+          </td>
+          <td style="text-align:right;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <button class="btn-view-report-pill btn-report-action" onclick="window.navigateToGroupDetail('leaves')">View Report</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; display:none;" title="Edit Group" onclick="alert('Editing group: Leaves')">✏️</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; color:#f87171; display:none;" title="Delete Group" onclick="alert('Delete confirmation for group: Leaves')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- ROW 6: PACKAGE -->
+        <tr data-name="package" data-campus="campus11" data-status="active">
+          <td>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:36px; height:36px; border-radius:10px; background:rgba(99, 102, 241, 0.15); border:1px solid #6366f1; display:flex; align-items:center; justify-content:center; color:#6366f1; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <a href="javascript:void(0)" onclick="window.navigateToGroupDetail('package')" style="font-weight:600; color:#fff; text-decoration:none;" class="group-row-link">package</a>
+                <div style="font-size:11px; color:var(--text-muted);">Sunday</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-weight:500; color:#cbd5e1;">Campus 11</div>
+            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-cyan);">01</div>
+          </td>
+          <td>Platform Admin</td>
+          <td style="text-align:center; font-weight:700; color:#fff;">0</td>
+          <td style="text-align:center;">
+            <span style="font-weight:700; color:#64748b; font-family:var(--font-mono);">0</span>
+          </td>
+          <td style="text-align:center;">
+            <span class="badge-status badge-active">Active</span>
+          </td>
+          <td style="text-align:right;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <button class="btn-view-report-pill btn-report-action" onclick="window.navigateToGroupDetail('package')">View Report</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; display:none;" title="Edit Group" onclick="alert('Editing group: package')">✏️</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; color:#f87171; display:none;" title="Delete Group" onclick="alert('Delete confirmation for group: package')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- ROW 7: TRIAL GROUP -->
+        <tr data-name="trial group" data-campus="campus11" data-status="upcoming">
+          <td>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:36px; height:36px; border-radius:10px; background:rgba(245, 158, 11, 0.15); border:1px solid #f59e0b; display:flex; align-items:center; justify-content:center; color:#f59e0b; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <a href="javascript:void(0)" onclick="window.navigateToGroupDetail('trial-group')" style="font-weight:600; color:#fff; text-decoration:none;" class="group-row-link">Trial group</a>
+                <div style="font-size:11px; color:var(--text-muted);">Wed</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-weight:500; color:#cbd5e1;">Campus 11</div>
+            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-cyan);">01</div>
+          </td>
+          <td>TEST V T</td>
+          <td style="text-align:center; font-weight:700; color:#fff;">0</td>
+          <td style="text-align:center;">
+            <span style="font-weight:700; color:#64748b; font-family:var(--font-mono);">0</span>
+          </td>
+          <td style="text-align:center;">
+            <span class="badge-status badge-upcoming">upcoming</span>
+          </td>
+          <td style="text-align:right;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <button class="btn-view-report-pill btn-report-action" onclick="window.navigateToGroupDetail('trial-group')">View Report</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; display:none;" title="Edit Group" onclick="alert('Editing group: Trial group')">✏️</button>
+              <button class="btn-outline write-permission-only" style="padding:5px 8px; font-size:11px; color:#f87171; display:none;" title="Delete Group" onclick="alert('Delete confirmation for group: Trial group')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div class="table-pagination-footer">
+      <span>Showing 1 to 7 of 512 entries</span>
+      <div class="pagination-btn-group">
+        <button class="btn-pag-square">&laquo;</button>
+        <button class="btn-pag-square">&lsaquo;</button>
+        <button class="btn-pag-square active">1</button>
+        <button class="btn-pag-square">2</button>
+        <button class="btn-pag-square">3</button>
+        <button class="btn-pag-square">4</button>
+        <button class="btn-pag-square">5</button>
+        <span style="padding:0 4px; color:var(--text-muted);">-</span>
+        <button class="btn-pag-square">74</button>
+        <button class="btn-pag-square">&rsaquo;</button>
+        <button class="btn-pag-square">&raquo;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+        <!-- VIEW 4: GROUP DETAIL / REPORT VIEW -->
+
+<div id="view-group-detail" class="tab-view-content" style="display:none;">
+  <div class="group-detail-view-card">
+    
+    <!-- TOP NAVIGATION: BACK TO GROUP RESULTS -->
+    <div class="detail-header-panel">
+      <button class="btn btn-outline" onclick="window.navigateBackToGroups()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+        </svg>
+        <span>Back to Group Results</span>
+      </button>
+
+      <div style="font-size:12px; color:var(--text-muted);">
+        Route: <span style="font-family:var(--font-mono); color:var(--text-cyan);">/results/group/6bc5b9b9-87c5-40f5-85a0-0dd61948e1c1</span>
+      </div>
+    </div>
+
+    <!-- GROUP HERO PANEL -->
+    <div class="group-hero-card-box">
+      <div class="group-folder-box" style="background:rgba(236, 72, 153, 0.15); border-color:#ec4899; color:#ec4899;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+
+      <div>
+        <div class="group-title-row">
+          <h2 class="group-title-txt" id="detail-group-name">bike</h2>
+          <span class="badge-status badge-active" id="detail-group-status">Active</span>
+        </div>
+        <div style="font-size:13px; color:var(--text-secondary);" id="detail-group-subtitle">
+          ESAI Headquarters &bull; Sep 22 &ndash; Oct 1, 2026
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 KPI SUMMARY CARDS (FROM SCREENSHOT media_1791435700557.png) -->
+    <div class="detail-5kpi-grid">
+      <div class="kpi-metric-box">
+        <div class="kpi-big-num score-gradient-text" id="kpi-students">1</div>
+        <div class="kpi-label-text">Students</div>
+      </div>
+
+      <div class="kpi-metric-box">
+        <div class="kpi-big-num score-gradient-text" id="kpi-tests">65</div>
+        <div class="kpi-label-text">Tests Completed</div>
+      </div>
+
+      <div class="kpi-metric-box">
+        <div class="kpi-big-num" style="color:#f87171;" id="kpi-avg-score">20</div>
+        <div class="kpi-label-text">Avg Score</div>
+      </div>
+
+      <div class="kpi-metric-box">
+        <div class="kpi-big-num" style="color:#fb923c;" id="kpi-initial-level">&mdash;</div>
+        <div class="kpi-label-text">Initial Level</div>
+      </div>
+
+      <div class="kpi-metric-box">
+        <div class="kpi-big-num" style="color:#38bdf8;" id="kpi-cefr-level">A1+</div>
+        <div class="kpi-label-text">Average CEFR Level</div>
+      </div>
+    </div>
+
+    <!-- GROUP DETAILS (2-COLUMN KEY-VALUE CARD) -->
+    <div class="group-details-meta-card">
+      <div style="font-size:15px; font-weight:700; color:#fff; margin-bottom:14px;">Group Details</div>
+      
+      <div class="group-meta-2col">
+        <!-- LEFT COLUMN -->
+        <div>
+          <div class="meta-row-line">
+            <span style="color:var(--text-muted);">Instructor</span>
+            <span style="color:#fff; font-weight:600;" id="detail-instructor">Ralph lauren</span>
+          </div>
+          <div class="meta-row-line">
+            <span style="color:var(--text-muted);">Campuses</span>
+            <span>
+              <span class="badge-status" style="background:#091433; border:1px solid #38bdf8; color:#38bdf8;" id="detail-campus-badge">
+                ESAI Headquarters
+              </span>
+            </span>
+          </div>
+          <div class="meta-row-line">
+            <span style="color:var(--text-muted);">Schedule</span>
+            <span style="color:#fff;" id="detail-schedule">&mdash;</span>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+          <div class="meta-row-line">
+            <span style="color:var(--text-muted);">Start Date</span>
+            <span style="color:#38bdf8; font-weight:600;" id="detail-start-date">Sep 22, 2026</span>
+          </div>
+          <div class="meta-row-line">
+            <span style="color:var(--text-muted);">End Date</span>
+            <span style="color:#fff;" id="detail-end-date">Oct 1, 2026</span>
+          </div>
+          <div class="meta-row-line">
+            <span style="color:var(--text-muted);">Campus Codes</span>
+            <span style="font-family:var(--font-mono); color:#00CFE8; font-weight:600;" id="detail-campus-codes">
+              ESAI-HEADQUARTERS
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENTS IN GROUP SECTION -->
+    <div class="students-table-card">
+      <div class="students-card-title-bar">
+        <div>
+          <h3 style="font-size:14px; font-weight:700; color:#fff;">Students in Group</h3>
+          <p style="font-size:11px; color:var(--text-muted); margin-top:2px;">
+            Click on any student row to drill down into their individual assessment attempt and reports.
+          </p>
+        </div>
+        <span class="badge-status badge-active" style="background:rgba(99,102,241,0.2); color:#818cf8; border:1px solid rgba(99,102,241,0.3);">
+          1 Enrolled
+        </span>
+      </div>
+
+      <!-- STUDENT ROWS -->
+      <div id="students-group-list">
+        
+        <div class="student-record-row" onclick="window.openStudentDrilldownModal('rohit Aze', 'rohit.aze@yopmail.com', '20', 'A1+')">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="student-circle-avatar">RA</div>
+            <div>
+              <div style="font-weight:600; color:#fff; display:flex; align-items:center; gap:6px;">
+                <span>rohit Aze</span>
+                <span style="font-size:10px; color:#38bdf8; font-weight:500;">(Click to view report)</span>
+              </div>
+              <div style="font-size:11px; color:var(--text-muted);">rohit.aze@yopmail.com</div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span class="score-gradient-text" style="font-size:16px;">20</span>
+            <span class="badge-a1">A1+</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--text-muted);">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FOOTER PAGINATION -->
+      <div class="table-pagination-footer">
+        <span>Showing 1 to 1 of 1 entry</span>
+        <div class="pagination-btn-group">
+          <button class="btn-pag-square">&laquo;</button>
+          <button class="btn-pag-square">&lsaquo;</button>
+          <button class="btn-pag-square active">1</button>
+          <button class="btn-pag-square">&rsaquo;</button>
+          <button class="btn-pag-square">&raquo;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAIL FOOTER ACTIONS -->
+    <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:4px;">
+      <!-- Edit Group Button (Visible only if write permission enabled) -->
+      <button class="btn btn-outline write-permission-only" style="display:none;" onclick="alert('Opening Edit Group Modal for bike...')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+        <span>Edit Group</span>
+      </button>
+
+      <button class="btn btn-cyan" onclick="window.navigateBackToGroups()">
+        Close
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- MODALS -->
+
+<!-- ============================================================
+     MODAL 1: CREATE GROUP (CONDITIONAL FOR WRITE PERMISSION)
+     ============================================================ -->
+<div id="modal-create-group" class="modal-overlay">
+  <div class="modal-container" style="max-width: 580px;">
+    <div class="modal-header">
+      <h3 style="font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00CFE8" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        <span>Create New Group</span>
+      </h3>
+      <button class="btn-outline" style="padding: 4px 8px; font-size: 14px;" onclick="window.closeAllModals()">&times;</button>
+    </div>
+
+    <form onsubmit="event.preventDefault(); window.submitCreateGroup();">
+      <div class="modal-body">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:12px; font-weight:600; color:var(--text-secondary);">Group Name *</label>
+          <input type="text" id="new-group-name" class="filter-input-text" style="padding-left:12px;" required placeholder="e.g. October Evening Batch">
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:12px; font-weight:600; color:var(--text-secondary);">Campus *</label>
+          <select id="new-group-campus" class="filter-select-dropdown" required>
+            <option value="ESAI Headquarters">ESAI Headquarters</option>
+            <option value="Campus 11">Campus 11</option>
+            <option value="Aagam">Aagam</option>
+          </select>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:12px; font-weight:600; color:var(--text-secondary);">Assigned Instructor</label>
+          <input type="text" id="new-group-instructor" class="filter-input-text" style="padding-left:12px;" placeholder="e.g. Ralph Lauren">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="font-size:12px; font-weight:600; color:var(--text-secondary);">Start Date</label>
+            <input type="date" id="new-group-start" class="filter-input-text" style="padding-left:12px;" value="2026-10-10">
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="font-size:12px; font-weight:600; color:var(--text-secondary);">End Date</label>
+            <input type="date" id="new-group-end" class="filter-input-text" style="padding-left:12px;" value="2026-11-30">
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:12px; font-weight:600; color:var(--text-secondary);">Schedule / Frequency</label>
+          <input type="text" id="new-group-schedule" class="filter-input-text" style="padding-left:12px;" placeholder="e.g. Mon, Wed, Fri (6:00 PM - 8:00 PM)">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="window.closeAllModals()">Cancel</button>
+        <button type="submit" class="btn btn-cyan">Create Group</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL 2: STUDENT ASSESSMENT DRILL-DOWN (DRILL-DOWN EXTENSION)
+     ============================================================ -->
+<div id="modal-student-drilldown" class="modal-overlay">
+  <div class="modal-container" style="max-width: 680px;">
+    <div class="modal-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="8.5" cy="7" r="4"/>
+          <polyline points="17 11 19 13 23 9"/>
+        </svg>
+        <h3 style="font-size: 16px; font-weight: 700; color: #fff;" id="drilldown-modal-title">Student Assessment Drill-Down</h3>
+      </div>
+      <button class="btn-outline" style="padding: 4px 8px; font-size: 14px;" onclick="window.closeAllModals()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- HERO STUDENT INFO -->
+      <div style="display:flex; align-items:center; justify-content:space-between; background:#060d24; border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div class="student-circle-avatar" id="drilldown-avatar" style="width:46px; height:46px; font-size:16px;">RA</div>
+          <div>
+            <h4 style="font-size:16px; font-weight:700; color:#fff;" id="drilldown-name">rohit Aze</h4>
+            <div style="font-size:12px; color:var(--text-secondary);" id="drilldown-email">rohit.aze@yopmail.com</div>
+          </div>
+        </div>
+
+        <div style="text-align:right;">
+          <div style="font-size:24px; font-weight:800; color:#f87171; font-family:var(--font-mono);" id="drilldown-score">20</div>
+          <span class="badge badge-a1" id="drilldown-level">A1+</span>
+        </div>
+      </div>
+
+      <!-- TEST ATTEMPT HISTORY FOR THIS STUDENT -->
+      <div style="margin-top:10px;">
+        <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:10px;">Assessment Attempts in this Group</div>
+        
+        <table class="portal-table" style="background:#060d24; border-radius:var(--radius-md); overflow:hidden;">
+          <thead>
+            <tr>
+              <th style="padding:10px 14px;">Assessment</th>
+              <th style="padding:10px 14px;">Attempt Date</th>
+              <th style="padding:10px 14px; text-align:center;">Score</th>
+              <th style="padding:10px 14px; text-align:center;">CEFR</th>
+              <th style="padding:10px 14px; text-align:right;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:12px 14px; font-weight:500; color:#fff;">ES World AI Placement Test</td>
+              <td style="padding:12px 14px; font-size:12px;">Sep 28, 2026</td>
+              <td style="padding:12px 14px; text-align:center; font-weight:700; color:#f87171; font-family:var(--font-mono);">20</td>
+              <td style="padding:12px 14px; text-align:center;"><span class="badge badge-a1">A1+</span></td>
+              <td style="padding:12px 14px; text-align:right;">
+                <button class="btn btn-outline" style="padding:4px 10px; font-size:11px;" onclick="alert('Navigating to full student assessment report: /student-report/user-rohit-aze-uuid/attempt-9921')">
+                  Full Report ➔
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2); border-radius:var(--radius-md); padding:12px 16px; font-size:12px; color:var(--text-secondary);">
+        💡 In production Client Portal, clicking on any student row in Group Details invokes <code style="color:#38bdf8; font-family:var(--font-mono);">studentAssessmentsPath(organizationUserId)</code>, allowing administrators to inspect full proctoring logs and SpeechAce acoustic scorecards.
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-cyan" onclick="window.closeAllModals()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- JAVASCRIPT LOGIC -->
+
+<script>
+let hasWritePermission = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const viewParam = params.get('view');
+  const tabParam = params.get('tab');
+  const permParam = params.get('perm');
+
+  if (permParam === 'write') {
+    const permCheckbox = document.getElementById('chk-perm-write');
+    if (permCheckbox) {
+      permCheckbox.checked = true;
+      toggleWritePermission(permCheckbox);
+    }
+  }
+
+  if (viewParam === 'group-detail') {
+    const id = params.get('id') || 'bike';
+    navigateToGroupDetail(id);
+  } else if (tabParam === 'group-results') {
+    switchTab('group-results');
+  } else if (tabParam === 'feedbacks') {
+    switchTab('feedbacks');
+  } else {
+    switchTab('results');
+  }
+
+  const modalParam = params.get('modal');
+  if (modalParam === 'create') {
+    openCreateGroupModal();
+  } else if (modalParam === 'drilldown') {
+    openStudentDrilldownModal('rohit Aze', 'rohit.aze@yopmail.com', '20', 'A1+');
+  }
+});
+
+function switchTab(tabId) {
+  // Hide all contents
+  const resContent = document.getElementById('tab-content-results');
+  const fbContent = document.getElementById('tab-content-feedbacks');
+  const grContent = document.getElementById('tab-content-group-results');
+  const detailView = document.getElementById('view-group-detail');
+
+  if (resContent) resContent.style.display = 'none';
+  if (fbContent) fbContent.style.display = 'none';
+  if (grContent) grContent.style.display = 'none';
+  if (detailView) detailView.style.display = 'none';
+
+  // Update stakeholder bar active states
+  document.querySelectorAll('.stk-tab-btn').forEach(btn => btn.classList.remove('active'));
+  const stkBtn = document.getElementById('stk-btn-' + tabId);
+  if (stkBtn) stkBtn.classList.add('active');
+
+  // Update inner subtabs active states
+  document.querySelectorAll('.tab-trigger-button, .subtab-trigger').forEach(btn => btn.classList.remove('active'));
+  const innerBtn = document.getElementById('inner-subtab-' + tabId);
+  if (innerBtn) innerBtn.classList.add('active');
+
+  // Show target content
+  if (tabId === 'results') {
+    if (resContent) resContent.style.display = 'block';
+    updateUrl({ tab: 'results', view: null, id: null });
+  } else if (tabId === 'feedbacks') {
+    if (fbContent) fbContent.style.display = 'block';
+    updateUrl({ tab: 'feedbacks', view: null, id: null });
+  } else if (tabId === 'group-results') {
+    if (grContent) grContent.style.display = 'block';
+    updateUrl({ tab: 'group-results', view: null, id: null });
+  } else if (tabId === 'group-detail') {
+    if (detailView) detailView.style.display = 'block';
+  }
+}
+
+function navigateToGroupDetail(groupId) {
+  const resContent = document.getElementById('tab-content-results');
+  const fbContent = document.getElementById('tab-content-feedbacks');
+  const grContent = document.getElementById('tab-content-group-results');
+  const detailView = document.getElementById('view-group-detail');
+
+  if (resContent) resContent.style.display = 'none';
+  if (fbContent) fbContent.style.display = 'none';
+  if (grContent) grContent.style.display = 'none';
+  if (detailView) detailView.style.display = 'block';
+
+  document.querySelectorAll('.stk-tab-btn').forEach(btn => btn.classList.remove('active'));
+  const stkBtn = document.getElementById('stk-btn-group-detail');
+  if (stkBtn) stkBtn.classList.add('active');
+
+  updateUrl({ view: 'group-detail', id: groupId, tab: null });
+}
+
+function navigateBackToGroups() {
+  switchTab('group-results');
+}
+
+function toggleWritePermission(checkbox) {
+  hasWritePermission = checkbox.checked;
+  const writeEls = document.querySelectorAll('.write-permission-only');
+  const readOnlyBadge = document.getElementById('read-only-indicator-badge');
+
+  writeEls.forEach(el => {
+    if (hasWritePermission) {
+      if (el.tagName === 'BUTTON' && el.classList.contains('btn-cyan')) {
+        el.style.display = 'inline-flex';
+      } else {
+        el.style.display = 'inline-flex';
+      }
+    } else {
+      el.style.display = 'none';
+    }
+  });
+
+  if (readOnlyBadge) {
+    readOnlyBadge.style.display = hasWritePermission ? 'none' : 'inline-flex';
+  }
+
+  const currentParams = new URLSearchParams(window.location.search);
+  if (hasWritePermission) {
+    currentParams.set('perm', 'write');
+  } else {
+    currentParams.delete('perm');
+  }
+  if (history.pushState) {
+    const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + currentParams.toString();
+    window.history.pushState({path:newurl}, '', newurl);
+  }
+}
+
+function filterGroupsTable() {
+  const searchVal = document.getElementById('group-search-input').value.toLowerCase().trim();
+  const campusVal = document.getElementById('group-campus-filter').value;
+  const statusVal = document.getElementById('group-status-filter').value;
+
+  const rows = document.querySelectorAll('#groups-data-table tbody tr');
+  rows.forEach(row => {
+    const name = row.getAttribute('data-name') || '';
+    const campus = row.getAttribute('data-campus') || '';
+    const status = row.getAttribute('data-status') || '';
+
+    const matchSearch = name.includes(searchVal);
+    const matchCampus = (campusVal === 'all' || campus === campusVal);
+    const matchStatus = (statusVal === 'all' || status === statusVal);
+
+    if (matchSearch && matchCampus && matchStatus) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+function closeAllModals() {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+}
+
+function openCreateGroupModal() {
+  closeAllModals();
+  const modal = document.getElementById('modal-create-group');
+  if (modal) modal.classList.add('open');
+}
+
+function openStudentDrilldownModal(name, email, score, level) {
+  closeAllModals();
+  const modal = document.getElementById('modal-student-drilldown');
+  if (modal) {
+    document.getElementById('drilldown-name').innerText = name;
+    document.getElementById('drilldown-email').innerText = email;
+    document.getElementById('drilldown-score').innerText = score;
+    document.getElementById('drilldown-level').innerText = level;
+    modal.classList.add('open');
+  }
+}
+
+function submitCreateGroup() {
+  const name = document.getElementById('new-group-name').value;
+  const campus = document.getElementById('new-group-campus').value;
+  const instructor = document.getElementById('new-group-instructor').value || 'Unassigned';
+
+  const tbody = document.querySelector('#groups-data-table tbody');
+  if (tbody) {
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-name', name.toLowerCase());
+    tr.setAttribute('data-campus', campus.toLowerCase().includes('esai') ? 'esai' : 'campus11');
+    tr.setAttribute('data-status', 'active');
+    tr.style.background = 'rgba(16, 185, 129, 0.08)';
+    tr.innerHTML = `
+      <td>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(16, 185, 129, 0.15); border:1px solid #10b981; display:flex; align-items:center; justify-content:center; color:#10b981;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div>
+            <a href="javascript:void(0)" onclick="window.navigateToGroupDetail('${name}')" style="font-weight:600; color:#fff; text-decoration:none;" class="group-row-link">${name}</a>
+            <div style="font-size:11px; color:#34d399;">Just Created</div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div style="font-weight:500; color:#cbd5e1;">${campus}</div>
+        <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-cyan);">NEW-CODE</div>
+      </td>
+      <td>${instructor}</td>
+      <td style="text-align:center; font-weight:700; color:#fff;">0</td>
+      <td style="text-align:center;">
+        <span style="font-weight:700; color:#94a3b8; font-family:var(--font-mono);">0</span>
+      </td>
+      <td style="text-align:center;">
+        <span class="badge badge-active">Active</span>
+      </td>
+      <td style="text-align:right;">
+        <div style="display:inline-flex; align-items:center; gap:6px;">
+          <button class="btn-report-action" onclick="window.navigateToGroupDetail('${name}')">View Report</button>
+        </div>
+      </td>
+    `;
+    tbody.insertBefore(tr, tbody.firstChild);
+  }
+
+  closeAllModals();
+  alert('🎉 Group "' + name + '" created successfully!');
+}
+
+function updateUrl(paramsObj) {
+  const current = new URLSearchParams(window.location.search);
+  Object.keys(paramsObj).forEach(k => {
+    if (paramsObj[k] === null) {
+      current.delete(k);
+    } else {
+      current.set(k, paramsObj[k]);
+    }
+  });
+  if (history.pushState) {
+    const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + current.toString();
+    window.history.pushState({path:newurl}, '', newurl);
+  }
+}
+
+// Global exposure
+window.switchTab = switchTab;
+window.navigateToGroupDetail = navigateToGroupDetail;
+window.navigateBackToGroups = navigateBackToGroups;
+window.toggleWritePermission = toggleWritePermission;
+window.filterGroupsTable = filterGroupsTable;
+window.closeAllModals = closeAllModals;
+window.openCreateGroupModal = openCreateGroupModal;
+window.openStudentDrilldownModal = openStudentDrilldownModal;
+window.submitCreateGroup = submitCreateGroup;
+</script>
+
+
+</body>
+</html>

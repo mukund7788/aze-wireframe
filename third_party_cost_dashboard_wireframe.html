@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AZE Admin - Third-Party Usage & Cost Dashboard</title>
+  
+  <!-- AZE Design System Typography: Poppins (Primary) & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  
+  <style>
+    :root {
+      /* AZE Design Tokens from zaiassement index.css & tailwind.config.js */
+      --background: hsl(223 84% 5%); /* #020617 */
+      --card: hsl(216 22% 11%);      /* #0f172a / #161b22 */
+      --border: hsl(217 33% 20%);    /* #1e293b */
+      --primary: #06b6d4;            /* Cyan-500 brand accent */
+      --primary-hover: #0891b2;      /* Cyan-600 */
+      --primary-text: #22d3ee;       /* Cyan-400 */
+      --secondary-background: #1e293b;
+      --secondary-border: #334155;
+      --secondary-table-header: #172033;
+      --secondary-hover: #131c2f;
+      --secondary-text: #94a3b8;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #020617;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-6 text-slate-100 antialiased selection:bg-cyan-500 selection:text-white">
+
+  <!-- Main Container -->
+  <div class="max-w-6xl mx-auto space-y-5">
+
+    <!-- Page Header (Matches AZE Admin Portal) -->
+    <div class="border-b border-slate-800 pb-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight text-white">Activity Logs</h1>
+          <p class="text-xs text-slate-400 mt-0.5">Monitor system actions, LLM query audit logs, and third-party service costs</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Cron Circuit Breaker: Active
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs (dev.azetest.ai/admin/activity-logs) -->
+    <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+      <button onclick="alert('System Audit Logs view')" class="px-3.5 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-xs sm:text-sm font-medium transition-colors">
+        System Audit logs
+      </button>
+      <button onclick="alert('LLM Audit Logs view (101,793 logs)')" class="px-3.5 py-1.5 rounded-md text-slate-400 hover:text-slate-200 text-xs sm:text-sm font-medium transition-colors">
+        LLM audit logs
+      </button>
+      <button class="px-3.5 py-1.5 rounded-md bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs sm:text-sm shadow-sm transition-all flex items-center gap-1.5">
+        <span>Third-Party Usage &amp; Cost</span>
+      </button>
+    </div>
+
+    <!-- Clean 2-Subtab Navigation & Controls -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0f172a] p-2 rounded-xl border border-[#1e293b]">
+      
+      <!-- Sub-Tabs -->
+      <div class="flex items-center gap-1">
+        <button onclick="switchTab('overview')" id="btn-tab-overview" class="px-4 py-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs font-semibold transition-all flex items-center gap-2">
+          <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          <span>1. Third-Party Cost Overview</span>
+        </button>
+        <button onclick="switchTab('alerts')" id="btn-tab-alerts" class="px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-semibold transition-all flex items-center gap-2">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          <span>2. User Test Usage &amp; Cost Breakdown</span>
+        </button>
+      </div>
+
+      <!-- Contextual Controls on Right Side -->
+      <div class="flex items-center gap-2">
+
+        <!-- Tab 1 Controls: Day, Week, and Month View + Set Alert Limits -->
+        <div id="tab1-controls" class="flex items-center gap-2">
+          <div id="timeframeControls" class="flex items-center gap-1 bg-[#020617] p-1 rounded-lg border border-[#1e293b] text-xs text-slate-400">
+            <button onclick="setTimeframe('day')" id="tf-day" class="px-2.5 py-1 rounded bg-cyan-600 text-white font-medium transition-colors">Day</button>
+            <button onclick="setTimeframe('week')" id="tf-week" class="px-2.5 py-1 rounded hover:text-slate-200 font-medium transition-colors">Week</button>
+            <button onclick="setTimeframe('month')" id="tf-month" class="px-2.5 py-1 rounded hover:text-slate-200 font-medium transition-colors">Month</button>
+            <div class="h-3 w-px bg-slate-800 mx-1"></div>
+            <span id="dateRangeLabel" class="text-[11px] text-slate-400 font-mono pr-1">Today (Sep 23)</span>
+          </div>
+
+          <button onclick="openAlertModal()" title="Configure alert limit of every third party service" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-slate-700 text-slate-200 border border-[#334155] hover:border-slate-500 text-xs font-semibold transition-all shadow-sm group">
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="hidden sm:inline">Set Alert Limits</span>
+          </button>
+        </div>
+
+        <!-- Tab 2 Controls: Date Picker Calendar Only & Today's Date Display -->
+        <div id="tab2-controls" class="hidden relative">
+          <button onclick="toggleCalendarDropdown(event)" id="datePickerBtn" title="Click to open calendar date picker" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-lg bg-[#020617] hover:bg-slate-900 border border-[#1e293b] hover:border-slate-700 text-xs text-slate-200 transition-all shadow-sm group">
+            <svg class="w-4 h-4 text-cyan-400 group-hover:text-cyan-300 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Date:</span>
+              <span id="selectedDateDisplay" class="font-semibold text-white font-mono">Today, Sep 23, 2026</span>
+            </div>
+            <svg id="calChevron" class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-300 transition-transform ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+
+          <!-- Interactive Calendar Popover Dropdown -->
+          <div id="calendarDropdown" class="hidden absolute right-0 mt-2 z-50 w-72 rounded-xl bg-[#0f172a] border border-[#1e293b] shadow-2xl p-3.5 space-y-3">
+            <!-- Calendar Month Navigation -->
+            <div class="flex items-center justify-between pb-2 border-b border-[#1e293b]">
+              <button onclick="changeCalMonth(-1)" class="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <span id="calMonthYearText" class="text-xs font-bold text-white font-mono">September 2026</span>
+              <button onclick="changeCalMonth(1)" class="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+
+            <!-- Weekdays Row -->
+            <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-semibold text-slate-400 uppercase">
+              <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+            </div>
+
+            <!-- Days Grid (Rendered by JS) -->
+            <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs">
+            </div>
+
+            <!-- Quick Today Shortcut Action -->
+            <div class="pt-2 border-t border-[#1e293b] flex items-center justify-between text-xs">
+              <span class="text-[11px] text-slate-400">Today: <strong class="text-cyan-400 font-mono">Sep 23, 2026</strong></span>
+              <button onclick="selectDate(2026, 8, 23, true)" class="px-2.5 py-1 rounded-md bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-[11px] shadow-sm transition-all">
+                Go to Today
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- =================================================================================== -->
+    <!-- TAB 1: THIRD-PARTY COST OVERVIEW (INDIVIDUAL KPI CARDS) -->
+    <!-- =================================================================================== -->
+    <div id="content-overview" class="space-y-5">
+      
+      <!-- Top Summary: Total Combined Platform Spend -->
+      <div class="p-4 rounded-xl bg-gradient-to-r from-slate-900 via-indigo-950/20 to-slate-900 border border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="text-xs text-slate-400 font-medium uppercase tracking-wider block">Total Platform Third-Party Cost</span>
+          <div class="flex items-baseline gap-2 mt-0.5">
+            <span class="text-3xl font-bold tracking-tight text-white font-mono" id="kpi-total-cost">$126.80</span>
+            <span class="text-xs text-slate-400 font-medium" id="kpi-summary-label">Aggregated vendor consumption</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 text-xs text-slate-400 border-t sm:border-t-0 sm:border-l border-slate-800 pt-2 sm:pt-0 sm:pl-4">
+          <div>
+            <span class="text-[10px] text-slate-500 uppercase block">Selected Period</span>
+            <strong class="text-slate-200 font-mono" id="summary-period-text">Day (Today, Sep 23)</strong>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-500 uppercase block">Active Providers</span>
+            <strong class="text-indigo-300">5 Integrated Services</strong>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-500 uppercase block">Alert Thresholds</span>
+            <span class="text-emerald-400 font-medium flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>Monitored &amp; Active</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Individual KPI Cards: EXACTLY ONE CARD PER THIRD PARTY (NO BEDROCK) -->
+      <div>
+        <div class="flex items-center justify-between mb-2.5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Individual Third-Party Provider Costs</span>
+          <span class="text-[11px] text-slate-500">Each card reflects individual provider consumption for the active timeframe</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          
+          <!-- 1. OpenAI Individual KPI Card -->
+          <div id="card-openai" class="p-4 rounded-xl bg-slate-900 border border-slate-800 shadow-sm relative overflow-hidden group hover:border-slate-700 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <div class="flex items-center gap-1.5 font-semibold text-white">
+                  <span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
+                  <span>OpenAI</span>
+                </div>
+                <span id="alert-chip-openai" class="hidden px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 text-[10px] font-semibold tracking-wide flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                  <span>Limit Exceeded</span>
+                </span>
+              </div>
+              <div>
+                <span class="text-2xl font-bold tracking-tight text-white font-mono" id="kpi-openai-cost">$79.60</span>
+              </div>
+            </div>
+            <div class="mt-3.5 text-[11px] text-slate-400 border-t border-slate-800/80 pt-2.5 space-y-1.5">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Service:</span>
+                <span class="text-slate-300 font-medium">Writing &amp; CEFR</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Billing Rate:</span>
+                <span class="text-slate-200 font-mono font-medium">$2.50 / $10.00 M</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Volume:</span>
+                <span class="text-slate-200 font-mono" id="kpi-openai-vol">11.45M tokens</span>
+              </div>
+              <div class="flex justify-between items-center pt-1 border-t border-slate-800/40">
+                <span class="text-slate-500 text-[10px]">Alert Limit:</span>
+                <span id="limit-tag-openai" class="text-indigo-300 font-mono font-medium text-[10px]">$75.00 (D,M)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Speechace Individual KPI Card -->
+          <div id="card-speechace" class="p-4 rounded-xl bg-slate-900 border border-slate-800 shadow-sm relative overflow-hidden group hover:border-slate-700 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <div class="flex items-center gap-1.5 font-semibold text-white">
+                  <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+                  <span>Speechace</span>
+                </div>
+                <span id="alert-chip-speechace" class="hidden px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 text-[10px] font-semibold tracking-wide flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                  <span>Limit Exceeded</span>
+                </span>
+              </div>
+              <div>
+                <span class="text-2xl font-bold tracking-tight text-white font-mono" id="kpi-speech-cost">$24.50</span>
+              </div>
+            </div>
+            <div class="mt-3.5 text-[11px] text-slate-400 border-t border-slate-800/80 pt-2.5 space-y-1.5">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Service:</span>
+                <span class="text-slate-300 font-medium">Pronunciation</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Billing Rate:</span>
+                <span class="text-slate-200 font-mono font-medium">$0.025 / 15s</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Volume:</span>
+                <span class="text-slate-200 font-mono" id="kpi-speech-vol">980 x 15s</span>
+              </div>
+              <div class="flex justify-between items-center pt-1 border-t border-slate-800/40">
+                <span class="text-slate-500 text-[10px]">Alert Limit:</span>
+                <span id="limit-tag-speechace" class="text-purple-300 font-mono font-medium text-[10px]">$50.00 (D,W,M)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Veriff Individual KPI Card -->
+          <div id="card-veriff" class="p-4 rounded-xl bg-slate-900 border border-slate-800 shadow-sm relative overflow-hidden group hover:border-slate-700 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <div class="flex items-center gap-1.5 font-semibold text-white">
+                  <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                  <span>Veriff</span>
+                </div>
+                <span id="alert-chip-veriff" class="hidden px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 text-[10px] font-semibold tracking-wide flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                  <span>Limit Exceeded</span>
+                </span>
+              </div>
+              <div>
+                <span class="text-2xl font-bold tracking-tight text-white font-mono" id="kpi-veriff-cost">$12.00</span>
+              </div>
+            </div>
+            <div class="mt-3.5 text-[11px] text-slate-400 border-t border-slate-800/80 pt-2.5 space-y-1.5">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Service:</span>
+                <span class="text-slate-300 font-medium">Biometric KYC</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Billing Rate:</span>
+                <span class="text-slate-200 font-mono font-medium">$1.50 / check</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Volume:</span>
+                <span class="text-slate-200 font-mono" id="kpi-veriff-vol">8 sessions</span>
+              </div>
+              <div class="flex justify-between items-center pt-1 border-t border-slate-800/40">
+                <span class="text-slate-500 text-[10px]">Alert Limit:</span>
+                <span id="limit-tag-veriff" class="text-cyan-300 font-mono font-medium text-[10px]">$30.00 (D,M)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. ElevenLabs Individual KPI Card -->
+          <div id="card-elevenlabs" class="p-4 rounded-xl bg-slate-900 border border-slate-800 shadow-sm relative overflow-hidden group hover:border-slate-700 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <div class="flex items-center gap-1.5 font-semibold text-white">
+                  <span class="w-2.5 h-2.5 rounded-full bg-pink-400"></span>
+                  <span>ElevenLabs</span>
+                </div>
+                <span id="alert-chip-elevenlabs" class="hidden px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 text-[10px] font-semibold tracking-wide flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                  <span>Limit Exceeded</span>
+                </span>
+              </div>
+              <div>
+                <span class="text-2xl font-bold tracking-tight text-white font-mono" id="kpi-eleven-cost">$5.70</span>
+              </div>
+            </div>
+            <div class="mt-3.5 text-[11px] text-slate-400 border-t border-slate-800/80 pt-2.5 space-y-1.5">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Service:</span>
+                <span class="text-slate-300 font-medium">TTS Audio</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Billing Rate:</span>
+                <span class="text-slate-200 font-mono font-medium">$0.15 / 1k chars</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Volume:</span>
+                <span class="text-slate-200 font-mono" id="kpi-eleven-vol">38k chars</span>
+              </div>
+              <div class="flex justify-between items-center pt-1 border-t border-slate-800/40">
+                <span class="text-slate-500 text-[10px]">Alert Limit:</span>
+                <span id="limit-tag-elevenlabs" class="text-pink-300 font-mono font-medium text-[10px]">$15.00 (D,M)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. SpeechSuper Individual KPI Card -->
+          <div id="card-speechsuper" class="p-4 rounded-xl bg-slate-900 border border-slate-800 shadow-sm relative overflow-hidden group hover:border-slate-700 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <div class="flex items-center gap-1.5 font-semibold text-white">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  <span>SpeechSuper</span>
+                </div>
+                <span id="alert-chip-speechsuper" class="hidden px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 text-[10px] font-semibold tracking-wide flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                  <span>Limit Exceeded</span>
+                </span>
+              </div>
+              <div>
+                <span class="text-2xl font-bold tracking-tight text-white font-mono" id="kpi-speechsuper-cost">$5.00</span>
+              </div>
+            </div>
+            <div class="mt-3.5 text-[11px] text-slate-400 border-t border-slate-800/80 pt-2.5 space-y-1.5">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Service:</span>
+                <span class="text-slate-300 font-medium">Oral Scoring</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Billing Rate:</span>
+                <span class="text-slate-200 font-mono font-medium">$0.015 / test</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Volume:</span>
+                <span class="text-slate-200 font-mono" id="kpi-speechsuper-vol">120 tests</span>
+              </div>
+              <div class="flex justify-between items-center pt-1 border-t border-slate-800/40">
+                <span class="text-slate-500 text-[10px]">Alert Limit:</span>
+                <span id="limit-tag-speechsuper" class="text-amber-300 font-mono font-medium text-[10px]">$15.00 (D,M)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =================================================================================== -->
+    <!-- TAB 2: USER TEST USAGE & COST BREAKDOWN (SORTED DESCENDING BY HIGHEST COST) -->
+    <!-- =================================================================================== -->
+    <div id="content-alerts" class="hidden space-y-4">
+      
+      <!-- Top Action & Filter Bar (AZE Design System) -->
+      <div class="p-3.5 rounded-xl bg-[#0f172a] border border-[#1e293b] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3 flex-1">
+          <!-- Search Box -->
+          <div class="relative flex-1 max-w-md">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </span>
+            <input type="text" id="user-search-input" onkeyup="filterUserList()" placeholder="Filter candidate name, ID, or assessment title..." class="w-full pl-9 pr-3 py-1.5 bg-[#020617] border border-[#1e293b] rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors">
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5 text-xs">
+          <!-- Session Count Badge -->
+          <span id="user-count-badge" class="px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-semibold">
+            7 Candidates Logged
+          </span>
+        </div>
+      </div>
+
+      <!-- User Test Cards List -->
+      <div class="space-y-3" id="user-cards-container">
+        
+        <!-- 1. Tariq Al-Mansoor ($11.85) - Expanded by Default -->
+        <div class="user-card rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-slate-700 transition-all shadow-sm overflow-hidden" data-name="tariq al-mansoor" data-test="general english adaptive b2 adaptive speaking re-take" data-id="237884fc">
+          
+          <!-- Collapsed Summary Row (List View) -->
+          <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors" onclick="toggleAccordion('user-accordion-1')">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-bold text-xs font-mono shrink-0">
+                TM
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-sm font-bold text-white">Tariq Al-Mansoor</h3>
+                  <span class="text-[11px] text-slate-400 font-mono">ID: 237884fc</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">2 Test Sessions</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium">42 Retries (Cron Resolved)</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                  <span>tariq.mansoor@example.com</span>
+                  <span class="text-slate-600">&bull;</span>
+                  <span>Last active: Sep 23, 2026, 02:15 PM</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start sm:items-end justify-between sm:justify-start gap-4">
+              <div class="flex flex-col sm:text-right">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Total User Cost</span>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xl sm:text-2xl font-bold font-mono text-white">$11.85</span>
+                  <span class="text-xs text-slate-400 font-mono">USD</span>
+                </div>
+                <div class="mt-0.5 flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">
+                  <span class="text-slate-400">Highest:</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                  <strong class="text-white font-semibold">OpenAI</strong>
+                  <span class="font-mono text-cyan-300">($9.20 &bull; 78%)</span>
+                </div>
+              </div>
+
+              <!-- Accordion Toggle Button -->
+              <button onclick="event.stopPropagation(); toggleAccordion('user-accordion-1')" id="btn-user-accordion-1" class="px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-[#334155] text-xs font-medium flex items-center gap-1.5 transition-all shrink-0">
+                <span id="label-user-accordion-1">Hide Tests</span>
+                <svg id="icon-user-accordion-1" class="w-3.5 h-3.5 transform rotate-180 transition-transform text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Expanded Accordion Content -->
+          <div id="user-accordion-1" class="p-4 border-t border-[#1e293b] bg-[#090e1a] space-y-3.5">
+            
+            <div class="flex items-center justify-between pb-1 border-b border-[#1e293b]/60">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <span>Activity Breakdown</span>
+              </h4>
+              <span class="text-[11px] font-mono text-slate-400">2 Tests Completed</span>
+            </div>
+
+            <!-- Test Session 1 -->
+            <div class="rounded-xl bg-[#0f172a] border border-[#1e293b] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs">
+                    1
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h5 class="text-xs font-bold text-white">General English Adaptive B2 (Speaking &amp; Writing)</h5>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">#TS-8942</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Completed on Sep 23, 2026 &bull; 10:45 AM &bull; Duration: 42 mins</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Test Cost</span>
+                    <span class="text-sm font-bold font-mono text-cyan-300">$9.40</span>
+                  </div>
+                  <!-- Redirect to Student Result Button -->
+                  <button onclick="openStudentResultModal('tariq-1')" title="Redirect to student result scorecard" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all">
+                    <span>View Student Result</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </button>
+                </div>
+              </div>
+
+            <!-- Test Session 2 -->
+            <div class="rounded-xl bg-[#0f172a] border border-[#1e293b] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs">
+                    2
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h5 class="text-xs font-bold text-white">Adaptive Speaking Re-Take V1</h5>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">#TS-8950</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Completed on Sep 23, 2026 &bull; 02:15 PM &bull; Duration: 15 mins</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Test Cost</span>
+                    <span class="text-sm font-bold font-mono text-cyan-300">$2.45</span>
+                  </div>
+                  <!-- Redirect to Student Result Button -->
+                  <button onclick="openStudentResultModal('tariq-2')" title="Redirect to student result scorecard" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all">
+                    <span>View Student Result</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </button>
+                </div>
+              </div>
+
+          </div>
+
+        </div>
+
+        <!-- 2. Aagam Jain ($10.45) - Collapsed by Default -->
+        <div class="user-card rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-slate-700 transition-all shadow-sm overflow-hidden" data-name="aagam jain" data-test="writing & coherence assessment v2" data-id="89db3854">
+          
+          <!-- Collapsed Summary Row (List View) -->
+          <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors" onclick="toggleAccordion('user-accordion-2')">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-bold text-xs font-mono shrink-0">
+                AJ
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-sm font-bold text-white">Aagam Jain</h3>
+                  <span class="text-[11px] text-slate-400 font-mono">ID: 89db3854</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">1 Test Session</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium">38 Retries (Cron Resolved)</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                  <span>aagam.jain@example.com</span>
+                  <span class="text-slate-600">&bull;</span>
+                  <span>Last active: Sep 23, 2026, 11:20 AM</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start sm:items-end justify-between sm:justify-start gap-4">
+              <div class="flex flex-col sm:text-right">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Total User Cost</span>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xl sm:text-2xl font-bold font-mono text-white">$10.45</span>
+                  <span class="text-xs text-slate-400 font-mono">USD</span>
+                </div>
+                <div class="mt-0.5 flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">
+                  <span class="text-slate-400">Highest:</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                  <strong class="text-white font-semibold">OpenAI</strong>
+                  <span class="font-mono text-cyan-300">($10.15 &bull; 97%)</span>
+                </div>
+              </div>
+
+              <!-- Accordion Toggle Button -->
+              <button onclick="event.stopPropagation(); toggleAccordion('user-accordion-2')" id="btn-user-accordion-2" class="px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-[#334155] text-xs font-medium flex items-center gap-1.5 transition-all shrink-0">
+                <span id="label-user-accordion-2">View Breakdown</span>
+                <svg id="icon-user-accordion-2" class="w-3.5 h-3.5 transform transition-transform text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Expanded Accordion Content -->
+          <div id="user-accordion-2" class="hidden p-4 border-t border-[#1e293b] bg-[#090e1a] space-y-3.5">
+            
+            <div class="flex items-center justify-between pb-1 border-b border-[#1e293b]/60">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <span>Activity Breakdown</span>
+              </h4>
+              <span class="text-[11px] font-mono text-slate-400">1 Test Completed</span>
+            </div>
+
+            <!-- Test Session 1 -->
+            <div class="rounded-xl bg-[#0f172a] border border-[#1e293b] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs">
+                    1
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h5 class="text-xs font-bold text-white">Writing &amp; Coherence Assessment V2</h5>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">#TS-7719</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Completed on Sep 23, 2026 &bull; 11:20 AM &bull; Duration: 35 mins</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Test Cost</span>
+                    <span class="text-sm font-bold font-mono text-cyan-300">$10.45</span>
+                  </div>
+                  <button onclick="openStudentResultModal('aagam-1')" title="Redirect to student result scorecard" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all">
+                    <span>View Student Result</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </button>
+                </div>
+              </div>
+
+          </div>
+
+        </div>
+
+        <!-- 3. Sarah Jenkins ($2.18) - Collapsed by Default -->
+        <div class="user-card rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-slate-700 transition-all shadow-sm overflow-hidden" data-name="sarah jenkins" data-test="accredited higher-ed admissions exam" data-id="44a1029c">
+          
+          <!-- Collapsed Summary Row (List View) -->
+          <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors" onclick="toggleAccordion('user-accordion-3')">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-bold text-xs font-mono shrink-0">
+                SJ
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-sm font-bold text-white">Sarah Jenkins</h3>
+                  <span class="text-[11px] text-slate-400 font-mono">ID: 44a1029c</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">1 Test Session</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Standard 1-Pass</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                  <span>sarah.jenkins@example.com</span>
+                  <span class="text-slate-600">&bull;</span>
+                  <span>Last active: Sep 23, 2026, 09:15 AM</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start sm:items-end justify-between sm:justify-start gap-4">
+              <div class="flex flex-col sm:text-right">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Total User Cost</span>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xl sm:text-2xl font-bold font-mono text-white">$2.18</span>
+                  <span class="text-xs text-slate-400 font-mono">USD</span>
+                </div>
+                <div class="mt-0.5 flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">
+                  <span class="text-slate-400">Highest:</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                  <strong class="text-white font-semibold">Veriff</strong>
+                  <span class="font-mono text-cyan-300">($1.50 &bull; 69%)</span>
+                </div>
+              </div>
+
+              <!-- Accordion Toggle Button -->
+              <button onclick="event.stopPropagation(); toggleAccordion('user-accordion-3')" id="btn-user-accordion-3" class="px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-[#334155] text-xs font-medium flex items-center gap-1.5 transition-all shrink-0">
+                <span id="label-user-accordion-3">View Breakdown</span>
+                <svg id="icon-user-accordion-3" class="w-3.5 h-3.5 transform transition-transform text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Expanded Accordion Content -->
+          <div id="user-accordion-3" class="hidden p-4 border-t border-[#1e293b] bg-[#090e1a] space-y-3.5">
+            
+            <div class="flex items-center justify-between pb-1 border-b border-[#1e293b]/60">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <span>Activity Breakdown</span>
+              </h4>
+              <span class="text-[11px] font-mono text-slate-400">1 Test Completed</span>
+            </div>
+
+            <!-- Test Session 1 -->
+            <div class="rounded-xl bg-[#0f172a] border border-[#1e293b] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs">
+                    1
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h5 class="text-xs font-bold text-white">Accredited Higher-Ed Admissions Exam (4 Skills + KYC)</h5>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">#TS-6602</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Completed on Sep 23, 2026 &bull; 09:15 AM &bull; Duration: 55 mins</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Test Cost</span>
+                    <span class="text-sm font-bold font-mono text-cyan-300">$2.18</span>
+                  </div>
+                  <button onclick="openStudentResultModal('sarah-1')" title="Redirect to student result scorecard" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all">
+                    <span>View Student Result</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </button>
+                </div>
+              </div>
+
+          </div>
+
+        </div>
+
+        <!-- 4. Mateo Hernandez ($0.48) - Collapsed by Default -->
+        <div class="user-card rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-slate-700 transition-all shadow-sm overflow-hidden" data-name="mateo hernandez" data-test="conversational fluency benchmark b1" data-id="71bc9901">
+          
+          <!-- Collapsed Summary Row (List View) -->
+          <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors" onclick="toggleAccordion('user-accordion-4')">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-bold text-xs font-mono shrink-0">
+                MH
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-sm font-bold text-white">Mateo Hernandez</h3>
+                  <span class="text-[11px] text-slate-400 font-mono">ID: 71bc9901</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">1 Test Session</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Standard 1-Pass</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                  <span>mateo.h@example.com</span>
+                  <span class="text-slate-600">&bull;</span>
+                  <span>Last active: Sep 23, 2026, 01:40 PM</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start sm:items-end justify-between sm:justify-start gap-4">
+              <div class="flex flex-col sm:text-right">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Total User Cost</span>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xl sm:text-2xl font-bold font-mono text-white">$0.48</span>
+                  <span class="text-xs text-slate-400 font-mono">USD</span>
+                </div>
+                <div class="mt-0.5 flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">
+                  <span class="text-slate-400">Highest:</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                  <strong class="text-white font-semibold">Speechace</strong>
+                  <span class="font-mono text-cyan-300">($0.30 &bull; 63%)</span>
+                </div>
+              </div>
+
+              <!-- Accordion Toggle Button -->
+              <button onclick="event.stopPropagation(); toggleAccordion('user-accordion-4')" id="btn-user-accordion-4" class="px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-[#334155] text-xs font-medium flex items-center gap-1.5 transition-all shrink-0">
+                <span id="label-user-accordion-4">View Breakdown</span>
+                <svg id="icon-user-accordion-4" class="w-3.5 h-3.5 transform transition-transform text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Expanded Accordion Content -->
+          <div id="user-accordion-4" class="hidden p-4 border-t border-[#1e293b] bg-[#090e1a] space-y-3.5">
+            
+            <div class="flex items-center justify-between pb-1 border-b border-[#1e293b]/60">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <span>Activity Breakdown</span>
+              </h4>
+              <span class="text-[11px] font-mono text-slate-400">1 Test Completed</span>
+            </div>
+
+            <!-- Test Session 1 -->
+            <div class="rounded-xl bg-[#0f172a] border border-[#1e293b] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs">
+                    1
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h5 class="text-xs font-bold text-white">Conversational Fluency Benchmark B1</h5>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">#TS-5541</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Completed on Sep 23, 2026 &bull; 01:40 PM &bull; Duration: 20 mins</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Test Cost</span>
+                    <span class="text-sm font-bold font-mono text-cyan-300">$0.48</span>
+                  </div>
+                  <button onclick="openStudentResultModal('mateo-1')" title="Redirect to student result scorecard" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all">
+                    <span>View Student Result</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </button>
+                </div>
+              </div>
+
+          </div>
+
+        </div>
+
+        <!-- 5. Amina Diallo ($0.31) - Collapsed by Default -->
+        <div class="user-card rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-slate-700 transition-all shadow-sm overflow-hidden" data-name="amina diallo" data-test="business english written communication" data-id="55ef1209">
+          
+          <!-- Collapsed Summary Row (List View) -->
+          <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors" onclick="toggleAccordion('user-accordion-5')">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-bold text-xs font-mono shrink-0">
+                AD
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-sm font-bold text-white">Amina Diallo</h3>
+                  <span class="text-[11px] text-slate-400 font-mono">ID: 55ef1209</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">1 Test Session</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Standard 1-Pass</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                  <span>amina.diallo@example.com</span>
+                  <span class="text-slate-600">&bull;</span>
+                  <span>Last active: Sep 23, 2026, 03:10 PM</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start sm:items-end justify-between sm:justify-start gap-4">
+              <div class="flex flex-col sm:text-right">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Total User Cost</span>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xl sm:text-2xl font-bold font-mono text-white">$0.31</span>
+                  <span class="text-xs text-slate-400 font-mono">USD</span>
+                </div>
+                <div class="mt-0.5 flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">
+                  <span class="text-slate-400">Highest:</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                  <strong class="text-white font-semibold">OpenAI</strong>
+                  <span class="font-mono text-cyan-300">($0.24 &bull; 77%)</span>
+                </div>
+              </div>
+
+              <!-- Accordion Toggle Button -->
+              <button onclick="event.stopPropagation(); toggleAccordion('user-accordion-5')" id="btn-user-accordion-5" class="px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-[#334155] text-xs font-medium flex items-center gap-1.5 transition-all shrink-0">
+                <span id="label-user-accordion-5">View Breakdown</span>
+                <svg id="icon-user-accordion-5" class="w-3.5 h-3.5 transform transition-transform text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Expanded Accordion Content -->
+          <div id="user-accordion-5" class="hidden p-4 border-t border-[#1e293b] bg-[#090e1a] space-y-3.5">
+            
+            <div class="flex items-center justify-between pb-1 border-b border-[#1e293b]/60">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <span>Activity Breakdown</span>
+              </h4>
+              <span class="text-[11px] font-mono text-slate-400">1 Test Completed</span>
+            </div>
+
+            <!-- Test Session 1 -->
+            <div class="rounded-xl bg-[#0f172a] border border-[#1e293b] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs">
+                    1
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h5 class="text-xs font-bold text-white">Business English Written Communication</h5>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">#TS-4920</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Completed on Sep 23, 2026 &bull; 03:10 PM &bull; Duration: 28 mins</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Test Cost</span>
+                    <span class="text-sm font-bold font-mono text-cyan-300">$0.31</span>
+                  </div>
+                  <button onclick="openStudentResultModal('amina-1')" title="Redirect to student result scorecard" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all">
+                    <span>View Student Result</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </button>
+                </div>
+              </div>
+
+          </div>
+
+        </div>
+
+        <!-- 6. Kenji Sato ($0.19) - Collapsed by Default -->
+        <div class="user-card rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-slate-700 transition-all shadow-sm overflow-hidden" data-name="kenji sato" data-test="spoken english phoneme & stress drill" data-id="32da8811">
+          
+          <!-- Collapsed Summary Row (List View) -->
+          <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors" onclick="toggleAccordion('user-accordion-6')">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-bold text-xs font-mono shrink-0">
+                KS
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-sm font-bold text-white">Kenji Sato</h3>
+                  <span class="text-[11px] text-slate-400 font-mono">ID: 32da8811</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">1 Test Session</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Standard 1-Pass</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                  <span>kenji.sato@example.com</span>
+                  <span class="text-slate-600">&bull;</span>
+                  <span>Last active: Sep 23, 2026, 12:05 PM</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start sm:items-end justify-between sm:justify-start gap-4">
+              <div class="flex flex-col sm:text-right">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Total User Cost</span>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xl sm:text-2xl font-bold font-mono text-white">$0.19</span>
+                  <span class="text-xs text-slate-400 font-mono">USD</span>
+                </div>
+                <div class="mt-0.5 flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">
+                  <span class="text-slate-400">Highest:</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                  <strong class="text-white font-semibold">Speechace</strong>
+                  <span class="font-mono text-cyan-300">($0.12 &bull; 63%)</span>
+                </div>
+              </div>
+
+              <!-- Accordion Toggle Button -->
+              <button onclick="event.stopPropagation(); toggleAccordion('user-accordion-6')" id="btn-user-accordion-6" class="px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-[#334155] text-xs font-medium flex items-center gap-1.5 transition-all shrink-0">
+                <span id="label-user-accordion-6">View Breakdown</span>
+                <svg id="icon-user-accordion-6" class="w-3.5 h-3.5 transform transition-transform text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Expanded Accordion Content -->
+          <div id="user-accordion-6" class="hidden p-4 border-t border-[#1e293b] bg-[#090e1a] space-y-3.5">
+            
+            <div class="flex items-center justify-between pb-1 border-b border-[#1e293b]/60">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <span>Activity Breakdown</span>
+              </h4>
+              <span class="text-[11px] font-mono text-slate-400">1 Test Completed</span>
+            </div>
+
+            <!-- Test Session 1 -->
+            <div class="rounded-xl bg-[#0f172a] border border-[#1e293b] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs">
+                    1
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h5 class="text-xs font-bold text-white">Spoken English Phoneme &amp; Stress Drill</h5>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">#TS-3814</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Completed on Sep 23, 2026 &bull; 12:05 PM &bull; Duration: 12 mins</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Test Cost</span>
+                    <span class="text-sm font-bold font-mono text-cyan-300">$0.19</span>
+                  </div>
+                  <button onclick="openStudentResultModal('kenji-1')" title="Redirect to student result scorecard" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all">
+                    <span>View Student Result</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </button>
+                </div>
+              </div>
+
+          </div>
+
+        </div>
+
+        <!-- 7. Priya Sharma ($0.14) - Collapsed by Default -->
+        <div class="user-card rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-slate-700 transition-all shadow-sm overflow-hidden" data-name="priya sharma" data-test="writing & reading quick diagnostic" data-id="18ac7723">
+          
+          <!-- Collapsed Summary Row (List View) -->
+          <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors" onclick="toggleAccordion('user-accordion-7')">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-bold text-xs font-mono shrink-0">
+                PS
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-sm font-bold text-white">Priya Sharma</h3>
+                  <span class="text-[11px] text-slate-400 font-mono">ID: 18ac7723</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">1 Test Session</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Standard 1-Pass</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                  <span>priya.sharma@example.com</span>
+                  <span class="text-slate-600">&bull;</span>
+                  <span>Last active: Sep 23, 2026, 08:30 AM</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start sm:items-end justify-between sm:justify-start gap-4">
+              <div class="flex flex-col sm:text-right">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Total User Cost</span>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xl sm:text-2xl font-bold font-mono text-white">$0.14</span>
+                  <span class="text-xs text-slate-400 font-mono">USD</span>
+                </div>
+                <div class="mt-0.5 flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-medium">
+                  <span class="text-slate-400">Highest:</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                  <strong class="text-white font-semibold">OpenAI</strong>
+                  <span class="font-mono text-cyan-300">($0.10 &bull; 71%)</span>
+                </div>
+              </div>
+
+              <!-- Accordion Toggle Button -->
+              <button onclick="event.stopPropagation(); toggleAccordion('user-accordion-7')" id="btn-user-accordion-7" class="px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-[#334155] text-xs font-medium flex items-center gap-1.5 transition-all shrink-0">
+                <span id="label-user-accordion-7">View Breakdown</span>
+                <svg id="icon-user-accordion-7" class="w-3.5 h-3.5 transform transition-transform text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Expanded Accordion Content -->
+          <div id="user-accordion-7" class="hidden p-4 border-t border-[#1e293b] bg-[#090e1a] space-y-3.5">
+            
+            <div class="flex items-center justify-between pb-1 border-b border-[#1e293b]/60">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <span>Activity Breakdown</span>
+              </h4>
+              <span class="text-[11px] font-mono text-slate-400">1 Test Completed</span>
+            </div>
+
+            <!-- Test Session 1 -->
+            <div class="rounded-xl bg-[#0f172a] border border-[#1e293b] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs">
+                    1
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h5 class="text-xs font-bold text-white">Writing &amp; Reading Quick Diagnostic</h5>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">#TS-2908</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Completed on Sep 23, 2026 &bull; 08:30 AM &bull; Duration: 18 mins</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Test Cost</span>
+                    <span class="text-sm font-bold font-mono text-cyan-300">$0.14</span>
+                  </div>
+                  <button onclick="openStudentResultModal('priya-1')" title="Redirect to student result scorecard" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all">
+                    <span>View Student Result</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </button>
+                </div>
+              </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =================================================================================== -->
+  <!-- MODAL: STUDENT ASSESSMENT RESULT & SCORECARD (AZE DESIGN SYSTEM REDIRECT VIEW) -->
+  <!-- =================================================================================== -->
+  <div id="student-result-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#0f172a] border border-[#1e293b] rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-[#1e293b] flex items-center justify-between bg-[#020617]/70">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 id="res-modal-candidate" class="text-base font-bold text-white">Tariq Al-Mansoor</h2>
+              <span id="res-modal-cefr" class="text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-semibold">CEFR B2 &bull; 78/100</span>
+            </div>
+            <p id="res-modal-test" class="text-xs text-slate-400 mt-0.5">General English Adaptive B2 (Speaking &amp; Writing) &bull; Session #TS-8942</p>
+          </div>
+        </div>
+        <button onclick="closeStudentResultModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-5 space-y-4 overflow-y-auto custom-scrollbar flex-1">
+        
+        <!-- Redirect Context Banner -->
+        <div class="p-3 rounded-lg bg-cyan-950/30 border border-cyan-500/20 text-xs text-cyan-300 flex items-start gap-2.5">
+          <svg class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          <div class="flex-1">
+            <span class="block">Redirected to evaluated student scorecard from: <code id="res-modal-url" class="font-mono text-cyan-200">https://dev.azetest.ai/admin/candidates/237884fc/reports/TS-8942</code></span>
+          </div>
+        </div>
+
+        <!-- Score Overview Card -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3 rounded-xl bg-[#020617] border border-[#1e293b] text-center">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold block">Overall Score</span>
+            <span id="res-modal-score" class="text-2xl font-bold font-mono text-white mt-0.5 block">78/100</span>
+            <span class="text-[10px] text-emerald-400 font-medium">Proficient Pass</span>
+          </div>
+          <div class="p-3 rounded-xl bg-[#020617] border border-[#1e293b] text-center">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold block">CEFR Band</span>
+            <span id="res-modal-band" class="text-2xl font-bold font-mono text-cyan-400 mt-0.5 block">B2</span>
+            <span class="text-[10px] text-slate-400">Upper Intermediate</span>
+          </div>
+          <div class="p-3 rounded-xl bg-[#020617] border border-[#1e293b] text-center">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold block">3rd-Party AI Cost</span>
+            <span id="res-modal-cost" class="text-2xl font-bold font-mono text-cyan-300 mt-0.5 block">$9.40</span>
+            <span class="text-[10px] text-slate-400">Test session total</span>
+          </div>
+          <div class="p-3 rounded-xl bg-[#020617] border border-[#1e293b] text-center">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold block">Status</span>
+            <span class="text-xs font-bold text-emerald-400 mt-2 block">Official Verified</span>
+            <span class="text-[10px] text-slate-500">Auto-Audited</span>
+          </div>
+        </div>
+
+        <!-- Module Score & Vendor Cost Attribution Breakdown -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-semibold text-white uppercase tracking-wider">Module Score &amp; Third-Party Cost Attribution</h4>
+          <div class="rounded-xl border border-[#1e293b] overflow-hidden bg-[#020617]">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#172033] text-slate-400 uppercase text-[10px] font-semibold">
+                <tr>
+                  <th class="p-2.5">Module</th>
+                  <th class="p-2.5">Student Score</th>
+                  <th class="p-2.5">CEFR Level</th>
+                  <th class="p-2.5">Integrated Provider</th>
+                  <th class="p-2.5 text-right">Incurred Cost</th>
+                </tr>
+              </thead>
+              <tbody id="res-modal-table-body" class="divide-y divide-[#1e293b] text-slate-200">
+                <!-- Populated via openStudentResultModal -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-[#1e293b] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#020617]/70 text-xs">
+        <button onclick="copyResultLink()" class="px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-[#334155] font-medium flex items-center justify-center gap-1.5 transition-colors">
+          <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          <span id="copy-btn-text">Copy Candidate Result Link</span>
+        </button>
+        <div class="flex items-center justify-end gap-2">
+          <button onclick="closeStudentResultModal()" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-colors">
+            Close
+          </button>
+          <button onclick="alert('Opening official candidate PDF certificate & complete breakdown in new tab...')" class="px-4 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-medium transition-colors shadow-sm flex items-center gap-1.5">
+            <span>Open Full Student Report</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =================================================================================== -->
+  <!-- MODAL: SET ALERT LIMITS FOR EVERY THIRD-PARTY SERVICE -->
+  <!-- =================================================================================== -->
+  <div id="alert-limits-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/70">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-white">Third-Party Cost Alert Thresholds</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Set notification limits &amp; interval frequencies for every integrated provider</p>
+          </div>
+        </div>
+        <button onclick="closeAlertModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-5 space-y-3.5 overflow-y-auto custom-scrollbar flex-1">
+        
+        <!-- Explanatory Banner -->
+        <div class="p-3 rounded-lg bg-indigo-950/30 border border-indigo-500/20 text-xs text-indigo-300 flex items-start gap-2.5">
+          <svg class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Configure dollar spending caps for each third party. Check <strong>Day</strong>, <strong>Week</strong>, and/or <strong>Month</strong> to receive real-time notifications whenever aggregate spend exceeds your target within that interval.</span>
+        </div>
+
+        <!-- 1. OpenAI Limit Row -->
+        <div id="alert-row-openai" class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5 transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
+              <span class="text-xs font-bold text-white">OpenAI</span>
+              <span class="text-[11px] text-slate-400">&bull; Writing Eval ($2.50 / $10.00 M tokens)</span>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 font-medium border border-indigo-500/20">Active Monitor</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-900">
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Alert Spending Limit</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-500 text-xs font-mono">$</span>
+                <input type="number" id="limit-openai" value="75.00" step="5.00" min="1.00" class="w-full pl-6 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-indigo-500">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Notify If Exceeded In:</label>
+              <div class="flex items-center gap-4 pt-1.5">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-openai-day" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Day</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-openai-week" class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Week</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-openai-month" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Month</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Speechace Limit Row -->
+        <div id="alert-row-speechace" class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5 transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+              <span class="text-xs font-bold text-white">Speechace</span>
+              <span class="text-[11px] text-slate-400">&bull; Speaking Audio ($0.025 / 15s unit)</span>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 font-medium border border-purple-500/20">Active Monitor</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-900">
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Alert Spending Limit</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-500 text-xs font-mono">$</span>
+                <input type="number" id="limit-speechace" value="50.00" step="5.00" min="1.00" class="w-full pl-6 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-indigo-500">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Notify If Exceeded In:</label>
+              <div class="flex items-center gap-4 pt-1.5">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-speechace-day" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Day</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-speechace-week" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Week</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-speechace-month" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Month</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Veriff Limit Row -->
+        <div id="alert-row-veriff" class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5 transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+              <span class="text-xs font-bold text-white">Veriff</span>
+              <span class="text-[11px] text-slate-400">&bull; Identity KYC ($1.50 / check)</span>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 font-medium border border-cyan-500/20">Active Monitor</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-900">
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Alert Spending Limit</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-500 text-xs font-mono">$</span>
+                <input type="number" id="limit-veriff" value="30.00" step="5.00" min="1.00" class="w-full pl-6 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-indigo-500">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Notify If Exceeded In:</label>
+              <div class="flex items-center gap-4 pt-1.5">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-veriff-day" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Day</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-veriff-week" class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Week</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-veriff-month" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Month</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. ElevenLabs Limit Row -->
+        <div id="alert-row-elevenlabs" class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5 transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-pink-400"></span>
+              <span class="text-xs font-bold text-white">ElevenLabs</span>
+              <span class="text-[11px] text-slate-400">&bull; TTS Voice ($0.15 / 1k chars)</span>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-pink-500/10 text-pink-300 font-medium border border-pink-500/20">Active Monitor</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-900">
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Alert Spending Limit</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-500 text-xs font-mono">$</span>
+                <input type="number" id="limit-elevenlabs" value="15.00" step="2.00" min="1.00" class="w-full pl-6 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-indigo-500">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Notify If Exceeded In:</label>
+              <div class="flex items-center gap-4 pt-1.5">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-elevenlabs-day" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Day</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-elevenlabs-week" class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Week</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-elevenlabs-month" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Month</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. SpeechSuper Limit Row -->
+        <div id="alert-row-speechsuper" class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5 transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+              <span class="text-xs font-bold text-white">SpeechSuper</span>
+              <span class="text-[11px] text-slate-400">&bull; Oral Fluency ($0.015 / test)</span>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 font-medium border border-amber-500/20">Active Monitor</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-900">
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Alert Spending Limit</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-500 text-xs font-mono">$</span>
+                <input type="number" id="limit-speechsuper" value="15.00" step="2.00" min="1.00" class="w-full pl-6 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-indigo-500">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 uppercase font-semibold mb-1">Notify If Exceeded In:</label>
+              <div class="flex items-center gap-4 pt-1.5">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-speechsuper-day" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Day</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-speechsuper-week" class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Week</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-slate-300 hover:text-white">
+                  <input type="checkbox" id="chk-speechsuper-month" checked class="rounded border-slate-700 text-indigo-600 bg-slate-900 focus:ring-0">
+                  <span>Month</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification Channel Destination -->
+        <div class="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 space-y-1.5 text-xs">
+          <span class="text-[10px] text-slate-400 uppercase font-semibold block">Alert Notification Email</span>
+          <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-2 rounded-lg border border-slate-800">
+            <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <input type="text" id="alert-notify-email" value="admin@azetest.ai" class="bg-transparent border-0 text-white font-mono text-xs p-0 focus:outline-none w-full" placeholder="Enter recipient email for cost threshold alerts">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-800 bg-slate-950/90 flex items-center justify-between">
+        <span class="text-[11px] text-slate-500">Thresholds apply to selected Day, Week, and Month spans</span>
+        <div class="flex items-center gap-2">
+          <button onclick="closeAlertModal()" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs font-medium transition-colors">
+            Cancel
+          </button>
+          <button onclick="saveAlertLimits()" class="px-4 py-1.5 rounded-lg bg-cyan-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-all flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>Save Alert Limits</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="save-toast" class="fixed bottom-6 right-6 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-2xl border border-emerald-500 flex items-center gap-2 text-xs font-medium transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <span>Alert limits updated successfully for all 5 providers!</span>
+  </div>
+
+  <!-- Interactive Logic -->
+  <script>
+    // Incurred costs per timeframe
+    const providerCosts = {
+      day: { openai: 79.60, speechace: 24.50, veriff: 12.00, elevenlabs: 5.70, speechsuper: 5.00 },
+      week: { openai: 298.50, speechace: 98.30, veriff: 45.00, elevenlabs: 22.30, speechsuper: 22.10 },
+      month: { openai: 1120.00, speechace: 360.40, veriff: 195.00, elevenlabs: 98.50, speechsuper: 90.00 },
+      year: { openai: 11840.00, speechace: 3650.00, veriff: 1980.00, elevenlabs: 840.00, speechsuper: 950.00 }
+    };
+
+    let currentTimeframe = 'day';
+
+    // Alert limit configurations for every provider
+    const alertConfigs = {
+      openai: { limit: 75.00, day: true, week: false, month: true },
+      speechace: { limit: 50.00, day: true, week: true, month: true },
+      veriff: { limit: 30.00, day: true, week: false, month: true },
+      elevenlabs: { limit: 15.00, day: true, week: false, month: true },
+      speechsuper: { limit: 15.00, day: true, week: false, month: true }
+    };
+
+    function updateAlertBadges() {
+      for (const [key, cfg] of Object.entries(alertConfigs)) {
+        const badge = document.getElementById(`limit-tag-${key}`);
+        if (badge) {
+          const periods = [];
+          if (cfg.day) periods.push("D");
+          if (cfg.week) periods.push("W");
+          if (cfg.month) periods.push("M");
+          const pStr = periods.length > 0 ? `(${periods.join(",")})` : "(Muted)";
+          badge.innerText = `$${Number(cfg.limit).toFixed(2)} ${pStr}`;
+        }
+      }
+    }
+
+    function evaluateAlertChips() {
+      const keys = ['openai', 'speechace', 'veriff', 'elevenlabs', 'speechsuper'];
+      const costs = providerCosts[currentTimeframe] || providerCosts['day'];
+
+      keys.forEach(k => {
+        const cfg = alertConfigs[k];
+        const cost = costs[k] || 0;
+        const chip = document.getElementById(`alert-chip-${k}`);
+        const card = document.getElementById(`card-${k}`);
+        if (!chip || !cfg) return;
+
+        let isMonitored = false;
+        let threshold = cfg.limit;
+
+        if (currentTimeframe === 'day' && cfg.day) {
+          isMonitored = true;
+          threshold = cfg.limit;
+        } else if (currentTimeframe === 'week' && cfg.week) {
+          isMonitored = true;
+          threshold = cfg.limit * 7;
+        } else if (currentTimeframe === 'month' && cfg.month) {
+          isMonitored = true;
+          threshold = cfg.limit * 30;
+        }
+
+        if (isMonitored && cost > threshold) {
+          chip.classList.remove('hidden');
+          if (card) {
+            card.classList.add('border-rose-500/40');
+            card.classList.remove('border-slate-800');
+          }
+        } else {
+          chip.classList.add('hidden');
+          if (card) {
+            card.classList.remove('border-rose-500/40');
+            card.classList.add('border-slate-800');
+          }
+        }
+      });
+    }
+
+    function openAlertModal(serviceKey) {
+      const modal = document.getElementById('alert-limits-modal');
+      modal.classList.remove('hidden');
+
+      // Populate input values and checkbox states from current config
+      for (const [key, cfg] of Object.entries(alertConfigs)) {
+        const inp = document.getElementById(`limit-${key}`);
+        const chkDay = document.getElementById(`chk-${key}-day`);
+        const chkWeek = document.getElementById(`chk-${key}-week`);
+        const chkMonth = document.getElementById(`chk-${key}-month`);
+        if (inp) inp.value = Number(cfg.limit).toFixed(2);
+        if (chkDay) chkDay.checked = cfg.day;
+        if (chkWeek) chkWeek.checked = cfg.week;
+        if (chkMonth) chkMonth.checked = cfg.month;
+      }
+
+      if (serviceKey) {
+        const targetRow = document.getElementById(`alert-row-${serviceKey}`);
+        if (targetRow) {
+          targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          targetRow.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-950/40');
+          setTimeout(() => {
+            targetRow.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-950/40');
+          }, 1500);
+        }
+      }
+    }
+
+    function closeAlertModal() {
+      document.getElementById('alert-limits-modal').classList.add('hidden');
+    }
+
+    // Close modal on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAlertModal();
+    });
+
+    function saveAlertLimits() {
+      const keys = ['openai', 'speechace', 'veriff', 'elevenlabs', 'speechsuper'];
+      keys.forEach(k => {
+        const inp = document.getElementById(`limit-${k}`);
+        const chkDay = document.getElementById(`chk-${k}-day`);
+        const chkWeek = document.getElementById(`chk-${k}-week`);
+        const chkMonth = document.getElementById(`chk-${k}-month`);
+        if (inp) {
+          alertConfigs[k] = {
+            limit: parseFloat(inp.value) || alertConfigs[k].limit,
+            day: chkDay ? chkDay.checked : false,
+            week: chkWeek ? chkWeek.checked : false,
+            month: chkMonth ? chkMonth.checked : false
+          };
+        }
+      });
+
+      updateAlertBadges();
+      evaluateAlertChips();
+    renderCalendarGrid();
+      closeAlertModal();
+
+      // Show toast
+      const toast = document.getElementById('save-toast');
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+
+    // ==========================================
+    // CALENDAR DATE PICKER LOGIC
+    // ==========================================
+    let currentCalYear = 2026;
+    let currentCalMonth = 8; // September (0-indexed)
+    let selectedYear = 2026;
+    let selectedMonth = 8;
+    let selectedDay = 23;
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    function toggleCalendarDropdown(e) {
+      if (e) e.stopPropagation();
+      const dd = document.getElementById('calendarDropdown');
+      const chev = document.getElementById('calChevron');
+      if (!dd) return;
+      const isHidden = dd.classList.contains('hidden');
+      if (isHidden) {
+        renderCalendarGrid();
+        dd.classList.remove('hidden');
+        if (chev) chev.classList.add('rotate-180');
+      } else {
+        closeCalendarDropdown();
+      }
+    }
+
+    function closeCalendarDropdown() {
+      const dd = document.getElementById('calendarDropdown');
+      const chev = document.getElementById('calChevron');
+      if (dd) dd.classList.add('hidden');
+      if (chev) chev.classList.remove('rotate-180');
+    }
+
+    document.addEventListener('click', (e) => {
+      const wrapper = document.getElementById('datePickerWrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        closeCalendarDropdown();
+      }
+    });
+
+    function changeCalMonth(dir) {
+      currentCalMonth += dir;
+      if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; }
+      else if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; }
+      renderCalendarGrid();
+    }
+
+    function renderCalendarGrid() {
+      const title = document.getElementById('calMonthYearText');
+      if (title) title.innerText = monthNames[currentCalMonth] + " " + currentCalYear;
+      
+      const grid = document.getElementById('calendarDaysGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const firstDay = new Date(currentCalYear, currentCalMonth, 1).getDay();
+      const daysInMonth = new Date(currentCalYear, currentCalMonth + 1, 0).getDate();
+
+      // Empty lead days
+      for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = "py-1.5 text-slate-600 text-center";
+        emptyCell.innerHTML = '&nbsp;';
+        grid.appendChild(emptyCell);
+      }
+
+      // Day buttons
+      for (let d = 1; d <= daysInMonth; d++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.innerText = d;
+        const isSelected = (currentCalYear === selectedYear && currentCalMonth === selectedMonth && d === selectedDay);
+        const isToday = (currentCalYear === 2026 && currentCalMonth === 8 && d === 23);
+
+        if (isSelected) {
+          btn.className = "py-1.5 rounded-lg bg-cyan-600 text-white font-bold hover:bg-cyan-500 transition-colors";
+        } else if (isToday) {
+          btn.className = "py-1.5 rounded-lg bg-slate-800 text-cyan-400 font-semibold border border-cyan-500/40 hover:bg-slate-700 transition-colors";
+        } else {
+          btn.className = "py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors";
+        }
+
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          selectDate(currentCalYear, currentCalMonth, d, isToday);
+        };
+        grid.appendChild(btn);
+      }
+    }
+
+    function selectDate(year, month, day, isToday) {
+      selectedYear = year;
+      selectedMonth = month;
+      selectedDay = day;
+      currentCalYear = year;
+      currentCalMonth = month;
+
+      const display = document.getElementById('selectedDateDisplay');
+      const shortMonth = monthNames[month].slice(0, 3);
+      const isActuallyToday = isToday || (year === 2026 && month === 8 && day === 23);
+      if (display) {
+        if (isActuallyToday) {
+          display.innerText = "Today, " + shortMonth + " " + day + ", " + year;
+        } else {
+          display.innerText = shortMonth + " " + day + ", " + year;
+        }
+      }
+
+      const summaryPeriod = document.getElementById('summary-period-text');
+      if (summaryPeriod) {
+        if (isActuallyToday) {
+          summaryPeriod.innerText = "Day (Today, Sep 23)";
+        } else {
+          summaryPeriod.innerText = "Day (" + shortMonth + " " + day + ", " + year + ")";
+        }
+      }
+
+      // Update KPI figures dynamically
+      const totalCost = document.getElementById('kpi-total-cost');
+      const kpiOpenAiCost = document.getElementById('kpi-openai-cost');
+      const kpiOpenAiVol = document.getElementById('kpi-openai-vol');
+      const kpiSpeechCost = document.getElementById('kpi-speech-cost');
+      const kpiSpeechVol = document.getElementById('kpi-speech-vol');
+      const kpiVeriffCost = document.getElementById('kpi-veriff-cost');
+      const kpiVeriffVol = document.getElementById('kpi-veriff-vol');
+      const kpiElevenCost = document.getElementById('kpi-eleven-cost');
+      const kpiElevenVol = document.getElementById('kpi-eleven-vol');
+      const kpiSpeechsuperCost = document.getElementById('kpi-speechsuper-cost');
+      const kpiSpeechsuperVol = document.getElementById('kpi-speechsuper-vol');
+
+      if (isActuallyToday) {
+        if (totalCost) totalCost.innerText = "$126.80";
+        if (kpiOpenAiCost) kpiOpenAiCost.innerText = "9.60";
+        if (kpiOpenAiVol) kpiOpenAiVol.innerText = "11.45M tokens";
+        if (kpiSpeechCost) kpiSpeechCost.innerText = "4.50";
+        if (kpiSpeechVol) kpiSpeechVol.innerText = "980 x 15s";
+        if (kpiVeriffCost) kpiVeriffCost.innerText = "8.50";
+        if (kpiVeriffVol) kpiVeriffVol.innerText = "10 checks";
+        if (kpiElevenCost) kpiElevenCost.innerText = ".80";
+        if (kpiElevenVol) kpiElevenVol.innerText = "18.6k chars";
+        if (kpiSpeechsuperCost) kpiSpeechsuperCost.innerText = ".40";
+        if (kpiSpeechsuperVol) kpiSpeechsuperVol.innerText = "93 items";
+      } else {
+        if (totalCost) totalCost.innerText = "12.40";
+        if (kpiOpenAiCost) kpiOpenAiCost.innerText = "1.30";
+        if (kpiOpenAiVol) kpiOpenAiVol.innerText = "10.20M tokens";
+        if (kpiSpeechCost) kpiSpeechCost.innerText = "1.80";
+        if (kpiSpeechVol) kpiSpeechVol.innerText = "872 x 15s";
+        if (kpiVeriffCost) kpiVeriffCost.innerText = "6.65";
+        if (kpiVeriffVol) kpiVeriffVol.innerText = "9 checks";
+        if (kpiElevenCost) kpiElevenCost.innerText = ".85";
+        if (kpiElevenVol) kpiElevenVol.innerText = "12.3k chars";
+        if (kpiSpeechsuperCost) kpiSpeechsuperCost.innerText = "$1.40";
+        if (kpiSpeechsuperVol) kpiSpeechsuperVol.innerText = "53 items";
+      }
+
+      evaluateAlertChips();
+      closeCalendarDropdown();
+    }
+
+    function switchTab(tab) {
+      const btnOverview = document.getElementById('btn-tab-overview');
+      const btnAlerts = document.getElementById('btn-tab-alerts');
+      const contentOverview = document.getElementById('content-overview');
+      const contentAlerts = document.getElementById('content-alerts');
+      const tab1Controls = document.getElementById('tab1-controls');
+      const tab2Controls = document.getElementById('tab2-controls');
+
+      if (tab === 'overview') {
+        btnOverview.className = "px-4 py-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs font-semibold transition-all flex items-center gap-2";
+        btnAlerts.className = "px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-semibold transition-all flex items-center gap-2";
+        contentOverview.classList.remove('hidden');
+        contentAlerts.classList.add('hidden');
+        if (tab1Controls) tab1Controls.classList.remove('hidden');
+        if (tab2Controls) tab2Controls.classList.add('hidden');
+      } else {
+        btnOverview.className = "px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-semibold transition-all flex items-center gap-2";
+        btnAlerts.className = "px-4 py-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs font-semibold transition-all flex items-center gap-2";
+        contentOverview.classList.add('hidden');
+        contentAlerts.classList.remove('hidden');
+        if (tab1Controls) tab1Controls.classList.add('hidden');
+        if (tab2Controls) tab2Controls.classList.remove('hidden');
+      }
+    }
+
+    function filterUserList() {
+      const query = (document.getElementById('user-search-input')?.value || '').toLowerCase().trim();
+      const cards = document.querySelectorAll('.user-card');
+      let visibleCount = 0;
+      cards.forEach(card => {
+        const name = (card.getAttribute('data-name') || '').toLowerCase();
+        const test = (card.getAttribute('data-test') || '').toLowerCase();
+        const id = (card.getAttribute('data-id') || '').toLowerCase();
+        if (!query || name.includes(query) || test.includes(query) || id.includes(query)) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      const counter = document.getElementById('user-count-badge');
+      if (counter) {
+        counter.innerText = `${visibleCount} Candidate Sessions`;
+      }
+    }
+
+    function setTimeframe(tf) {
+      currentTimeframe = tf;
+
+      const dayBtn = document.getElementById('tf-day');
+      const weekBtn = document.getElementById('tf-week');
+      const monthBtn = document.getElementById('tf-month');
+      const yearBtn = document.getElementById('tf-year');
+      const label = document.getElementById('dateRangeLabel');
+      const summaryPeriod = document.getElementById('summary-period-text');
+      const totalCost = document.getElementById('kpi-total-cost');
+
+      // Individual KPI Cards
+      const kpiOpenAiCost = document.getElementById('kpi-openai-cost');
+      const kpiOpenAiVol = document.getElementById('kpi-openai-vol');
+      const kpiSpeechCost = document.getElementById('kpi-speech-cost');
+      const kpiSpeechVol = document.getElementById('kpi-speech-vol');
+      const kpiVeriffCost = document.getElementById('kpi-veriff-cost');
+      const kpiVeriffVol = document.getElementById('kpi-veriff-vol');
+      const kpiElevenCost = document.getElementById('kpi-eleven-cost');
+      const kpiElevenVol = document.getElementById('kpi-eleven-vol');
+      const kpiSpeechsuperCost = document.getElementById('kpi-speechsuper-cost');
+      const kpiSpeechsuperVol = document.getElementById('kpi-speechsuper-vol');
+
+      [dayBtn, weekBtn, monthBtn, yearBtn].forEach(b => {
+        b.className = "px-2.5 py-1 rounded hover:text-slate-200 font-medium";
+      });
+
+      if (tf === 'day') {
+        dayBtn.className = "px-2.5 py-1 rounded bg-cyan-600 text-white font-medium";
+        label.innerText = "Today (Sep 23)";
+        summaryPeriod.innerText = "Day (Today, Sep 23)";
+        totalCost.innerText = "$126.80";
+
+        kpiOpenAiCost.innerText = "$79.60";
+        kpiOpenAiVol.innerText = "11.45M tokens";
+        kpiSpeechCost.innerText = "$24.50";
+        kpiSpeechVol.innerText = "980 x 15s";
+        kpiVeriffCost.innerText = "$12.00";
+        kpiVeriffVol.innerText = "8 sessions";
+        kpiElevenCost.innerText = "$5.70";
+        kpiElevenVol.innerText = "38k chars";
+        kpiSpeechsuperCost.innerText = "$5.00";
+        kpiSpeechsuperVol.innerText = "120 tests";
+      } else if (tf === 'week') {
+        weekBtn.className = "px-2.5 py-1 rounded bg-cyan-600 text-white font-medium";
+        label.innerText = "Last 7 Days (Sep 17 - 23)";
+        summaryPeriod.innerText = "Week (Sep 17 - Sep 23)";
+        totalCost.innerText = "$486.20";
+
+        kpiOpenAiCost.innerText = "$298.50";
+        kpiOpenAiVol.innerText = "42.10M tokens";
+        kpiSpeechCost.innerText = "$98.30";
+        kpiSpeechVol.innerText = "3,932 x 15s";
+        kpiVeriffCost.innerText = "$45.00";
+        kpiVeriffVol.innerText = "30 sessions";
+        kpiElevenCost.innerText = "$22.30";
+        kpiElevenVol.innerText = "148k chars";
+        kpiSpeechsuperCost.innerText = "$22.10";
+        kpiSpeechsuperVol.innerText = "550 tests";
+      } else if (tf === 'month') {
+        monthBtn.className = "px-2.5 py-1 rounded bg-cyan-600 text-white font-medium";
+        label.innerText = "Current Month (Sep 2026)";
+        summaryPeriod.innerText = "Month (September 2026)";
+        totalCost.innerText = "$1,863.90";
+
+        kpiOpenAiCost.innerText = "$1,120.00";
+        kpiOpenAiVol.innerText = "165.2M tokens";
+        kpiSpeechCost.innerText = "$360.40";
+        kpiSpeechVol.innerText = "14,416 x 15s";
+        kpiVeriffCost.innerText = "$195.00";
+        kpiVeriffVol.innerText = "130 sessions";
+        kpiElevenCost.innerText = "$98.50";
+        kpiElevenVol.innerText = "656k chars";
+        kpiSpeechsuperCost.innerText = "$90.00";
+        kpiSpeechsuperVol.innerText = "2,200 tests";
+      } else if (tf === 'year') {
+        yearBtn.className = "px-2.5 py-1 rounded bg-cyan-600 text-white font-medium";
+        label.innerText = "Year 2026 (YTD)";
+        summaryPeriod.innerText = "Year (2026 YTD)";
+        totalCost.innerText = "$19,260.00";
+
+        kpiOpenAiCost.innerText = "$11,840.00";
+        kpiOpenAiVol.innerText = "1.82B tokens";
+        kpiSpeechCost.innerText = "$3,650.00";
+        kpiSpeechVol.innerText = "146k x 15s";
+        kpiVeriffCost.innerText = "$1,980.00";
+        kpiVeriffVol.innerText = "1,320 sessions";
+        kpiElevenCost.innerText = "$840.00";
+        kpiElevenVol.innerText = "5.6M chars";
+        kpiSpeechsuperCost.innerText = "$950.00";
+        kpiSpeechsuperVol.innerText = "23,500 tests";
+      }
+
+      evaluateAlertChips();
+    }
+
+    function viewLlmAuditLogs(testId) {
+      alert("Opening LLM audit logs filtered for Assigned Test ID: " + testId);
+    }
+
+    function unblockTask(testId) {
+      alert("Task " + testId + " has been reset with a max retry cap of 2. Cron will safely process it once.");
+    }
+
+    function quarantineAll() {
+      alert("All runaway tasks quarantined in database. Cron retry loops halted.");
+    }
+
+    // Initialize alert badges and chips on load
+    updateAlertBadges();
+    evaluateAlertChips();
+  
+    // ==========================================
+    // ACCORDION TOGGLE & STUDENT RESULT MODAL LOGIC
+    // ==========================================
+    function toggleAccordion(accId) {
+      const panel = document.getElementById(accId);
+      const label = document.getElementById(`label-${accId}`);
+      const icon = document.getElementById(`icon-${accId}`);
+      if (!panel) return;
+
+      const isHidden = panel.classList.contains('hidden');
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        if (label) label.innerText = 'Hide Tests';
+        if (icon) icon.classList.add('rotate-180');
+      } else {
+        panel.classList.add('hidden');
+        if (label) label.innerText = 'View Breakdown';
+        if (icon) icon.classList.remove('rotate-180');
+      }
+    }
+
+    const testScorecards = {
+      'tariq-1': {
+        candidate: 'Tariq Al-Mansoor',
+        candidateId: '237884fc',
+        testTitle: 'General English Adaptive B2 (Speaking & Writing)',
+        sessionId: 'TS-8942',
+        score: '78/100',
+        band: 'B2',
+        cost: '$9.40',
+        modules: [
+          { name: 'Writing Module', score: '74/100', cefr: 'B2', provider: 'OpenAI GPT-4o (1.25M tok)', cost: '$7.10' },
+          { name: 'Speaking Module', score: '81/100', cefr: 'B2+', provider: 'Speechace Fluency (84x15s)', cost: '$2.10' },
+          { name: 'Listening Module', score: '82/100', cefr: 'B2+', provider: 'ElevenLabs Neural TTS', cost: '$0.20' },
+          { name: 'Reading Module', score: '76/100', cefr: 'B2', provider: 'AZE Engine (Deterministic)', cost: '$0.00' }
+        ]
+      },
+      'tariq-2': {
+        candidate: 'Tariq Al-Mansoor',
+        candidateId: '237884fc',
+        testTitle: 'Adaptive Speaking Re-Take V1',
+        sessionId: 'TS-8950',
+        score: '82/100',
+        band: 'B2+',
+        cost: '$2.45',
+        modules: [
+          { name: 'Speaking Module', score: '83/100', cefr: 'B2+', provider: 'Speechace Fluency (14x15s)', cost: '$0.35' },
+          { name: 'Oral Transcript Feedback', score: '81/100', cefr: 'B2+', provider: 'OpenAI GPT-4o (370k tok)', cost: '$2.10' }
+        ]
+      },
+      'aagam-1': {
+        candidate: 'Aagam Jain',
+        candidateId: '89db3854',
+        testTitle: 'Writing & Coherence Assessment V2',
+        sessionId: 'TS-7719',
+        score: '68/100',
+        band: 'B1+',
+        cost: '$10.45',
+        modules: [
+          { name: 'Writing Module', score: '67/100', cefr: 'B1+', provider: 'OpenAI GPT-4o (1.42M tok)', cost: '$10.15' },
+          { name: 'Listening Instructions', score: '70/100', cefr: 'B2', provider: 'ElevenLabs TTS (2.0k chars)', cost: '$0.30' }
+        ]
+      },
+      'sarah-1': {
+        candidate: 'Sarah Jenkins',
+        candidateId: '44a1029c',
+        testTitle: 'Accredited Higher-Ed Admissions Exam (4 Skills + KYC)',
+        sessionId: 'TS-6602',
+        score: '88/100',
+        band: 'C1',
+        cost: '$2.18',
+        modules: [
+          { name: 'AI Proctoring & KYC', score: 'Passed', cefr: 'Verified', provider: 'Veriff Biometric API', cost: '$1.50' },
+          { name: 'Writing Module', score: '86/100', cefr: 'C1', provider: 'OpenAI GPT-4o (65k tok)', cost: '$0.42' },
+          { name: 'Speaking Module', score: '89/100', cefr: 'C1', provider: 'Speechace Fluency (7x15s)', cost: '$0.18' },
+          { name: 'Listening Module', score: '91/100', cefr: 'C1', provider: 'ElevenLabs TTS (350 chars)', cost: '$0.05' },
+          { name: 'Oral Pronunciation', score: '88/100', cefr: 'C1', provider: 'SpeechSuper API', cost: '$0.03' }
+        ]
+      },
+      'mateo-1': {
+        candidate: 'Mateo Hernandez',
+        candidateId: '71bc9901',
+        testTitle: 'Conversational Fluency Benchmark B1',
+        sessionId: 'TS-5541',
+        score: '72/100',
+        band: 'B1',
+        cost: '$0.48',
+        modules: [
+          { name: 'Speaking Module', score: '73/100', cefr: 'B1', provider: 'Speechace (12x15s)', cost: '$0.30' },
+          { name: 'Writing Module', score: '70/100', cefr: 'B1', provider: 'OpenAI GPT-4o (18k tok)', cost: '$0.12' },
+          { name: 'Listening Module', score: '74/100', cefr: 'B1', provider: 'ElevenLabs (420 chars)', cost: '$0.06' }
+        ]
+      },
+      'amina-1': {
+        candidate: 'Amina Diallo',
+        candidateId: '55ef1209',
+        testTitle: 'Business English Written Communication',
+        sessionId: 'TS-4920',
+        score: '80/100',
+        band: 'B2',
+        cost: '$0.31',
+        modules: [
+          { name: 'Writing Module', score: '82/100', cefr: 'B2', provider: 'OpenAI GPT-4o (36k tok)', cost: '$0.24' },
+          { name: 'Listening Module', score: '78/100', cefr: 'B2', provider: 'ElevenLabs (280 chars)', cost: '$0.04' },
+          { name: 'Oral Drill Module', score: '80/100', cefr: 'B2', provider: 'SpeechSuper Intonation', cost: '$0.03' }
+        ]
+      },
+      'kenji-1': {
+        candidate: 'Kenji Sato',
+        candidateId: '32da8811',
+        testTitle: 'Spoken English Phoneme & Stress Drill',
+        sessionId: 'TS-3814',
+        score: '75/100',
+        band: 'B1',
+        cost: '$0.19',
+        modules: [
+          { name: 'Speaking Module', score: '76/100', cefr: 'B1', provider: 'Speechace (5x15s)', cost: '$0.12' },
+          { name: 'Writing Module', score: '72/100', cefr: 'B1', provider: 'OpenAI GPT-4o (7.5k tok)', cost: '$0.05' },
+          { name: 'Oral Assessment', score: '77/100', cefr: 'B1', provider: 'SpeechSuper', cost: '$0.02' }
+        ]
+      },
+      'priya-1': {
+        candidate: 'Priya Sharma',
+        candidateId: '18ac7723',
+        testTitle: 'Writing & Reading Quick Diagnostic',
+        sessionId: 'TS-2908',
+        score: '84/100',
+        band: 'B2+',
+        cost: '$0.14',
+        modules: [
+          { name: 'Writing Module', score: '85/100', cefr: 'B2+', provider: 'OpenAI GPT-4o (15k tok)', cost: '$0.10' },
+          { name: 'Listening Prompts', score: '83/100', cefr: 'B2', provider: 'ElevenLabs (120 chars)', cost: '$0.02' },
+          { name: 'Pronunciation', score: '84/100', cefr: 'B2+', provider: 'SpeechSuper', cost: '$0.02' }
+        ]
+      }
+    };
+
+    let currentOpenResultUrl = '';
+
+    function openStudentResultModal(testKey) {
+      const data = testScorecards[testKey] || testScorecards['tariq-1'];
+      document.getElementById('res-modal-candidate').innerText = data.candidate;
+      document.getElementById('res-modal-cefr').innerText = `CEFR ${data.band} • ${data.score}`;
+      document.getElementById('res-modal-test').innerText = `${data.testTitle} • Session #${data.sessionId}`;
+      document.getElementById('res-modal-score').innerText = data.score;
+      document.getElementById('res-modal-band').innerText = data.band;
+      document.getElementById('res-modal-cost').innerText = data.cost;
+      
+      currentOpenResultUrl = `https://dev.azetest.ai/admin/candidates/${data.candidateId}/reports/${data.sessionId}`;
+      document.getElementById('res-modal-url').innerText = currentOpenResultUrl;
+
+      const tbody = document.getElementById('res-modal-table-body');
+      tbody.innerHTML = data.modules.map(m => `
+        <tr class="hover:bg-slate-800/40 transition-colors">
+          <td class="p-2.5 font-medium text-white flex items-center gap-1.5">${m.name}</td>
+          <td class="p-2.5 font-mono text-emerald-300 font-semibold">${m.score}</td>
+          <td class="p-2.5 font-mono text-cyan-300">${m.cefr}</td>
+          <td class="p-2.5 text-slate-300">${m.provider}</td>
+          <td class="p-2.5 text-right font-mono font-bold text-white">${m.cost}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('student-result-modal').classList.remove('hidden');
+    }
+
+    function closeStudentResultModal() {
+      document.getElementById('student-result-modal').classList.add('hidden');
+    }
+
+    function copyResultLink() {
+      const btn = document.getElementById('copy-btn-text');
+      if (btn) {
+        btn.innerText = 'Copied to Clipboard!';
+        setTimeout(() => { btn.innerText = 'Copy Candidate Result Link'; }, 2000);
+      }
+    }
+
+  </script>
+
+</body>
+</html>

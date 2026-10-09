@@ -1,0 +1,4703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AZE Admin Portal - Question Fields</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+
+    :root {
+      --background: #030712;
+      --foreground: #f8fafc;
+      --sidebar-bg: #040817;
+      --sidebar-border: #111c35;
+      --card-bg: #060d1f;
+      --card-border: #131f38;
+      --table-header: #0d172e;
+      --table-row-hover: #0a142c;
+      --table-border: #111d38;
+      --input-bg: #070e20;
+      --input-border: #17233f;
+      --input-focus: #06b6d4;
+      --primary: #06b6d4;
+      --primary-hover: #0891b2;
+      --primary-text: #04111d;
+      --muted-text: #94a3b8;
+      --dim-text: #64748b;
+      --border-subtle: #17233f;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --radius-xl: 12px;
+      --font-poppins: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-poppins);
+      background-color: var(--background);
+      color: var(--foreground);
+      min-height: 100vh;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.2);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.4);
+    }
+
+    .app-shell {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    /* Left Sidebar */
+    .app-sidebar {
+      width: 240px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      user-select: none;
+      transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .app-sidebar.sidebar-collapsed {
+      width: 68px;
+    }
+
+    .sidebar-header {
+      height: 56px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--sidebar-border);
+      overflow: hidden;
+    }
+
+    .brand-logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .brand-logo-mini {
+      display: none;
+      font-size: 20px;
+      font-weight: 800;
+      color: #06b6d4;
+    }
+
+    .sidebar-collapsed .brand-logo-text {
+      display: none;
+    }
+    .sidebar-collapsed .brand-logo-mini {
+      display: block;
+    }
+
+    .sidebar-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 8px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      color: var(--muted-text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 2px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .sidebar-collapsed .sidebar-item {
+      justify-content: center;
+      padding: 10px 0;
+    }
+
+    .sidebar-collapsed .sidebar-item span {
+      display: none;
+    }
+
+    .sidebar-item:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+    }
+
+    .sidebar-item svg {
+      width: 16px;
+      height: 16px;
+      color: inherit;
+      flex-shrink: 0;
+    }
+
+    .sidebar-group-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 12px 4px;
+      color: var(--dim-text);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .sidebar-collapsed .sidebar-group-label {
+      display: none;
+    }
+
+    .sidebar-subitem {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 12px 7px 32px;
+      border-radius: var(--radius-md);
+      color: var(--muted-text);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 1px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .sidebar-collapsed .sidebar-subitem {
+      justify-content: center;
+      padding: 9px 0;
+    }
+
+    .sidebar-collapsed .sidebar-subitem span {
+      display: none;
+    }
+
+    .sidebar-subitem:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+    }
+
+    .sidebar-subitem.active {
+      background: rgba(6, 182, 212, 0.12);
+      color: #22d3ee;
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      font-weight: 600;
+    }
+
+    .sidebar-subitem svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--sidebar-border);
+    }
+
+    .sidebar-collapsed .sidebar-footer {
+      padding: 14px 8px;
+      text-align: center;
+    }
+
+    .sidebar-collapsed .logout-btn span {
+      display: none;
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ef4444;
+      font-size: 12.5px;
+      font-weight: 500;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.15s ease;
+      width: 100%;
+    }
+
+    .logout-btn:hover {
+      color: #f87171;
+    }
+
+    .logout-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* Main Area */
+    .app-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .top-navbar {
+      height: 56px;
+      background: var(--sidebar-bg);
+      border-bottom: 1px solid var(--sidebar-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .icon-btn-ghost {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted-text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .icon-btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border-color: var(--border-subtle);
+    }
+
+    .icon-btn-ghost.active {
+      background: rgba(6, 182, 212, 0.12);
+      color: #06b6d4;
+      border-color: rgba(6, 182, 212, 0.3);
+    }
+
+    .icon-btn-ghost svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #070e20;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 6px 12px;
+      font-size: 12.5px;
+      color: var(--dim-text);
+      width: 220px;
+      cursor: text;
+    }
+
+    .nav-search-bar svg {
+      width: 14px;
+      height: 14px;
+      color: var(--dim-text);
+    }
+
+    .kbd-pill {
+      margin-left: auto;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      background: #111c38;
+      color: #94a3b8;
+      padding: 2px 5px;
+      border-radius: 4px;
+      border: 1px solid #1e2c4f;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 4px 8px;
+      border-radius: 9999px;
+      border: 1px solid var(--border-subtle);
+      background: #070e20;
+      cursor: pointer;
+    }
+
+    .user-avatar-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .content-viewport {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px 40px;
+    }
+
+    /* Page Header */
+    .page-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 18px;
+    }
+
+    .page-title h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .page-title p {
+      font-size: 13px;
+      color: var(--muted-text);
+      margin-top: 3px;
+    }
+
+    .header-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .custom-select-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #070e20;
+      border: 1px solid var(--border-subtle);
+      color: #f1f5f9;
+      font-size: 13px;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .custom-select-trigger:hover {
+      border-color: rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-aze-outline {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: #e2e8f0;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-aze-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #2a3a5f;
+      color: #fff;
+    }
+
+    .btn-aze-outline svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .btn-aze-primary {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: #06b6d4;
+      border: 1px solid #06b6d4;
+      color: #04111d;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(6, 182, 212, 0.3);
+      transition: all 0.15s ease;
+    }
+
+    .btn-aze-primary:hover {
+      background: #0891b2;
+      border-color: #0891b2;
+    }
+
+    .btn-aze-primary svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* Skills Segmented Bar matching Screenshot 1 (media_1791454128881.png) */
+    .skills-segmented-bar {
+      display: inline-flex;
+      align-items: center;
+      background: #0d1527;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 3px;
+      gap: 2px;
+      margin-bottom: 18px;
+    }
+
+    .skill-segment-btn {
+      padding: 5px 14px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .skill-segment-btn:hover {
+      color: #f1f5f9;
+    }
+
+    .skill-segment-btn.active {
+      background: #06b6d4;
+      color: #020817;
+      font-weight: 600;
+    }
+
+    /* Subtabs Line Bar */
+    .subtabs-line-bar {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 18px;
+      gap: 4px;
+      position: relative;
+    }
+
+    .subtab-item-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--muted-text);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: -1px;
+      white-space: nowrap;
+    }
+
+    .subtab-item-btn:hover {
+      color: #f1f5f9;
+    }
+
+    .subtab-item-btn.active {
+      color: #fff;
+      border-bottom: 2px solid #06b6d4;
+      font-weight: 600;
+    }
+
+    .subtab-more-btn {
+      margin-left: auto;
+      padding: 6px;
+      background: transparent;
+      border: none;
+      color: var(--dim-text);
+      cursor: pointer;
+    }
+
+    /* CEFR Distribution Bar (media_1791295917539.png) */
+    .cefr-distribution-card {
+      display: flex;
+      align-items: center;
+      background: #060d1f;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 6px 12px;
+      margin-bottom: 16px;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .cefr-dist-item {
+      display: flex;
+      align-items: center;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      flex: 1;
+      min-width: 90px;
+    }
+
+    .cefr-dist-label {
+      padding: 3px 8px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .cefr-dist-count {
+      padding: 3px 10px;
+      background: #091226;
+      color: #f8fafc;
+      font-weight: 600;
+      flex: 1;
+      text-align: center;
+    }
+
+    .dist-a1 .cefr-dist-label { background: #451a03; color: #fb923c; }
+    .dist-a2 .cefr-dist-label { background: #311042; color: #e879f9; }
+    .dist-b1 .cefr-dist-label { background: #3b1807; color: #f59e0b; }
+    .dist-b2 .cefr-dist-label { background: #064e3b; color: #34d399; }
+    .dist-c1 .cefr-dist-label { background: #2e1065; color: #c084fc; }
+    .dist-c2 .cefr-dist-label { background: #065f46; color: #6ee7b7; }
+
+    /* Card Container */
+    .aze-card-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .aze-card-container.is-fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1000;
+      border-radius: 0;
+      overflow-y: auto;
+    }
+
+    /* Toolbar */
+    .aze-table-toolbar {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #060e22;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .table-search-box {
+      position: relative;
+      width: 320px;
+      display: flex;
+      align-items: center;
+    }
+
+    .table-search-box svg {
+      position: absolute;
+      left: 11px;
+      width: 15px;
+      height: 15px;
+      color: var(--dim-text);
+      pointer-events: none;
+    }
+
+    .table-search-box input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
+      padding: 7px 32px 7px 34px;
+      color: #fff;
+      font-size: 12.5px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .table-search-box input:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.15);
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 9px;
+      background: transparent;
+      border: none;
+      color: var(--dim-text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 2px;
+    }
+
+    .search-clear-btn:hover {
+      color: #fff;
+    }
+
+    .table-tools-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ToggleGroup for View Mode (Table vs Grid) matching Screenshot 1 */
+    .view-toggle-group {
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #141d2f;
+      height: 28px;
+    }
+
+    .view-toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 100%;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      padding: 0;
+      color: #64748b;
+    }
+
+    .view-toggle-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: #64748b;
+    }
+
+    .view-toggle-btn.active {
+      background: #06b6d4;
+      color: #020817;
+    }
+
+    .view-toggle-btn.active svg {
+      stroke: #020817;
+    }
+
+    /* Density Switcher matching Screenshot 1 */
+    .density-pill-group {
+      display: flex;
+      align-items: center;
+      background: #141d2f;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 2px;
+      height: 28px;
+      box-sizing: border-box;
+      gap: 2px;
+    }
+
+    .density-btn {
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #64748b;
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      height: 22px;
+      line-height: 18px;
+    }
+
+    .density-btn.active {
+      background: #06b6d4;
+      color: #020817;
+      font-weight: 600;
+    }
+
+    /* Bulk Action Bar */
+    .bulk-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(6, 182, 212, 0.1);
+      border-bottom: 1px solid rgba(6, 182, 212, 0.25);
+      padding: 8px 18px;
+      font-size: 12.5px;
+      color: #38bdf8;
+    }
+
+    .bulk-action-bar button {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #0a1733;
+      border: 1px solid #1e3a66;
+      color: #e0f2fe;
+    }
+
+    .bulk-action-bar button.btn-bulk-delete {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    /* Data Table */
+    .aze-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .aze-data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .aze-data-table thead th {
+      background: var(--table-header);
+      color: var(--muted-text);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: capitalize;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid var(--table-border);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .sort-eq {
+      color: #475569;
+      font-size: 11px;
+      margin-left: 2px;
+    }
+
+    .aze-data-table tbody td {
+      border-bottom: 1px solid var(--table-border);
+      color: #e2e8f0;
+      transition: background 0.1s ease;
+      vertical-align: middle;
+    }
+
+    .aze-data-table tbody tr:hover td {
+      background: var(--table-row-hover);
+    }
+
+    /* Density padding */
+    .density-compact th, .density-compact td { padding: 6px 14px; font-size: 12px; }
+    .density-cozy th, .density-cozy td { padding: 11px 16px; font-size: 13px; }
+    .density-comfortable th, .density-comfortable td { padding: 16px 18px; font-size: 13.5px; }
+
+    /* Custom Checkbox */
+    .aze-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid #475569;
+      border-radius: 3px;
+      background: #091226;
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      transition: all 0.15s ease;
+    }
+
+    .aze-checkbox:checked {
+      background: #06b6d4;
+      border-color: #06b6d4;
+    }
+
+    .aze-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 4.5px;
+      top: 1.5px;
+      width: 3.5px;
+      height: 7px;
+      border: solid #04111d;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    /* Badges & Pills */
+    .cefr-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+
+    .cefr-badge.c2 { background: rgba(16, 185, 129, 0.16); color: #34d399; }
+    .cefr-badge.c1 { background: rgba(168, 85, 247, 0.16); color: #c084fc; }
+    .cefr-badge.b2 { background: rgba(20, 184, 166, 0.16); color: #2dd4bf; }
+    .cefr-badge.b1 { background: rgba(249, 115, 22, 0.16); color: #fb923c; }
+    .cefr-badge.a2 { background: rgba(245, 158, 11, 0.16); color: #fbbf24; }
+    .cefr-badge.a1 { background: rgba(129, 140, 248, 0.16); color: #a5b4fc; }
+
+    .cluster-id-badge {
+      display: inline-flex;
+      align-items: center;
+      background: #0f1c3f;
+      color: #38bdf8;
+      border: 1px solid #1e3a66;
+      border-radius: var(--radius-sm);
+      padding: 3px 8px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    /* GSE Range Badge matching Screenshot 1 */
+    .gse-range-badge {
+      display: inline-flex;
+      align-items: center;
+      background: #172554;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: #38bdf8;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: inherit;
+      font-weight: 600;
+    }
+
+    .attached-cefr-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(6, 182, 212, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      color: #22d3ee;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status-pill.active {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-pill .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 9999px;
+      background: currentColor;
+    }
+
+    /* Expand / Collapse Chevron Buttons */
+    .row-expand-btn {
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted-text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .row-expand-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .row-expand-btn.open svg {
+      transform: rotate(90deg);
+    }
+
+    .row-expand-btn svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.15s ease;
+    }
+
+    /* Action Buttons with Tooltips */
+    .action-btn-group {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    .row-action-btn {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--muted-text);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .row-action-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+
+    .row-action-btn.btn-delete:hover {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .row-action-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Multi-Tier Nested Tables */
+    .nested-tier-cell {
+      padding: 0 !important;
+      background: #040917 !important;
+      border-bottom: 2px solid #142242 !important;
+    }
+
+    .nested-panel-wrapper {
+      padding: 14px 20px 18px 44px;
+      border-left: 3px solid #06b6d4;
+    }
+
+    .nested-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 12.5px;
+    }
+
+    .nested-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+
+    .nested-aze-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #060e22;
+      border: 1px solid #142242;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      font-size: 12.5px;
+    }
+
+    .nested-aze-table th {
+      background: #0a1530;
+      color: var(--muted-text);
+      padding: 8px 12px;
+      font-weight: 600;
+      font-size: 11.5px;
+      border-bottom: 1px solid #142242;
+    }
+
+    .nested-aze-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #0f1c38;
+      color: #e2e8f0;
+    }
+
+    .nested-aze-table tr:hover td {
+      background: #0d1a38;
+    }
+
+    /* Tier 3 Can Do statements table */
+    .tier3-wrapper {
+      padding: 10px 16px 14px 40px;
+      border-left: 3px solid #8b5cf6;
+      background: #030714;
+    }
+
+    .tier3-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .statements-subtable {
+      width: 100%;
+      border-collapse: collapse;
+      background: #050a1b;
+      border: 1px solid #172445;
+      border-radius: var(--radius-sm);
+    }
+
+    .statements-subtable th {
+      background: #09132c;
+      color: #94a3b8;
+      padding: 6px 10px;
+      font-size: 11px;
+      border-bottom: 1px solid #172445;
+    }
+
+    .statements-subtable td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #0f1c38;
+      font-size: 12px;
+    }
+
+    /* Grid Card View (GridView / GridCard) */
+    .aze-grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      padding: 18px;
+    }
+
+    .grid-card {
+      background: #060e22;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.15s ease;
+    }
+
+    .grid-card:hover {
+      border-color: rgba(6, 182, 212, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .grid-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .grid-index-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--dim-text);
+      background: #091226;
+      padding: 2px 7px;
+      border-radius: var(--radius-sm);
+    }
+
+    .grid-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .grid-card-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12.5px;
+    }
+
+    .grid-field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+    }
+
+    .grid-field-label {
+      color: var(--dim-text);
+      font-size: 11.5px;
+    }
+
+    .grid-field-value {
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+
+    /* Table Footer & Pagination */
+    .aze-table-footer {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-subtle);
+      background: #060e22;
+      font-size: 12.5px;
+      color: var(--muted-text);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .page-sq-btn {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      background: #070e20;
+      border: 1px solid var(--border-subtle);
+      color: var(--muted-text);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .page-sq-btn:hover {
+      border-color: #334155;
+      color: #fff;
+    }
+
+    .page-sq-btn.active {
+      background: #06b6d4;
+      border-color: #06b6d4;
+      color: #04111d;
+      font-weight: 700;
+    }
+
+    /* Modals & Dialogs (Radix UI Style) */
+    .aze-dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.15s ease;
+    }
+
+    .aze-dialog-box {
+      background: #060e22;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      animation: scaleUp 0.15s ease;
+      overflow: hidden;
+    }
+
+    .aze-dialog-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .aze-dialog-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .aze-dialog-close {
+      background: transparent;
+      border: none;
+      color: var(--muted-text);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: var(--radius-sm);
+    }
+
+    .aze-dialog-close:hover {
+      color: #fff;
+    }
+
+    .aze-dialog-body {
+      padding: 20px 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .aze-dialog-footer {
+      padding: 14px 24px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #040917;
+    }
+
+    /* Form Fields */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .form-field-group {
+      margin-bottom: 14px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+
+    .field-label .req {
+      color: #ef4444;
+      margin-left: 2px;
+    }
+
+    .field-hint {
+      font-size: 11px;
+      color: var(--dim-text);
+      margin-top: 4px;
+    }
+
+    .aze-input, .aze-select-field {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .aze-input:focus, .aze-select-field:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.15);
+    }
+
+    /* Multi-select Level Pills Group in Add Cluster Modal */
+    .level-multiselect-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 4px 0;
+    }
+
+    .level-select-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-md);
+      background: #070e20;
+      border: 1px solid var(--border-subtle);
+      color: var(--muted-text);
+      font-size: 12.5px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .level-select-pill:hover {
+      border-color: #334155;
+      color: #fff;
+    }
+
+    .level-select-pill.selected {
+      background: rgba(6, 182, 212, 0.18);
+      border-color: #06b6d4;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Detail Modal Specific Styles */
+    .cluster-detail-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      background: #040917;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 14px 18px;
+      margin-bottom: 20px;
+    }
+
+    .detail-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .detail-meta-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--dim-text);
+      font-weight: 600;
+    }
+
+    .detail-meta-value {
+      font-size: 13px;
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .select-all-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #09142e;
+      border: 1px solid #1a2a50;
+      border-radius: var(--radius-md);
+      margin-bottom: 10px;
+      font-size: 12.5px;
+    }
+
+    /* Evidence Repeater Section */
+    .evidence-section-container {
+      background: #040a1c;
+      border: 1px solid #162444;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .evidence-header-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .evidence-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .evidence-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .evidence-weight-input-wrap {
+      display: flex;
+      align-items: center;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
+      padding-right: 8px;
+      width: 85px;
+      flex-shrink: 0;
+    }
+
+    .evidence-weight-input-wrap input {
+      width: 55px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 12.5px;
+      font-family: var(--font-mono);
+      padding: 8px;
+      outline: none;
+      text-align: right;
+    }
+
+    .evidence-weight-input-wrap span {
+      color: var(--dim-text);
+      font-size: 12px;
+    }
+
+    .btn-add-evidence-dashed {
+      width: 100%;
+      border: 1px dashed rgba(6, 182, 212, 0.4);
+      background: rgba(6, 182, 212, 0.04);
+      color: #38bdf8;
+      border-radius: var(--radius-md);
+      padding: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-add-evidence-dashed:hover {
+      background: rgba(6, 182, 212, 0.1);
+      border-color: #06b6d4;
+    }
+
+    .evidence-weight-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      margin-top: 12px;
+    }
+
+    .evidence-weight-banner.valid {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+
+    .evidence-weight-banner.invalid {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    /* Column Customizer Popover */
+    .column-popover-box {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 240px;
+      background: #060e22;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      animation: fadeIn 0.1s ease;
+    }
+
+    .column-popover-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .column-popover-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .aze-toast {
+      background: #091530;
+      border: 1px solid #1e3a66;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideUp 0.2s ease;
+    }
+
+    .aze-toast.success {
+      border-color: rgba(16, 185, 129, 0.5);
+      color: #34d399;
+    }
+
+    .aze-toast.destructive {
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #f87171;
+    }
+
+    .app-page-footer {
+      text-align: center;
+      padding: 24px 0 10px;
+      color: #475569;
+      font-size: 12px;
+    }
+
+    /* Evidence Column Chip & Interactive Popover */
+    .evidence-info-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      color: #38bdf8;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .evidence-info-chip:hover {
+      background: rgba(6, 182, 212, 0.22);
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .evidence-info-chip svg {
+      width: 13px;
+      height: 13px;
+      color: #06b6d4;
+    }
+
+    .evidence-popover-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: transparent;
+    }
+
+    .evidence-popover {
+      position: absolute;
+      z-index: 1000;
+      width: 380px;
+      background: #08122c;
+      border: 1px solid #1e3a6a;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(56, 189, 248, 0.2);
+      padding: 16px;
+      animation: scaleUp 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .evidence-popover-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .evidence-popover-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .evidence-popover-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .evidence-popover-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 12px;
+      background: #04091a;
+      border: 1px solid #14244a;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .evidence-popover-item span.text {
+      color: #e2e8f0;
+      flex: 1;
+    }
+
+    .evidence-weight-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+
+    .evidence-popover-footer {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scaleUp {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+  
+    /* CEFR Table Hover Actions (Screenshot 1 alignment) */
+    .cefr-hover-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .aze-data-table tbody tr:hover .cefr-hover-actions {
+      opacity: 1;
+    }
+
+    /* Modal Creation Mode Pills */
+    .modal-tab-pill-group {
+      display: flex;
+      align-items: center;
+      background: #070e20;
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
+      padding: 3px;
+      margin-bottom: 16px;
+      gap: 4px;
+    }
+    .modal-tab-pill {
+      flex: 1;
+      padding: 6px 12px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted-text);
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .modal-tab-pill.active {
+      background: #06b6d4;
+      color: #04111d;
+      font-weight: 600;
+    }
+
+    /* Batch CEFR Selection Grid */
+    .batch-cefr-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 4px 1px;
+    }
+    .batch-cefr-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: #070e20;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 12px;
+    }
+    .batch-cefr-item:hover {
+      border-color: #06b6d4;
+      background: #0c1630;
+    }
+    .batch-cefr-item.selected {
+      border-color: #06b6d4;
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Left Navigation Sidebar matching media_1791290727603.png -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <span class="brand-logo-text">AZE</span>
+          <span class="brand-logo-mini">A</span>
+        </div>
+      </div>
+
+      <div class="sidebar-scroll">
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Dashboard</span>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>
+          <span>Testing</span>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+          <span>Arabic Testing</span>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          <span>Analytics</span>
+        </div>
+
+        <div class="sidebar-group-label">
+          <span>Content Management</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="sidebar-subitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+          <span>Questions</span>
+        </div>
+        <div class="sidebar-subitem active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+          <span>Question Fields</span>
+        </div>
+        <div class="sidebar-subitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <span>Templates</span>
+        </div>
+        <div class="sidebar-subitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>Placement Template</span>
+        </div>
+
+        <div class="sidebar-item" style="margin-top: 8px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <span>Monitoring</span>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>User Management</span>
+          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <span>Business Management</span>
+          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          <span>Pricing and plans</span>
+          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          <span>Assessment Operations</span>
+          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>System & Security</span>
+          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Audit & Monitoring</span>
+          <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;width:13px;height:13px;color:#475569;"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="showToast('Logged out', 'info')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- Navbar matching media_1791290727603.png -->
+      <header class="top-navbar">
+        <div class="nav-left">
+          <button class="icon-btn-ghost" title="Toggle Sidebar" onclick="toggleSidebar()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+          </button>
+        </div>
+
+        <div class="nav-right">
+          <!-- Module Search -->
+          <div class="nav-search-bar" onclick="showToast('Module search Ctrl+K', 'info')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search modules...</span>
+            <span class="kbd-pill">Ctrl+K</span>
+          </div>
+
+          <!-- Notification Bell -->
+          <button class="icon-btn-ghost" title="Notifications" onclick="showToast('No new notifications', 'info')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button class="icon-btn-ghost" title="Toggle Theme" onclick="showToast('Dark mode enabled', 'info')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          </button>
+
+          <!-- User Profile -->
+          <div class="user-pill" onclick="showToast('Logged in as Mukundp', 'info')">
+            <div class="user-avatar-circle">M</div>
+            <span style="font-size: 13px; font-weight: 500;">Mukundp</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; color: var(--muted-text);"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dynamic Screen Content Viewport -->
+      <div class="content-viewport" id="pageContainer">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Dynamic Radix-Style Modal Layer -->
+  <div id="modalContainer" style="display: none;"></div>
+
+  <!-- Toast Notification Layer -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script>
+
+    // State Tracker
+    let activeSubTab = 'cefr-levels';
+    let activeSkill = 'Language Awareness';
+    let viewMode = 'table';
+    let currentDensity = 'cozy';
+    let searchQuery = '';
+    let isSidebarCollapsed = false;
+    let isFullscreen = false;
+    let columnPopoverOpen = false;
+
+    // Checkbox selection sets
+    let selectedRowIds = new Set();
+
+    // Expansion trackers
+    let expandedClusterIds = { 'CLUST-ADV-01': true, 'CLUST-INT-02': false, 'CLUST-ELEM-03': false };
+    let expandedCefrLevelKeys = { 'C2': true, 'C1': false, 'B2': false, 'B1': false, 'A2': false, 'A1': false };
+    let expandedGridCardIds = {};
+
+    // Column visibility settings
+    let visibleColumns = {
+      id: true,
+      name: true,
+      domain: true,
+      level: true,
+      gseRange: true,
+      attachedCefr: true,
+      actions: true
+    };
+
+    // Datasets serialized safely via JSON
+    let clusterTableData = [
+  {
+    "id": "CLUST-ADV-01",
+    "name": "Advanced Professional Mastery",
+    "domain": "Business English",
+    "level": "C2",
+    "levelClass": "c2",
+    "gseRange": "76 - 90",
+    "attachedCefrLevels": [
+      {
+        "key": "CLUST-ADV-01-C2",
+        "level": "C2",
+        "levelClass": "c2",
+        "title": "C2 - Mastery",
+        "domain": "Business English",
+        "gseRange": "85 - 90",
+        "status": "Active",
+        "statements": [
+          {
+            "no": "01",
+            "gse": 88,
+            "domain": "Business English",
+            "text": "can understand with ease virtually everything heard or read in complex negotiations."
+          },
+          {
+            "no": "02",
+            "gse": 86,
+            "domain": "Business English",
+            "text": "can summarize information from diverse spoken and written sources, reconstructing arguments coherently."
+          },
+          {
+            "no": "03",
+            "gse": 85,
+            "domain": "Business English",
+            "text": "can express subtleties of meaning with high flexibility in strategic executive discourse."
+          }
+        ]
+      },
+      {
+        "key": "CLUST-ADV-01-C1",
+        "level": "C1",
+        "levelClass": "c1",
+        "title": "C1 - Effective Operational Proficiency",
+        "domain": "Business English",
+        "gseRange": "76 - 84",
+        "status": "Active",
+        "statements": [
+          {
+            "no": "01",
+            "gse": 80,
+            "domain": "Business English",
+            "text": "can understand a wide range of demanding, longer texts and recognise implicit meaning in business contracts."
+          },
+          {
+            "no": "02",
+            "gse": 78,
+            "domain": "Business English",
+            "text": "can express ideas fluently and spontaneously without much obvious searching for expressions in team meetings."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CLUST-INT-02",
+    "name": "Upper Intermediate Work Readiness",
+    "domain": "General English",
+    "level": "B2",
+    "levelClass": "b2",
+    "gseRange": "59 - 75",
+    "attachedCefrLevels": [
+      {
+        "key": "CLUST-INT-02-B2",
+        "level": "B2",
+        "levelClass": "b2",
+        "title": "B2 - Vantage",
+        "domain": "General English",
+        "gseRange": "59 - 75",
+        "status": "Active",
+        "statements": [
+          {
+            "no": "01",
+            "gse": 68,
+            "domain": "General English",
+            "text": "can understand the main ideas of complex text on both concrete and abstract topics."
+          },
+          {
+            "no": "02",
+            "gse": 65,
+            "domain": "General English",
+            "text": "can interact with a degree of fluency and spontaneity that makes regular interaction quite possible."
+          },
+          {
+            "no": "03",
+            "gse": 62,
+            "domain": "General English",
+            "text": "can produce clear, detailed text on a wide range of subjects related to their field."
+          }
+        ]
+      },
+      {
+        "key": "CLUST-INT-02-B1",
+        "level": "B1",
+        "levelClass": "b1",
+        "title": "B1 - Threshold",
+        "domain": "General English",
+        "gseRange": "43 - 58",
+        "status": "Active",
+        "statements": [
+          {
+            "no": "01",
+            "gse": 52,
+            "domain": "General English",
+            "text": "can understand the main points of clear standard input on familiar matters regularly encountered in work."
+          },
+          {
+            "no": "02",
+            "gse": 48,
+            "domain": "General English",
+            "text": "can deal with most situations likely to arise whilst travelling in an area where the language is spoken."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CLUST-ELEM-03",
+    "name": "Elementary Foundations",
+    "domain": "General English",
+    "level": "A2",
+    "levelClass": "a2",
+    "gseRange": "10 - 42",
+    "attachedCefrLevels": [
+      {
+        "key": "CLUST-ELEM-03-A2",
+        "level": "A2",
+        "levelClass": "a2",
+        "title": "A2 - Waystage",
+        "domain": "General English",
+        "gseRange": "30 - 42",
+        "status": "Active",
+        "statements": [
+          {
+            "no": "01",
+            "gse": 38,
+            "domain": "General English",
+            "text": "can make basic polite requests with 'could'."
+          },
+          {
+            "no": "02",
+            "gse": 35,
+            "domain": "General English",
+            "text": "can make affirmative statements using the present simple without time reference."
+          }
+        ]
+      },
+      {
+        "key": "CLUST-ELEM-03-A1",
+        "level": "A1",
+        "levelClass": "a1",
+        "title": "A1 - Breakthrough",
+        "domain": "General English",
+        "gseRange": "10 - 29",
+        "status": "Active",
+        "statements": [
+          {
+            "no": "01",
+            "gse": 22,
+            "domain": "General English",
+            "text": "can make simple statements with 'it is'."
+          },
+          {
+            "no": "02",
+            "gse": 18,
+            "domain": "General English",
+            "text": "can use verbs in the imperative."
+          }
+        ]
+      }
+    ]
+  }
+];
+    let cefrLevelsData = [
+  {
+    "no": 1,
+    "id": "LVL-C2",
+    "level": "C2",
+    "levelClass": "c2",
+    "gseMin": 85,
+    "gseMax": 90,
+    "gseRange": "85 - 90"
+  },
+  {
+    "no": 2,
+    "id": "LVL-C1",
+    "level": "C1",
+    "levelClass": "c1",
+    "gseMin": 76,
+    "gseMax": 84,
+    "gseRange": "76 - 84"
+  },
+  {
+    "no": 3,
+    "id": "LVL-B2",
+    "level": "B2",
+    "levelClass": "b2",
+    "gseMin": 59,
+    "gseMax": 75,
+    "gseRange": "59 - 75"
+  },
+  {
+    "no": 4,
+    "id": "LVL-B1",
+    "level": "B1",
+    "levelClass": "b1",
+    "gseMin": 43,
+    "gseMax": 58,
+    "gseRange": "43 - 58"
+  },
+  {
+    "no": 5,
+    "id": "LVL-A2",
+    "level": "A2",
+    "levelClass": "a2",
+    "gseMin": 30,
+    "gseMax": 42,
+    "gseRange": "30 - 42"
+  },
+  {
+    "no": 6,
+    "id": "LVL-A1",
+    "level": "A1",
+    "levelClass": "a1",
+    "gseMin": 10,
+    "gseMax": 29,
+    "gseRange": "10 - 29"
+  }
+];
+    let canDoStatementsData = [
+  {
+    "id": "stmt-1",
+    "no": 1,
+    "level": "A2",
+    "levelClass": "a2",
+    "clusterId": "CLUST-ELEM-03",
+    "gseScore": "35",
+    "domain": "General English",
+    "statement": "can make affirmative statements using the present simple without time reference.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-2",
+    "no": 2,
+    "level": "A2",
+    "levelClass": "a2",
+    "clusterId": "CLUST-ELEM-03",
+    "gseScore": "38",
+    "domain": "General English",
+    "statement": "can make basic polite requests with 'could'.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-3",
+    "no": 3,
+    "level": "A1",
+    "levelClass": "a1",
+    "clusterId": "CLUST-ELEM-03",
+    "gseScore": "18",
+    "domain": "General English",
+    "statement": "can use verbs in the imperative.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-4",
+    "no": 4,
+    "level": "A1",
+    "levelClass": "a1",
+    "clusterId": "CLUST-ELEM-03",
+    "gseScore": "22",
+    "domain": "General English",
+    "statement": "can make simple statements with 'it is'.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-5",
+    "no": 5,
+    "level": "A1",
+    "levelClass": "a1",
+    "clusterId": "CLUST-ELEM-03",
+    "gseScore": "25",
+    "domain": "General English",
+    "statement": "can use 'but' to link clauses and sentences.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-6",
+    "no": 6,
+    "level": "A1",
+    "levelClass": "a1",
+    "clusterId": "CLUST-ELEM-03",
+    "gseScore": "20",
+    "domain": "General English",
+    "statement": "can use 'this is' for an introduction.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-7",
+    "no": 7,
+    "level": "B1",
+    "levelClass": "b1",
+    "clusterId": "CLUST-INT-02",
+    "gseScore": "50",
+    "domain": "General English",
+    "statement": "can use the present perfect continuous with 'for/since' and time expressions.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-8",
+    "no": 8,
+    "level": "A2",
+    "levelClass": "a2",
+    "clusterId": "CLUST-ELEM-03",
+    "gseScore": "40",
+    "domain": "General English",
+    "statement": "understands everyday routine-related statements.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-9",
+    "no": 9,
+    "level": "B2",
+    "levelClass": "b2",
+    "clusterId": "CLUST-INT-02",
+    "gseScore": "65",
+    "domain": "General English",
+    "statement": "can use language related to mixed conditionals.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-10",
+    "no": 10,
+    "level": "B1",
+    "levelClass": "b1",
+    "clusterId": "CLUST-INT-02",
+    "gseScore": "45",
+    "domain": "General English",
+    "statement": "can use common quantifiers such as 'a lot' and 'much' as adverbs.",
+    "evidence": null
+  },
+  {
+    "id": "stmt-11",
+    "no": 11,
+    "level": "C1",
+    "levelClass": "c1",
+    "clusterId": "CLUST-ADV-01",
+    "gseScore": "80",
+    "domain": "Progressing",
+    "statement": "can understand a wide range of demanding, longer texts and recognise implicit meaning in business contracts.",
+    "evidence": [
+      {
+        "id": 1,
+        "text": "Demonstrates accurate clause subordination in persuasive speech",
+        "weight": 40
+      },
+      {
+        "id": 2,
+        "text": "Uses consistent specialized collocation without register lapses",
+        "weight": 30
+      },
+      {
+        "id": 3,
+        "text": "Synthesizes disparate viewpoints with sustained logical progression",
+        "weight": 30
+      }
+    ]
+  },
+  {
+    "id": "stmt-12",
+    "no": 12,
+    "level": "C2",
+    "levelClass": "c2",
+    "clusterId": "CLUST-ADV-01",
+    "gseScore": "88",
+    "domain": "Progressing",
+    "statement": "can understand with ease virtually everything heard or read in complex negotiations.",
+    "evidence": [
+      {
+        "id": 1,
+        "text": "Formulates subtle executive nuances without lexical searching",
+        "weight": 50
+      },
+      {
+        "id": 2,
+        "text": "Constructs coherent counter-arguments under adversarial cross-examination",
+        "weight": 50
+      }
+    ]
+  }
+];
+    let availableCanDoStatements = {
+  "C2": [
+    {
+      "id": "c2-1",
+      "text": "can understand with ease virtually everything heard or read in complex negotiations.",
+      "gse": 88,
+      "selected": true
+    },
+    {
+      "id": "c2-2",
+      "text": "can summarize information from diverse spoken and written sources, reconstructing arguments coherently.",
+      "gse": 86,
+      "selected": true
+    },
+    {
+      "id": "c2-3",
+      "text": "can express subtleties of meaning with high flexibility in strategic executive discourse.",
+      "gse": 85,
+      "selected": true
+    },
+    {
+      "id": "c2-4",
+      "text": "can formulate thoughts and arguments smoothly with natural native-level phrasing.",
+      "gse": 89,
+      "selected": false
+    }
+  ],
+  "C1": [
+    {
+      "id": "c1-1",
+      "text": "can understand a wide range of demanding, longer texts and recognise implicit meaning in business contracts.",
+      "gse": 80,
+      "selected": true
+    },
+    {
+      "id": "c1-2",
+      "text": "can express ideas fluently and spontaneously without much obvious searching for expressions in team meetings.",
+      "gse": 78,
+      "selected": true
+    },
+    {
+      "id": "c1-3",
+      "text": "can use language flexibly and effectively for social, academic and professional purposes.",
+      "gse": 79,
+      "selected": false
+    }
+  ],
+  "B2": [
+    {
+      "id": "b2-1",
+      "text": "can understand the main ideas of complex text on both concrete and abstract topics.",
+      "gse": 68,
+      "selected": false
+    },
+    {
+      "id": "b2-2",
+      "text": "can interact with a degree of fluency and spontaneity that makes regular interaction quite possible.",
+      "gse": 65,
+      "selected": false
+    }
+  ],
+  "B1": [
+    {
+      "id": "b1-1",
+      "text": "can understand the main points of clear standard input on familiar matters regularly encountered in work.",
+      "gse": 52,
+      "selected": false
+    },
+    {
+      "id": "b1-2",
+      "text": "can deal with most situations likely to arise whilst travelling in an area where the language is spoken.",
+      "gse": 48,
+      "selected": false
+    }
+  ],
+  "A2": [
+    {
+      "id": "a2-1",
+      "text": "can make affirmative statements using the present simple without time reference.",
+      "gse": 35,
+      "selected": false
+    },
+    {
+      "id": "a2-2",
+      "text": "can make basic polite requests with 'could'.",
+      "gse": 38,
+      "selected": false
+    }
+  ],
+  "A1": [
+    {
+      "id": "a1-1",
+      "text": "can use verbs in the imperative.",
+      "gse": 18,
+      "selected": false
+    },
+    {
+      "id": "a1-2",
+      "text": "can make simple statements with 'it is'.",
+      "gse": 22,
+      "selected": false
+    }
+  ]
+};
+    let evidenceEntries = [
+  {
+    "id": 1,
+    "text": "Demonstrates accurate clause subordination in persuasive speech",
+    "weight": 40
+  },
+  {
+    "id": 2,
+    "text": "Uses consistent specialized collocation without register lapses",
+    "weight": 30
+  },
+  {
+    "id": 3,
+    "text": "Synthesizes disparate viewpoints with sustained logical progression",
+    "weight": 30
+  }
+];
+
+    let clusterSelectedCefr = ['C2', 'C1'];
+    let openCanDoDropdowns = { 'C2': false, 'C1': false, 'B2': false, 'B1': false, 'A2': false, 'A1': false };
+    
+
+    /* -------------------------------------------------------------
+       VIEW CONTROLLERS & RENDERING ENGINE
+       ------------------------------------------------------------- */
+    function setSubTab(tabName) {
+      activeSubTab = tabName;
+      selectedRowIds.clear();
+      render();
+    }
+
+    function setSkill(skillName) {
+      activeSkill = skillName;
+      render();
+    }
+
+    function setDensity(mode) {
+      currentDensity = mode;
+      render();
+    }
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      render();
+    }
+
+    function toggleSidebar() {
+      isSidebarCollapsed = !isSidebarCollapsed;
+      const sidebar = document.querySelector('.app-sidebar');
+      if (sidebar) {
+        if (isSidebarCollapsed) {
+          sidebar.classList.add('sidebar-collapsed');
+        } else {
+          sidebar.classList.remove('sidebar-collapsed');
+        }
+      }
+    }
+
+    function toggleFullscreen() {
+      isFullscreen = !isFullscreen;
+      const card = document.querySelector('.aze-card-container');
+      if (card) {
+        if (isFullscreen) {
+          card.classList.add('is-fullscreen');
+        } else {
+          card.classList.remove('is-fullscreen');
+        }
+      }
+    }
+
+    function handleSearch(val) {
+      searchQuery = (val || '').toLowerCase().trim();
+      render();
+      const input = document.getElementById('tableSearchInput');
+      if (input) {
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
+    }
+
+    function clearSearch() {
+      searchQuery = '';
+      render();
+    }
+
+    function resetFilters() {
+      searchQuery = '';
+      selectedRowIds.clear();
+      showToast('Filters reset to default', 'info');
+      render();
+    }
+
+    function toggleColumnPopover() {
+      columnPopoverOpen = !columnPopoverOpen;
+      render();
+    }
+
+    function toggleColumn(colKey) {
+      visibleColumns[colKey] = !visibleColumns[colKey];
+      render();
+    }
+
+    function toggleCefrLevelRow(lvl) {
+      expandedCefrLevelKeys[lvl] = !expandedCefrLevelKeys[lvl];
+      render();
+    }
+
+    function toggleSelectAll(allIds) {
+      if (selectedRowIds.size === allIds.length) {
+        selectedRowIds.clear();
+      } else {
+        allIds.forEach(id => selectedRowIds.add(id));
+      }
+      render();
+    }
+
+    function toggleSelectRow(id) {
+      if (selectedRowIds.has(id)) {
+        selectedRowIds.delete(id);
+      } else {
+        selectedRowIds.add(id);
+      }
+      render();
+    }
+
+    function handleBulkDelete() {
+      openDeleteModal(`${selectedRowIds.size} selected items`, 'Bulk Selection', () => {
+        selectedRowIds.clear();
+        showToast('Selected items deleted successfully', 'destructive');
+        render();
+      });
+    }
+
+    function exportData() {
+      showToast('Export started: CSV download initiated!', 'success');
+    }
+
+    /* -------------------------------------------------------------
+       MAIN RENDER DISPATCHER
+       ------------------------------------------------------------- */
+    function render() {
+      const container = document.getElementById('pageContainer');
+      if (!container) return;
+
+      if (activeSubTab === 'clusters') {
+        renderClustersView(container);
+      } else if (activeSubTab === 'cefr-levels') {
+        renderCefrLevelsView(container);
+      } else if (activeSubTab === 'can-do-statements') {
+        renderCanDoStatementsView(container);
+      } else {
+        renderOtherTabView(container, activeSubTab);
+      }
+    }
+
+    /* Helper: Render Shared Shell (Header, Pills, Subtabs, Summary Bar) */
+    function renderSharedHeader(title, primaryBtnLabel, primaryBtnFn) {
+      const skills = [
+        'Language Awareness',
+        'Listening',
+        'Reading',
+        'Speaking',
+        'Writing'
+      ];
+
+      const subtabs = [
+        { key: 'cefr-levels', label: 'CEFR Levels' },
+        { key: 'can-do-statements', label: 'CEFR Can Do Statements' },
+        { key: 'clusters', label: 'Clusters' },
+        { key: 'tasks', label: 'Tasks' },
+        { key: 'topics', label: 'Topics' },
+        { key: 'subtypes', label: 'Sub Types' },
+        { key: 'skill-focus', label: 'Skill Focus' }
+      ];
+
+      return `
+        <!-- Page Header -->
+        <div class="page-header-row">
+          <div class="page-title">
+            <h1>Question Fields</h1>
+            <p>Create and manage question fields</p>
+          </div>
+          <div class="header-actions-group">
+            <button class="custom-select-trigger" onclick="showToast('Language selector', 'info')">
+              <span>English</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <button class="btn-aze-outline" onclick="openImportModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              <span>Import</span>
+            </button>
+            <button class="btn-aze-outline" onclick="exportData()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              <span>Export</span>
+            </button>
+            <button class="btn-aze-primary" onclick="${primaryBtnFn}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              <span>${primaryBtnLabel}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Skills Segmented Bar matching Screenshot 1 (media_1791454128881.png) -->
+        <div class="skills-segmented-bar">
+          ${skills.map(s => `
+            <button class="skill-segment-btn ${activeSkill === s ? 'active' : ''}" onclick="setSkill('${s}')">
+              ${s}
+            </button>
+          `).join('')}
+        </div>
+
+        <!-- Sub Tabs Bar -->
+        <div class="subtabs-line-bar">
+          ${subtabs.map(t => `
+            <button class="subtab-item-btn ${activeSubTab === t.key ? 'active' : ''}" onclick="setSubTab('${t.key}')">
+              ${t.label}
+            </button>
+          `).join('')}
+          <button class="subtab-more-btn" title="More options">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+          </button>
+        </div>
+
+        <!-- CEFR Distribution Summary Bar (Signature AZE component) -->
+        ${activeSubTab !== 'cefr-levels' ? `
+        <div class="cefr-distribution-card">
+          <div class="cefr-dist-item dist-a1"><span class="cefr-dist-label">A1</span><span class="cefr-dist-count">20</span></div>
+          <div class="cefr-dist-item dist-a2"><span class="cefr-dist-label">A2</span><span class="cefr-dist-count">19</span></div>
+          <div class="cefr-dist-item dist-b1"><span class="cefr-dist-label">B1</span><span class="cefr-dist-count">16</span></div>
+          <div class="cefr-dist-item dist-b2"><span class="cefr-dist-label">B2</span><span class="cefr-dist-count">22</span></div>
+          <div class="cefr-dist-item dist-c1"><span class="cefr-dist-label">C1</span><span class="cefr-dist-count">16</span></div>
+          <div class="cefr-dist-item dist-c2"><span class="cefr-dist-label">C2</span><span class="cefr-dist-count">1</span></div>
+        </div>
+        ` : ''}
+      `;
+    }
+
+    /* Helper: Render Shared Toolbar */
+    function renderToolbar(placeholder) {
+      return `
+        <div class="aze-table-toolbar" style="position: relative;">
+          <div class="table-search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="tableSearchInput" type="text" placeholder="${placeholder}" value="${searchQuery}" oninput="handleSearch(this.value)">
+            ${searchQuery ? `<button class="search-clear-btn" onclick="clearSearch()" title="Clear search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>` : ''}
+          </div>
+
+          <div class="table-tools-right">
+            ${activeSubTab !== 'cefr-levels' ? `
+              <!-- Reorder Tool -->
+              <button class="icon-btn-ghost" title="Reorder items" onclick="showToast('Reorder mode active', 'info')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5-5"/><path d="M12 4v16"/></svg>
+              </button>
+
+              <!-- Reset Filters -->
+              <button class="icon-btn-ghost" title="Reset Filters" onclick="resetFilters()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+
+              <!-- ToggleGroup: Grid vs Table -->
+              <div class="view-toggle-group">
+                <button class="view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}" onclick="setViewMode('grid')" title="Grid view">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                  <span>Grid</span>
+                </button>
+                <button class="view-toggle-btn ${viewMode === 'table' ? 'active' : ''}" onclick="setViewMode('table')" title="Table view">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>
+                  <span>Table</span>
+                </button>
+              </div>
+            ` : `
+              <!-- Table Icon directly matching Screenshot 1 -->
+              <button class="icon-btn-ghost active" title="Table view" style="color:#06b6d4;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>
+              </button>
+            `}
+
+            <!-- Density Switcher matching Screenshot 1 (cozy lowercase) -->
+            <div class="density-pill-group">
+              <button class="density-btn ${currentDensity === 'compact' ? 'active' : ''}" onclick="setDensity('compact')">Compact</button>
+              <button class="density-btn ${currentDensity === 'cozy' ? 'active' : ''}" onclick="setDensity('cozy')">cozy</button>
+              <button class="density-btn ${currentDensity === 'comfortable' ? 'active' : ''}" onclick="setDensity('comfortable')">Comfortable</button>
+            </div>
+
+            <!-- Column Customizer Button -->
+            <button class="icon-btn-ghost ${columnPopoverOpen ? 'active' : ''}" title="Customize Columns" onclick="toggleColumnPopover()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+            </button>
+
+            <!-- Fullscreen Button -->
+            <button class="icon-btn-ghost ${isFullscreen ? 'active' : ''}" title="Toggle Fullscreen" onclick="toggleFullscreen()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+            </button>
+          </div>
+
+          <!-- Column Customizer Popover Menu -->
+          ${columnPopoverOpen ? `
+            <div class="column-popover-box">
+              <div class="column-popover-title">
+                <span>Toggle Columns</span>
+                <button onclick="toggleColumnPopover()" style="background:none;border:none;color:#94a3b8;cursor:pointer;">✕</button>
+              </div>
+              <div class="column-popover-item">
+                <span>Cluster ID / Level</span>
+                <input type="checkbox" class="aze-checkbox" ${visibleColumns.id ? 'checked' : ''} onchange="toggleColumn('id')">
+              </div>
+              <div class="column-popover-item">
+                <span>Name / Title</span>
+                <input type="checkbox" class="aze-checkbox" ${visibleColumns.name ? 'checked' : ''} onchange="toggleColumn('name')">
+              </div>
+              <div class="column-popover-item">
+                <span>Domain</span>
+                <input type="checkbox" class="aze-checkbox" ${visibleColumns.domain ? 'checked' : ''} onchange="toggleColumn('domain')">
+              </div>
+              <div class="column-popover-item">
+                <span>Level</span>
+                <input type="checkbox" class="aze-checkbox" ${visibleColumns.level ? 'checked' : ''} onchange="toggleColumn('level')">
+              </div>
+              <div class="column-popover-item">
+                <span>GSE Range</span>
+                <input type="checkbox" class="aze-checkbox" ${visibleColumns.gseRange ? 'checked' : ''} onchange="toggleColumn('gseRange')">
+              </div>
+              <div class="column-popover-item">
+                <span>Attached CEFR</span>
+                <input type="checkbox" class="aze-checkbox" ${visibleColumns.attachedCefr ? 'checked' : ''} onchange="toggleColumn('attachedCefr')">
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    /* Helper: Bulk Selection Bar */
+    function renderBulkBar() {
+      if (selectedRowIds.size === 0) return '';
+      return `
+        <div class="bulk-action-bar">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <strong>${selectedRowIds.size}</strong> items selected
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button onclick="exportData()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Export Selected</button>
+            <button class="btn-bulk-delete" onclick="handleBulkDelete()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> Delete Selected</button>
+          </div>
+        </div>
+      `;
+    }
+
+    /* -------------------------------------------------------------
+       1. CLUSTERS VIEW (TAB 1: Clusters)
+       Refined: Inner table moved to Detail View Modal!
+       No accordion expander on cluster rows. Clicking row opens Detail View.
+       ------------------------------------------------------------- */
+    function renderClustersView(container) {
+      const filtered = clusterTableData.filter(c => {
+        if (!searchQuery) return true;
+        return c.id.toLowerCase().includes(searchQuery) ||
+               c.name.toLowerCase().includes(searchQuery) ||
+               c.domain.toLowerCase().includes(searchQuery) ||
+               c.level.toLowerCase().includes(searchQuery);
+      });
+
+      const allIds = filtered.map(c => c.id);
+      const isAllSelected = allIds.length > 0 && selectedRowIds.size === allIds.length;
+
+      let contentHtml = '';
+
+      if (viewMode === 'grid') {
+        // Grid Card Mode
+        contentHtml = `
+          <div class="aze-grid-view">
+            ${filtered.map((cluster, idx) => {
+              const isSelected = selectedRowIds.has(cluster.id);
+              return `
+                <div class="grid-card">
+                  <div class="grid-card-header">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <input type="checkbox" class="aze-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelectRow('${cluster.id}')">
+                      <span class="grid-index-pill">#${idx + 1}</span>
+                      <span class="cluster-id-badge">${cluster.id}</span>
+                    </div>
+                    <div class="action-btn-group">
+                      <button class="row-action-btn" title="View Full Details" onclick="openClusterDetailModal('${cluster.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                      <button class="row-action-btn" title="Edit Cluster" onclick="openAddClusterModal('${cluster.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+                      <button class="row-action-btn btn-delete" title="Delete Cluster" onclick="openDeleteModal('${cluster.name}', 'Cluster', () => { clusterTableData = clusterTableData.filter(x => x.id !== '${cluster.id}'); render(); })"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="grid-card-title" style="cursor:pointer;" onclick="openClusterDetailModal('${cluster.id}')">${cluster.name}</div>
+
+                  <div class="grid-card-fields">
+                    <div class="grid-field-row">
+                      <span class="grid-field-label">Domain</span>
+                      <span class="grid-field-value">${cluster.domain}</span>
+                    </div>
+                    <div class="grid-field-row">
+                      <span class="grid-field-label">Primary Level</span>
+                      <span class="cefr-badge ${cluster.levelClass}">${cluster.level}</span>
+                    </div>
+                    <div class="grid-field-row">
+                      <span class="grid-field-label">Computed GSE Range</span>
+                      <span class="gse-range-badge">${cluster.gseRange}</span>
+                    </div>
+                    <div class="grid-field-row">
+                      <span class="grid-field-label">Attached CEFR</span>
+                      <span class="attached-cefr-chip">${cluster.attachedCefrLevels.length} Levels (${cluster.attachedCefrLevels.map(c => c.level).join(', ')})</span>
+                    </div>
+                  </div>
+
+                  <button class="btn-aze-outline" style="width:100%;justify-content:center;font-size:12px;margin-top:6px;gap:6px;" onclick="openClusterDetailModal('${cluster.id}')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <span>View Attached Levels & Statements</span>
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else {
+        // Table Mode: Clean tabular rows, clicking opens Detail View
+        let rowsHtml = '';
+        if (filtered.length === 0) {
+          rowsHtml = `<tr><td colspan="7" style="text-align:center;padding:36px;color:var(--dim-text);">No clusters found matching "${searchQuery}".</td></tr>`;
+        } else {
+          filtered.forEach(cluster => {
+            const isSelected = selectedRowIds.has(cluster.id);
+
+            rowsHtml += `
+              <tr style="cursor:pointer;" onclick="openClusterDetailModal('${cluster.id}')">
+                <td style="text-align:center;width:40px;" onclick="event.stopPropagation();">
+                  <input type="checkbox" class="aze-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelectRow('${cluster.id}')">
+                </td>
+                ${visibleColumns.id ? `<td style="width:150px;"><span class="cluster-id-badge">${cluster.id}</span></td>` : ''}
+                ${visibleColumns.name ? `<td><span style="font-weight:600;color:#fff;text-decoration:underline;text-decoration-color:transparent;transition:text-decoration-color 0.15s ease;" onmouseover="this.style.textDecorationColor='#06b6d4'" onmouseout="this.style.textDecorationColor='transparent'">${cluster.name}</span></td>` : ''}
+                ${visibleColumns.domain ? `<td style="width:160px;color:#cbd5e1;">${cluster.domain}</td>` : ''}
+                ${visibleColumns.level ? `<td style="width:90px;"><span class="cefr-badge ${cluster.levelClass}">${cluster.level}</span></td>` : ''}
+                ${visibleColumns.gseRange ? `<td style="width:130px;"><span class="gse-range-badge">${cluster.gseRange}</span></td>` : ''}
+                ${visibleColumns.attachedCefr ? `<td style="width:200px;">
+                  <button class="attached-cefr-chip" style="cursor:pointer;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.3);" onclick="event.stopPropagation(); openClusterDetailModal('${cluster.id}');" title="Click to view attached levels">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+                    <strong>${cluster.attachedCefrLevels.length} Levels</strong> (${cluster.attachedCefrLevels.map(c => c.level).join(', ')})
+                  </button>
+                </td>` : ''}
+                ${visibleColumns.actions ? `<td style="text-align:right;width:100px;" onclick="event.stopPropagation();">
+                  <div class="action-btn-group">
+                    <button class="row-action-btn" title="View Detail Modal" onclick="openClusterDetailModal('${cluster.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="row-action-btn" title="Edit Cluster" onclick="openAddClusterModal('${cluster.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+                    <button class="row-action-btn btn-delete" title="Delete Cluster" onclick="openDeleteModal('${cluster.name}', 'Cluster', () => { clusterTableData = clusterTableData.filter(x => x.id !== '${cluster.id}'); render(); })"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+                  </div>
+                </td>` : ''}
+              </tr>
+            `;
+          });
+        }
+
+        contentHtml = `
+          <div class="aze-table-wrap">
+            <table class="aze-data-table cluster-data-table density-${currentDensity}">
+              <thead>
+                <tr>
+                  <th style="width:40px;text-align:center;">
+                    <input type="checkbox" class="aze-checkbox" ${isAllSelected ? 'checked' : ''} onchange="toggleSelectAll(${JSON.stringify(allIds)})">
+                  </th>
+                  ${visibleColumns.id ? `<th style="width:150px;">Cluster ID <span class="sort-eq">=</span></th>` : ''}
+                  ${visibleColumns.name ? `<th>Cluster Name <span class="sort-eq">=</span></th>` : ''}
+                  ${visibleColumns.domain ? `<th style="width:160px;">Domain <span class="sort-eq">=</span></th>` : ''}
+                  ${visibleColumns.level ? `<th style="width:90px;">Level <span class="sort-eq">=</span></th>` : ''}
+                  ${visibleColumns.gseRange ? `<th style="width:130px;">GSE Range <span class="sort-eq">=</span></th>` : ''}
+                  ${visibleColumns.attachedCefr ? `<th style="width:200px;">Attached CEFR <span class="sort-eq">=</span></th>` : ''}
+                  ${visibleColumns.actions ? `<th style="text-align:right;width:100px;">Actions</th>` : ''}
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        ${renderSharedHeader('Question Fields', 'Add New Cluster', 'openAddClusterModal()')}
+
+        <div class="aze-card-container ${isFullscreen ? 'is-fullscreen' : ''}">
+          ${renderToolbar('Search by Clusters...')}
+          ${renderBulkBar()}
+          ${contentHtml}
+
+          <!-- Pagination Footer -->
+          <div class="aze-table-footer">
+            <span>Showing 1 to ${filtered.length} of ${clusterTableData.length} entries</span>
+            <div class="pagination-bar">
+              <span style="margin-right:6px;">Rows per page</span>
+              <button class="custom-select-trigger" style="padding:3px 8px;font-size:11px;">10 ▾</button>
+              <button class="page-sq-btn" style="margin-left:8px;">&laquo;</button>
+              <button class="page-sq-btn">&lsaquo;</button>
+              <button class="page-sq-btn active">1</button>
+              <button class="page-sq-btn">&rsaquo;</button>
+              <button class="page-sq-btn">&raquo;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-page-footer">
+          Powered by azetest.ai &copy; 2026
+        </div>
+      `;
+    }
+
+    /* -------------------------------------------------------------
+       2. CEFR LEVELS VIEW (TAB 2: CEFR Levels - Matching dev.azetest.ai)
+       Columns: No. | Level | GSE Min | GSE Max | GSE Range | Actions
+       ------------------------------------------------------------- */
+    function renderCefrLevelsView(container) {
+      const filtered = cefrLevelsData.filter(lvl => {
+        if (!searchQuery) return true;
+        return lvl.level.toLowerCase().includes(searchQuery) ||
+               String(lvl.gseMin).includes(searchQuery) ||
+               String(lvl.gseMax).includes(searchQuery) ||
+               lvl.gseRange.includes(searchQuery);
+      });
+
+      let contentHtml = '';
+
+      if (viewMode === 'grid') {
+        contentHtml = `
+          <div class="aze-grid-view">
+            ${filtered.map(lvl => `
+              <div class="grid-card">
+                <div class="grid-card-header">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span class="grid-index-pill">#${lvl.no}</span>
+                    <span class="cefr-badge ${lvl.levelClass}">${lvl.level}</span>
+                  </div>
+                  <div class="action-btn-group">
+                    <button class="row-action-btn" title="Edit Level" onclick="openEditCefrLevelModal('${lvl.level}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+                    <button class="row-action-btn btn-delete" title="Delete Level" onclick="deleteCefrLevel('${lvl.level}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+                  </div>
+                </div>
+
+                <div class="grid-card-fields" style="margin-top:12px;">
+                  <div class="grid-field-row">
+                    <span class="grid-field-label">GSE Min</span>
+                    <span class="grid-field-value font-mono" style="color:#f1f5f9;font-weight:600;">${lvl.gseMin}</span>
+                  </div>
+                  <div class="grid-field-row">
+                    <span class="grid-field-label">GSE Max</span>
+                    <span class="grid-field-value font-mono" style="color:#f1f5f9;font-weight:600;">${lvl.gseMax}</span>
+                  </div>
+                  <div class="grid-field-row">
+                    <span class="grid-field-label">GSE Range</span>
+                    <span class="gse-range-badge">${lvl.gseRange}</span>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        let rowsHtml = '';
+        if (filtered.length === 0) {
+          rowsHtml = `<tr><td colspan="5" style="text-align:center;padding:36px;color:var(--dim-text);">No CEFR levels found matching "${searchQuery}".</td></tr>`;
+        } else {
+          filtered.forEach(lvl => {
+            rowsHtml += `
+              <tr style="position:relative;">
+                <td style="width:75px;color:var(--dim-text);font-family:var(--font-mono);">${lvl.no}</td>
+                <td style="width:140px;"><span class="cefr-badge ${lvl.levelClass}">${lvl.level}</span></td>
+                <td style="width:200px;font-family:var(--font-mono);color:#f1f5f9;font-weight:600;">${lvl.gseMin}</td>
+                <td style="width:200px;font-family:var(--font-mono);color:#f1f5f9;font-weight:600;">${lvl.gseMax}</td>
+                <td>
+                  <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span class="gse-range-badge">${lvl.gseRange}</span>
+                    <div class="cefr-hover-actions">
+                      <button class="row-action-btn" title="Edit Level" onclick="openEditCefrLevelModal('${lvl.level}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                      </button>
+                      <button class="row-action-btn btn-delete" title="Delete Level" onclick="deleteCefrLevel('${lvl.level}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        contentHtml = `
+          <div class="aze-table-wrap">
+            <table class="aze-data-table density-${currentDensity}">
+              <thead>
+                <tr>
+                  <th style="width:75px;">No. <span class="sort-eq">=</span></th>
+                  <th style="width:140px;">Level <span class="sort-eq">=</span></th>
+                  <th style="width:200px;">GSE Min <span class="sort-eq">=</span></th>
+                  <th style="width:200px;">GSE Max <span class="sort-eq">=</span></th>
+                  <th>GSE Range <span class="sort-eq">=</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        ${renderSharedHeader('Question Fields', 'Add New Field', 'openAddQuestionFieldModal("CEFR Levels")')}
+
+        <div class="aze-card-container ${isFullscreen ? 'is-fullscreen' : ''}">
+          ${renderToolbar('Search by CEFR Levels')}
+          ${contentHtml}
+
+          <div class="aze-table-footer">
+            <span>Showing 1 to ${filtered.length} of ${cefrLevelsData.length} entries</span>
+            <div class="pagination-bar">
+              <span style="margin-right:6px;">Rows per page</span>
+              <button class="custom-select-trigger" style="padding:3px 8px;font-size:11px;">10 ▾</button>
+              <button class="page-sq-btn" style="margin-left:8px;">&laquo;</button>
+              <button class="page-sq-btn">&lsaquo;</button>
+              <button class="page-sq-btn active">1</button>
+              <button class="page-sq-btn">&rsaquo;</button>
+              <button class="page-sq-btn">&raquo;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-page-footer">
+          Powered by azetest.ai &copy; 2026
+        </div>
+      `;
+    }
+
+    /* -------------------------------------------------------------
+       3. CAN DO STATEMENTS VIEW (TAB 3: CEFR Can Do Statements)
+       Includes dedicated Evidence column with interactive Information popover
+       ------------------------------------------------------------- */
+    function renderCanDoStatementsView(container) {
+      const filtered = canDoStatementsData.filter(s => {
+        if (!searchQuery) return true;
+        return s.statement.toLowerCase().includes(searchQuery) ||
+               s.level.toLowerCase().includes(searchQuery) ||
+               s.clusterId.toLowerCase().includes(searchQuery) ||
+               s.domain.toLowerCase().includes(searchQuery);
+      });
+
+      const allIds = filtered.map(s => s.id);
+      const isAllSelected = allIds.length > 0 && selectedRowIds.size === allIds.length;
+
+      let contentHtml = '';
+
+      if (viewMode === 'grid') {
+        contentHtml = `
+          <div class="aze-grid-view">
+            ${filtered.map(s => {
+              const isSelected = selectedRowIds.has(s.id);
+              return `
+                <div class="grid-card">
+                  <div class="grid-card-header">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <input type="checkbox" class="aze-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelectRow('${s.id}')">
+                      <span class="grid-index-pill">#${s.no}</span>
+                      <span class="cefr-badge ${s.levelClass}">${s.level}</span>
+                    </div>
+                    <div class="action-btn-group">
+                      <button class="row-action-btn" title="Edit Statement" onclick="openAddQuestionFieldModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+                      <button class="row-action-btn btn-delete" title="Delete" onclick="openDeleteModal('Statement #${s.no}', 'Can Do Statement', () => { canDoStatementsData = canDoStatementsData.filter(x => x.id !== '${s.id}'); render(); })"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+                    </div>
+                  </div>
+
+                  <p style="font-size:13px;color:#f1f5f9;line-height:1.5;">${s.statement}</p>
+
+                  <div class="grid-card-fields">
+                    <div class="grid-field-row">
+                      <span class="grid-field-label">Cluster</span>
+                      <span class="cluster-id-badge">${s.clusterId}</span>
+                    </div>
+                    <div class="grid-field-row">
+                      <span class="grid-field-label">GSE Score</span>
+                      <span class="gse-range-badge">${s.gseScore}</span>
+                    </div>
+                    <div class="grid-field-row">
+                      <span class="grid-field-label">Domain</span>
+                      <span class="grid-field-value" style="${s.domain === 'Progressing' ? 'color:#38bdf8;font-weight:600;' : ''}">${s.domain}</span>
+                    </div>
+                    ${s.evidence && s.evidence.length > 0 ? `
+                      <div class="grid-field-row">
+                        <span class="grid-field-label">Evidence</span>
+                        <button class="evidence-info-chip" onclick="event.stopPropagation(); toggleEvidencePopover(event, '${s.id}')" title="Click to view evidence breakdown">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
+                          <span>${s.evidence.length} Items</span>
+                        </button>
+                      </div>
+                    ` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else {
+        let rowsHtml = '';
+        if (filtered.length === 0) {
+          rowsHtml = `<tr><td colspan="9" style="text-align:center;padding:36px;color:var(--dim-text);">No Can Do Statements found matching "${searchQuery}".</td></tr>`;
+        } else {
+          filtered.forEach(s => {
+            const isSelected = selectedRowIds.has(s.id);
+            rowsHtml += `
+              <tr>
+                <td style="text-align:center;width:40px;" onclick="event.stopPropagation();">
+                  <input type="checkbox" class="aze-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelectRow('${s.id}')">
+                </td>
+                <td style="color:var(--dim-text);width:48px;font-family:var(--font-mono);">${s.no}</td>
+                <td style="width:80px;"><span class="cefr-badge ${s.levelClass}">${s.level}</span></td>
+                <td style="width:160px;"><span class="cluster-id-badge">${s.clusterId}</span></td>
+                <td style="width:100px;"><span class="gse-range-badge">${s.gseScore}</span></td>
+                <td style="width:140px;color:#cbd5e1;">
+                  ${s.domain === 'Progressing' ? `<span style="color:#38bdf8;font-weight:600;">Progressing</span>` : s.domain}
+                </td>
+                <td style="width:130px;">
+                  ${s.evidence && s.evidence.length > 0 ? `
+                    <button class="evidence-info-chip" onclick="event.stopPropagation(); toggleEvidencePopover(event, '${s.id}')" title="Click to view evidence breakdown">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
+                      <span>${s.evidence.length} Items</span>
+                    </button>
+                  ` : `<span style="color:var(--dim-text);font-family:var(--font-mono);">-</span>`}
+                </td>
+                <td style="color:#e2e8f0;line-height:1.45;">${s.statement}</td>
+                <td style="text-align:right;width:80px;">
+                  <div class="action-btn-group">
+                    <button class="row-action-btn" title="Edit Statement" onclick="openAddQuestionFieldModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+                    <button class="row-action-btn btn-delete" title="Delete" onclick="openDeleteModal('Statement #${s.no}', 'Can Do Statement', () => { canDoStatementsData = canDoStatementsData.filter(x => x.id !== '${s.id}'); render(); })"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        contentHtml = `
+          <div class="aze-table-wrap">
+            <table class="aze-data-table density-${currentDensity}">
+              <thead>
+                <tr>
+                  <th style="width:40px;text-align:center;">
+                    <input type="checkbox" class="aze-checkbox" ${isAllSelected ? 'checked' : ''} onchange="toggleSelectAll(${JSON.stringify(allIds)})">
+                  </th>
+                  <th style="width:48px;">No. <span class="sort-eq">=</span></th>
+                  <th style="width:80px;">Level <span class="sort-eq">=</span></th>
+                  <th style="width:160px;background:rgba(6,182,212,0.08);color:#38bdf8;">Cluster <span class="sort-eq">=</span></th>
+                  <th style="width:100px;">GSE Score <span class="sort-eq">=</span></th>
+                  <th style="width:140px;">Domain <span class="sort-eq">=</span></th>
+                  <th style="width:130px;background:rgba(6,182,212,0.08);color:#38bdf8;">Evidence <span class="sort-eq">=</span></th>
+                  <th>Can Do Statement <span class="sort-eq">=</span></th>
+                  <th style="text-align:right;width:80px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        ${renderSharedHeader('Question Fields', 'Add New Field', 'openAddQuestionFieldModal()')}
+
+        <div class="aze-card-container ${isFullscreen ? 'is-fullscreen' : ''}">
+          ${renderToolbar('Search by CEFR Can Do Statements...')}
+          ${renderBulkBar()}
+          ${contentHtml}
+
+          <div class="aze-table-footer">
+            <span>Showing 1 to ${filtered.length} of ${canDoStatementsData.length} entries</span>
+            <div class="pagination-bar">
+              <span style="margin-right:6px;">Rows per page</span>
+              <button class="custom-select-trigger" style="padding:3px 8px;font-size:11px;">10 ▾</button>
+              <button class="page-sq-btn" style="margin-left:8px;">&laquo;</button>
+              <button class="page-sq-btn">&lsaquo;</button>
+              <button class="page-sq-btn active">1</button>
+              <button class="page-sq-btn">&rsaquo;</button>
+              <button class="page-sq-btn">&raquo;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-page-footer">
+          Powered by azetest.ai &copy; 2026
+        </div>
+      `;
+    }
+
+    /* -------------------------------------------------------------
+       4. OTHER TABS (Tasks, Topics, Sub Types, Skill Focus)
+       ------------------------------------------------------------- */
+    function renderOtherTabView(container, tabKey) {
+      const titles = {
+        'tasks': 'Tasks',
+        'topics': 'Topics',
+        'subtypes': 'Sub Types',
+        'skill-focus': 'Skill Focus'
+      };
+      const title = titles[tabKey] || 'Field';
+
+      container.innerHTML = `
+        ${renderSharedHeader('Question Fields', `Add ${title}`, 'openAddQuestionFieldModal()')}
+
+        <div class="aze-card-container ${isFullscreen ? 'is-fullscreen' : ''}">
+          ${renderToolbar(`Search by ${title}...`)}
+          <div style="padding:48px 24px;text-align:center;color:var(--muted-text);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin-bottom:12px;color:#06b6d4;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            <h3 style="color:#fff;font-size:16px;margin-bottom:6px;">Manage ${title}</h3>
+            <p style="font-size:13px;max-width:400px;margin:0 auto 18px;">Standard AZE question fields management for ${title} under ${activeSkill}.</p>
+            <button class="btn-aze-primary" style="margin:0 auto;" onclick="openAddQuestionFieldModal()">+ Add New ${title}</button>
+          </div>
+        </div>
+
+        <div class="app-page-footer">
+          Powered by azetest.ai &copy; 2026
+        </div>
+      `;
+    }
+    
+
+    /* -------------------------------------------------------------
+       MODALS, DIALOGS & NOTIFICATIONS ENGINE
+       ------------------------------------------------------------- */
+    function closeModal() {
+      const modal = document.getElementById('modalContainer');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.innerHTML = '';
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      let container = document.getElementById('toastContainer');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+      }
+
+      const toast = document.createElement('div');
+      toast.className = `aze-toast ${type}`;
+      toast.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;">
+          ${type === 'success' ? '<polyline points="20 6 9 17 4 12"/>' : type === 'destructive' ? '<circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/>'}
+        </svg>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.2s ease';
+        setTimeout(() => toast.remove(), 200);
+      }, 3500);
+    }
+
+    /* -------------------------------------------------------------
+       1. CLUSTER DETAIL VIEW MODAL (ClusterDetailModal)
+       Displays Attached CEFR Levels and statements in detail view
+       ------------------------------------------------------------- */
+    let detailExpandedLevelKeys = { 'C2': true, 'C1': false, 'B2': false, 'B1': false, 'A2': false, 'A1': false };
+
+    function openClusterDetailModal(clusterId) {
+      const modal = document.getElementById('modalContainer');
+      if (!modal) return;
+
+      const cluster = clusterTableData.find(c => c.id === clusterId) || clusterTableData[0];
+      const attached = cluster.attachedCefrLevels || [];
+      const totalStatements = attached.reduce((sum, lvl) => sum + (lvl.statements ? lvl.statements.length : 0), 0);
+
+      modal.innerHTML = `
+        <div class="aze-dialog-backdrop" onclick="if(event.target === this) closeModal()">
+          <div class="aze-dialog-box" style="max-width: 820px;">
+            <div class="aze-dialog-header">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="cluster-id-badge" style="font-size:13px;padding:4px 10px;">${cluster.id}</span>
+                <span class="aze-dialog-title">${cluster.name}</span>
+              </div>
+              <button class="aze-dialog-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+
+            <div class="aze-dialog-body">
+              <!-- Cluster Meta Summary Cards -->
+              <div class="cluster-detail-meta-grid">
+                <div class="detail-meta-item">
+                  <span class="detail-meta-label">Skill</span>
+                  <span class="detail-meta-value">${activeSkill}</span>
+                </div>
+                <div class="detail-meta-item">
+                  <span class="detail-meta-label">Domain</span>
+                  <span class="detail-meta-value">${cluster.domain}</span>
+                </div>
+                <div class="detail-meta-item">
+                  <span class="detail-meta-label">Primary Level</span>
+                  <span class="detail-meta-value"><span class="cefr-badge ${cluster.levelClass}">${cluster.level}</span></span>
+                </div>
+                <div class="detail-meta-item">
+                  <span class="detail-meta-label">Dynamic GSE Range</span>
+                  <span class="detail-meta-value" style="color:#38bdf8;font-family:var(--font-mono);">${cluster.gseRange}</span>
+                </div>
+                <div class="detail-meta-item">
+                  <span class="detail-meta-label">Attached Levels</span>
+                  <span class="detail-meta-value">${attached.length} CEFR Levels</span>
+                </div>
+                <div class="detail-meta-item">
+                  <span class="detail-meta-label">Total Statements</span>
+                  <span class="detail-meta-value" style="color:#34d399;">${totalStatements} Attached</span>
+                </div>
+              </div>
+
+              <!-- Inner Table: Attached CEFR Levels for this Cluster -->
+              <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+                <div style="font-size:14px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:#06b6d4;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  <span>Attached CEFR Levels for <strong>${cluster.id}</strong></span>
+                </div>
+                <span style="font-size:12px;color:var(--dim-text);">Click statements chip to preview descriptors</span>
+              </div>
+
+              <div class="aze-table-wrap" style="border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden;background:#050a1b;">
+                <table class="nested-aze-table" style="margin:0;">
+                  <thead>
+                    <tr>
+                      <th style="width:90px;">CEFR Level</th>
+                      <th>Descriptor / Level Title</th>
+                      <th style="width:140px;">Domain</th>
+                      <th style="width:110px;">GSE Range</th>
+                      <th style="width:190px;">Can Do Statements</th>
+                      <th style="width:90px;">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${attached.map(cefr => {
+                      const isStmtsOpen = !!detailExpandedLevelKeys[cefr.level];
+                      return `
+                        <tr>
+                          <td><span class="cefr-badge ${cefr.levelClass}">${cefr.level}</span></td>
+                          <td><strong style="color:#fff;">${cefr.title}</strong></td>
+                          <td style="color:#cbd5e1;">${cefr.domain}</td>
+                          <td><span class="gse-range-badge">${cefr.gseRange}</span></td>
+                          <td>
+                            <button class="btn-aze-outline" style="padding:4px 10px;font-size:11.5px;color:#38bdf8;gap:6px;" onclick="toggleDetailLevelStmts('${cefr.level}', '${cluster.id}')">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                              <span>${cefr.statements.length} Statements</span>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;transform:${isStmtsOpen ? 'rotate(180deg)' : 'none'};"><path d="m6 9 6 6 6-6"/></svg>
+                            </button>
+                          </td>
+                          <td><span class="status-pill active"><span class="dot"></span> ${cefr.status}</span></td>
+                        </tr>
+                        ${isStmtsOpen ? `
+                          <tr>
+                            <td colspan="6" style="padding:0;background:#030714;">
+                              <div style="padding:12px 18px;border-left:3px solid #06b6d4;background:#04091a;">
+                                <div style="font-size:12px;font-weight:600;color:#38bdf8;margin-bottom:8px;">Can Do Statements attached under ${cefr.level}:</div>
+                                <div style="display:flex;flex-direction:column;gap:6px;">
+                                  ${cefr.statements.map(s => `
+                                    <div style="padding:6px 10px;background:#060e24;border:1px solid #142242;border-radius:4px;font-size:12px;display:flex;align-items:flex-start;gap:8px;">
+                                      <span class="gse-range-badge" style="font-size:10.5px;padding:1px 5px;">GSE ${s.gse}</span>
+                                      <span style="color:#e2e8f0;">${s.text}</span>
+                                    </div>
+                                  `).join('')}
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        ` : ''}
+                      `;
+                    }).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="aze-dialog-footer">
+              <button class="btn-aze-outline" onclick="closeModal()">Close</button>
+              <button class="btn-aze-primary" onclick="closeModal(); openAddClusterModal('${cluster.id}');">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                <span>Edit Cluster</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      modal.style.display = 'flex';
+    }
+
+    function toggleDetailLevelStmts(lvl, clusterId) {
+      detailExpandedLevelKeys[lvl] = !detailExpandedLevelKeys[lvl];
+      openClusterDetailModal(clusterId);
+    }
+
+    /* -------------------------------------------------------------
+       2. ADD / EDIT CLUSTER MODAL
+       Refined requirements:
+       - Skill, Cluster ID, Cluster Name, Level (multi-selected)
+       - Attach Specific Can Do Statements (multi-select + select all option)
+       - REMOVED: GSE Min, GSE Max, GSE Range
+       - Standard domains only (No Progressing domain)
+       ------------------------------------------------------------- */
+    let selectedClusterLevels = ['C2', 'C1']; // Multi-select array of Levels
+
+    function openAddClusterModal(editId = null) {
+      const modal = document.getElementById('modalContainer');
+      if (!modal) return;
+
+      const cluster = editId ? clusterTableData.find(c => c.id === editId) : null;
+      const initialId = cluster ? cluster.id : 'CLUST-ADV-01';
+      const initialName = cluster ? cluster.name : 'Advanced Professional Mastery';
+      const initialDomain = cluster ? cluster.domain : 'Business English';
+
+      if (cluster && cluster.attachedCefrLevels) {
+        selectedClusterLevels = cluster.attachedCefrLevels.map(c => c.level);
+      } else if (!editId) {
+        selectedClusterLevels = ['C2', 'C1'];
+      }
+
+      renderAddClusterModalContent(initialId, initialName, initialDomain);
+      modal.style.display = 'flex';
+    }
+
+    function renderAddClusterModalContent(cId, cName, cDomain) {
+      const modal = document.getElementById('modalContainer');
+      const allLevels = ['C2', 'C1', 'B2', 'B1', 'A2', 'A1'];
+
+      modal.innerHTML = `
+        <div class="aze-dialog-backdrop" onclick="if(event.target === this) closeModal()">
+          <div class="aze-dialog-box" style="max-width: 640px;">
+            <div class="aze-dialog-header">
+              <span class="aze-dialog-title">Add New Cluster</span>
+              <button class="aze-dialog-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+
+            <div class="aze-dialog-body">
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="field-label">Skill <span class="req">*</span></label>
+                  <select class="aze-select-field" id="clusterSkill">
+                    <option value="Language Awareness">Language Awareness</option>
+                    <option value="Listening">Listening</option>
+                    <option value="Reading">Reading</option>
+                    <option value="Speaking">Speaking</option>
+                    <option value="Writing">Writing</option>
+                  </select>
+                </div>
+                <div class="form-field-group">
+                  <label class="field-label">Cluster ID <span class="req">*</span></label>
+                  <input type="text" class="aze-input" id="clusterIdInput" value="${cId}" placeholder="e.g. CLUST-ADV-01">
+                  <div class="field-hint">Unique identifier entered by Admin</div>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="field-label">Cluster Name <span class="req">*</span></label>
+                  <input type="text" class="aze-input" id="clusterNameInput" value="${cName}" placeholder="e.g. Advanced Professional Mastery">
+                </div>
+                <div class="form-field-group">
+                  <label class="field-label">Domain <span class="req">*</span></label>
+                  <!-- Standard domains only (NO Progressing domain) -->
+                  <select class="aze-select-field" id="clusterDomainInput">
+                    <option value="Business English" ${cDomain === 'Business English' ? 'selected' : ''}>Business English</option>
+                    <option value="General English" ${cDomain === 'General English' ? 'selected' : ''}>General English</option>
+                    <option value="Academic English" ${cDomain === 'Academic English' ? 'selected' : ''}>Academic English</option>
+                  </select>
+                  <div class="field-hint">Standard domains only (no progressing)</div>
+                </div>
+              </div>
+
+              <!-- LEVEL - MULTI SELECTED -->
+              <div class="form-field-group">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                  <label class="field-label" style="margin-bottom:0;">Level (Multi-Select) <span class="req">*</span></label>
+                  <span style="font-size:11px;color:#38bdf8;">${selectedClusterLevels.length} Levels Selected</span>
+                </div>
+                <div class="level-multiselect-grid">
+                  ${allLevels.map(lvl => {
+                    const isSelected = selectedClusterLevels.includes(lvl);
+                    return `
+                      <div class="level-select-pill ${isSelected ? 'selected' : ''}" onclick="toggleClusterLevelMulti('${lvl}', '${cId}', '${cName}', '${cDomain}')">
+                        <input type="checkbox" class="aze-checkbox" ${isSelected ? 'checked' : ''} style="pointer-events:none;">
+                        <span class="cefr-badge ${lvl.toLowerCase()}">${lvl}</span>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+                <div class="field-hint">Selecting levels attaches them to this cluster</div>
+              </div>
+
+              <!-- ATTACH SPECIFIC CAN DO STATEMENTS WITH MULTI-SELECT & SELECT ALL -->
+              <div class="form-field-group" style="margin-top:16px;">
+                <label class="field-label">Attach Specific Can Do Statements to Cluster</label>
+                <div id="clusterCanDoDropdownsArea">
+                  ${renderClusterCanDoStatementsPicker()}
+                </div>
+              </div>
+            </div>
+
+            <div class="aze-dialog-footer">
+              <button class="btn-aze-outline" onclick="closeModal()">Cancel</button>
+              <button class="btn-aze-primary" onclick="handleSaveCluster()">Save Cluster</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleClusterLevelMulti(lvl, cId, cName, cDomain) {
+      if (selectedClusterLevels.includes(lvl)) {
+        if (selectedClusterLevels.length === 1) {
+          showToast('At least one level must be selected', 'info');
+          return;
+        }
+        selectedClusterLevels = selectedClusterLevels.filter(x => x !== lvl);
+      } else {
+        selectedClusterLevels.push(lvl);
+      }
+      renderAddClusterModalContent(
+        document.getElementById('clusterIdInput')?.value || cId,
+        document.getElementById('clusterNameInput')?.value || cName,
+        document.getElementById('clusterDomainInput')?.value || cDomain
+      );
+    }
+
+    function renderClusterCanDoStatementsPicker() {
+      if (selectedClusterLevels.length === 0) {
+        return `<div style="font-size:12px;color:var(--dim-text);padding:12px;background:#040a1b;border-radius:6px;">Select at least one Level above to attach Can Do Statements.</div>`;
+      }
+
+      // Calculate total available and total selected across all active levels
+      let totalAvailable = 0;
+      let totalSelected = 0;
+      selectedClusterLevels.forEach(lvl => {
+        const list = availableCanDoStatements[lvl] || [];
+        totalAvailable += list.length;
+        totalSelected += list.filter(s => s.selected).length;
+      });
+      const isGlobalAllSelected = totalAvailable > 0 && totalSelected === totalAvailable;
+
+      return `
+        <div style="background:#040a1b;border:1px solid #162444;border-radius:8px;padding:12px;">
+          <!-- Master Global Select All Option -->
+          <div class="select-all-header-row">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#fff;font-weight:600;">
+              <input type="checkbox" class="aze-checkbox" ${isGlobalAllSelected ? 'checked' : ''} onchange="toggleSelectAllStatementsGlobal(this.checked)">
+              <span>Select All Statements across All Selected Levels</span>
+            </label>
+            <span style="color:#38bdf8;font-family:var(--font-mono);">${totalSelected} of ${totalAvailable} Selected</span>
+          </div>
+
+          <!-- Per-Level Collapsible Groups with Individual Select All -->
+          ${selectedClusterLevels.map(lvl => {
+            const stmts = availableCanDoStatements[lvl] || [];
+            const selectedCount = stmts.filter(s => s.selected).length;
+            const isLevelAllSelected = stmts.length > 0 && selectedCount === stmts.length;
+            const isOpen = openCanDoDropdowns[lvl] !== false;
+
+            return `
+              <div style="margin-bottom:8px;border:1px solid #172445;border-radius:6px;overflow:hidden;background:#060e22;">
+                <!-- Level Accordion Header -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#09142c;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <button class="row-expand-btn ${isOpen ? 'open' : ''}" style="width:20px;height:20px;" onclick="toggleCanDoDropdown('${lvl}')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                    <span class="cefr-badge ${lvl.toLowerCase()}">${lvl}</span>
+                    <span style="font-size:12.5px;font-weight:600;color:#fff;">${lvl} Statements</span>
+                  </div>
+
+                  <!-- Per-Level Select All Checkbox -->
+                  <div style="display:flex;align-items:center;gap:12px;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#94a3b8;cursor:pointer;">
+                      <input type="checkbox" class="aze-checkbox" ${isLevelAllSelected ? 'checked' : ''} onchange="toggleSelectAllLevelStatements('${lvl}', this.checked)">
+                      <span>Select All (${stmts.length})</span>
+                    </label>
+                    <span style="font-size:11.5px;color:#38bdf8;font-family:var(--font-mono);">${selectedCount}/${stmts.length}</span>
+                  </div>
+                </div>
+
+                <!-- Statements List -->
+                ${isOpen ? `
+                  <div style="padding:10px 14px;border-top:1px solid #142242;background:#030714;display:flex;flex-direction:column;gap:6px;max-height:170px;overflow-y:auto;">
+                    ${stmts.map(s => `
+                      <label style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#cbd5e1;cursor:pointer;padding:4px 0;">
+                        <input type="checkbox" class="aze-checkbox" ${s.selected ? 'checked' : ''} onchange="toggleCanDoStatementSelection('${lvl}', '${s.id}')">
+                        <span style="line-height:1.4;"><strong style="color:#38bdf8;font-family:var(--font-mono);">[GSE ${s.gse}]</strong> ${s.text}</span>
+                      </label>
+                    `).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function toggleSelectAllStatementsGlobal(shouldSelect) {
+      selectedClusterLevels.forEach(lvl => {
+        const list = availableCanDoStatements[lvl] || [];
+        list.forEach(s => s.selected = shouldSelect);
+      });
+      const area = document.getElementById('clusterCanDoDropdownsArea');
+      if (area) area.innerHTML = renderClusterCanDoStatementsPicker();
+    }
+
+    function toggleSelectAllLevelStatements(lvl, shouldSelect) {
+      const list = availableCanDoStatements[lvl] || [];
+      list.forEach(s => s.selected = shouldSelect);
+      const area = document.getElementById('clusterCanDoDropdownsArea');
+      if (area) area.innerHTML = renderClusterCanDoStatementsPicker();
+    }
+
+    function toggleCanDoStatementSelection(lvl, stmtId) {
+      const list = availableCanDoStatements[lvl] || [];
+      const item = list.find(s => s.id === stmtId);
+      if (item) item.selected = !item.selected;
+      const area = document.getElementById('clusterCanDoDropdownsArea');
+      if (area) area.innerHTML = renderClusterCanDoStatementsPicker();
+    }
+
+    function toggleCanDoDropdown(lvl) {
+      openCanDoDropdowns[lvl] = openCanDoDropdowns[lvl] === false ? true : false;
+      const area = document.getElementById('clusterCanDoDropdownsArea');
+      if (area) area.innerHTML = renderClusterCanDoStatementsPicker();
+    }
+
+    function handleSaveCluster() {
+      const id = document.getElementById('clusterIdInput')?.value.trim();
+      const name = document.getElementById('clusterNameInput')?.value.trim();
+      const domain = document.getElementById('clusterDomainInput')?.value;
+
+      if (!id || !name) {
+        showToast('Please fill in Cluster ID and Name', 'destructive');
+        return;
+      }
+      if (selectedClusterLevels.length === 0) {
+        showToast('Please select at least one Level for the cluster', 'destructive');
+        return;
+      }
+
+      // Default GSE range mappings based on attached levels
+      const levelGseDefaults = {
+        'C2': { min: 85, max: 90 },
+        'C1': { min: 76, max: 84 },
+        'B2': { min: 59, max: 75 },
+        'B1': { min: 43, max: 58 },
+        'A2': { min: 30, max: 42 },
+        'A1': { min: 10, max: 29 }
+      };
+
+      let overallMin = 100;
+      let overallMax = 0;
+
+      const attached = selectedClusterLevels.map(lvl => {
+        const gseInfo = levelGseDefaults[lvl] || { min: 50, max: 70 };
+        if (gseInfo.min < overallMin) overallMin = gseInfo.min;
+        if (gseInfo.max > overallMax) overallMax = gseInfo.max;
+
+        const stmts = (availableCanDoStatements[lvl] || []).filter(s => s.selected).map((s, i) => ({
+          no: `0${i+1}`,
+          gse: s.gse,
+          domain: domain,
+          text: s.text
+        }));
+
+        return {
+          key: `${id}-${lvl}`,
+          level: lvl,
+          levelClass: lvl.toLowerCase(),
+          title: `${lvl} Proficiency`,
+          domain: domain,
+          gseRange: `${gseInfo.min} - ${gseInfo.max}`,
+          status: 'Active',
+          statements: stmts
+        };
+      });
+
+      const computedGseRange = overallMin <= overallMax ? `${overallMin} - ${overallMax}` : '76 - 90';
+      const primaryLevel = selectedClusterLevels[0] || 'C2';
+
+      const existing = clusterTableData.find(c => c.id === id);
+      if (existing) {
+        existing.name = name;
+        existing.domain = domain;
+        existing.level = primaryLevel;
+        existing.levelClass = primaryLevel.toLowerCase();
+        existing.gseRange = computedGseRange;
+        existing.attachedCefrLevels = attached;
+      } else {
+        clusterTableData.unshift({
+          id: id,
+          name: name,
+          domain: domain,
+          level: primaryLevel,
+          levelClass: primaryLevel.toLowerCase(),
+          gseRange: computedGseRange,
+          attachedCefrLevels: attached
+        });
+      }
+
+      closeModal();
+      showToast(`Cluster "${id}" saved successfully!`, 'success');
+      render();
+    }
+
+    /* -------------------------------------------------------------
+       3. ADD CEFR LEVEL MODAL (For CEFR Levels Tab)
+       ------------------------------------------------------------- */
+    
+    // Standard CEFR Presets mapping
+    const CEFR_PRESETS = {
+      'C2': { min: 85, max: 90, range: '85 - 90', class: 'c2' },
+      'C1': { min: 76, max: 84, range: '76 - 84', class: 'c1' },
+      'B2': { min: 59, max: 75, range: '59 - 75', class: 'b2' },
+      'B1': { min: 43, max: 58, range: '43 - 58', class: 'b1' },
+      'A2': { min: 30, max: 42, range: '30 - 42', class: 'a2' },
+      'A1': { min: 10, max: 29, range: '10 - 29', class: 'a1' },
+      'Pre-A1': { min: 10, max: 21, range: '10 - 21', class: 'a1' },
+      'C2+': { min: 88, max: 90, range: '88 - 90', class: 'c2' }
+    };
+
+    let selectedQuestionFieldType = 'CEFR Levels';
+    let cefrModalMode = 'single'; // 'single' or 'batch'
+    let batchSelectedLevels = new Set(['C2', 'C1', 'B2', 'B1', 'A2', 'A1']);
+
+    function setCefrModalMode(mode) {
+      cefrModalMode = mode;
+      renderAddQuestionFieldContent();
+    }
+
+    function toggleBatchLevelSelection(lvl) {
+      if (batchSelectedLevels.has(lvl)) {
+        batchSelectedLevels.delete(lvl);
+      } else {
+        batchSelectedLevels.add(lvl);
+      }
+      renderAddQuestionFieldContent();
+    }
+
+    function handleFieldCefrLevelChange(val) {
+      const gseInput = document.getElementById('fieldGseScoreInput');
+      const minInput = document.getElementById('fieldGseMinInput');
+      const maxInput = document.getElementById('fieldGseMaxInput');
+      const preset = CEFR_PRESETS[val];
+
+      if (preset) {
+        if (gseInput) {
+          gseInput.value = preset.range;
+          gseInput.placeholder = preset.range;
+          gseInput.disabled = false;
+        }
+        if (minInput) minInput.value = preset.min;
+        if (maxInput) maxInput.value = preset.max;
+      } else if (val === 'custom') {
+        if (gseInput) {
+          gseInput.value = '';
+          gseInput.placeholder = 'e.g. 85 - 90';
+          gseInput.disabled = false;
+        }
+      } else {
+        if (gseInput) {
+          gseInput.value = '';
+          gseInput.placeholder = 'Select Level first';
+          gseInput.disabled = true;
+        }
+      }
+    }
+
+    function handleQuestionFieldTypeChange(val) {
+      selectedQuestionFieldType = val;
+      renderAddQuestionFieldContent();
+    }
+
+    function openEditCefrLevelModal(levelKey) {
+      const lvlObj = cefrLevelsData.find(x => x.level === levelKey);
+      if (!lvlObj) return;
+      openAddQuestionFieldModal('CEFR Levels', lvlObj);
+    }
+
+    function deleteCefrLevel(levelKey) {
+      openDeleteModal(`CEFR Level ${levelKey}`, 'CEFR Level', () => {
+        cefrLevelsData = cefrLevelsData.filter(x => x.level !== levelKey);
+        cefrLevelsData.forEach((item, idx) => { item.no = idx + 1; });
+        showToast(`CEFR Level "${levelKey}" deleted successfully.`, 'info');
+        render();
+      });
+    }
+
+    function handleSaveCefrFromModal(editingLevel = null) {
+      if (cefrModalMode === 'single') {
+        const lvlSelect = document.getElementById('fieldCefrLevelSelect');
+        const customInput = document.getElementById('fieldCustomLevelInput');
+        const levelVal = (lvlSelect && lvlSelect.value === 'custom' && customInput) ? customInput.value.trim() : (lvlSelect ? lvlSelect.value : '');
+        
+        if (!levelVal) {
+          showToast('Please select or specify a CEFR Level.', 'error');
+          return;
+        }
+
+        const minVal = parseInt(document.getElementById('fieldGseMinInput')?.value) || 10;
+        const maxVal = parseInt(document.getElementById('fieldGseMaxInput')?.value) || 90;
+        const domainVal = document.getElementById('fieldDomainSelect')?.value || 'General Adult';
+        const createAnother = document.getElementById('createAnotherCefrCheckbox')?.checked;
+
+        const preset = CEFR_PRESETS[levelVal] || { class: 'c1' };
+        const existing = cefrLevelsData.find(x => x.level === levelVal);
+
+        if (existing) {
+          existing.gseMin = minVal;
+          existing.gseMax = maxVal;
+          existing.gseRange = `${minVal} - ${maxVal}`;
+          existing.domain = domainVal;
+        } else {
+          cefrLevelsData.push({
+            no: cefrLevelsData.length + 1,
+            id: `LVL-${levelVal.toUpperCase()}`,
+            level: levelVal,
+            levelClass: preset.class || levelVal.toLowerCase(),
+            gseMin: minVal,
+            gseMax: maxVal,
+            gseRange: `${minVal} - ${maxVal}`,
+            domain: domainVal,
+            status: 'Active'
+          });
+        }
+
+        // Re-sort descending by gseMin
+        cefrLevelsData.sort((a, b) => (b.gseMin || 0) - (a.gseMin || 0));
+        cefrLevelsData.forEach((item, idx) => { item.no = idx + 1; });
+
+        if (createAnother) {
+          showToast(`CEFR Level "${levelVal}" added to table! Enter next level...`, 'success');
+          render();
+          // Reset form fields for rapid sequential addition
+          if (lvlSelect) lvlSelect.value = '';
+          const gseInput = document.getElementById('fieldGseScoreInput');
+          if (gseInput) { gseInput.value = ''; gseInput.placeholder = 'Select Level first'; gseInput.disabled = true; }
+        } else {
+          closeModal();
+          showToast(`CEFR Level "${levelVal}" saved successfully!`, 'success');
+          render();
+        }
+      } else {
+        // Batch Multi-Level creation
+        let count = 0;
+        batchSelectedLevels.forEach(lvl => {
+          const preset = CEFR_PRESETS[lvl] || { min: 10, max: 90, range: '10 - 90', class: 'c1' };
+          const existing = cefrLevelsData.find(x => x.level === lvl);
+          if (!existing) {
+            cefrLevelsData.push({
+              no: cefrLevelsData.length + 1,
+              id: `LVL-${lvl.toUpperCase()}`,
+              level: lvl,
+              levelClass: preset.class,
+              gseMin: preset.min,
+              gseMax: preset.max,
+              gseRange: preset.range,
+              domain: 'General Adult',
+              status: 'Active'
+            });
+            count++;
+          }
+        });
+
+        cefrLevelsData.sort((a, b) => (b.gseMin || 0) - (a.gseMin || 0));
+        cefrLevelsData.forEach((item, idx) => { item.no = idx + 1; });
+
+        closeModal();
+        showToast(`Successfully provisioned ${count} CEFR levels into the first tab!`, 'success');
+        render();
+      }
+    }
+
+    function openAddCefrLevelModal(levelToEdit = null) {
+      const modal = document.getElementById('modalContainer');
+      if (!modal) return;
+
+      modal.innerHTML = `
+        <div class="aze-dialog-backdrop" onclick="if(event.target === this) closeModal()">
+          <div class="aze-dialog-box" style="max-width: 520px;">
+            <div class="aze-dialog-header">
+              <span class="aze-dialog-title">${levelToEdit ? 'Edit CEFR Level' : 'Add CEFR Level'}</span>
+              <button class="aze-dialog-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+            <div class="aze-dialog-body">
+              <div class="form-field-group">
+                <label class="field-label">CEFR Level <span class="req">*</span></label>
+                <select class="aze-select-field" id="cefrLevelSelect">
+                  <option value="C2" ${levelToEdit === 'C2' ? 'selected' : ''}>C2</option>
+                  <option value="C1" ${levelToEdit === 'C1' ? 'selected' : ''}>C1</option>
+                  <option value="B2" ${levelToEdit === 'B2' ? 'selected' : ''}>B2</option>
+                  <option value="B1" ${levelToEdit === 'B1' ? 'selected' : ''}>B1</option>
+                  <option value="A2" ${levelToEdit === 'A2' ? 'selected' : ''}>A2</option>
+                  <option value="A1" ${levelToEdit === 'A1' ? 'selected' : ''}>A1</option>
+                </select>
+              </div>
+              <div class="form-field-group">
+                <label class="field-label">Descriptor / Title <span class="req">*</span></label>
+                <input type="text" class="aze-input" id="cefrTitleInput" value="${levelToEdit ? levelToEdit + ' Proficiency' : 'C2 - Mastery'}" placeholder="e.g. C2 - Mastery">
+              </div>
+              <div class="form-field-group">
+                <label class="field-label">Attached Cluster <span class="req">*</span></label>
+                <select class="aze-select-field" id="cefrClusterSelect">
+                  ${clusterTableData.map(c => `
+                    <option value="${c.id}">${c.id} — ${c.name}</option>
+                  `).join('')}
+                </select>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="field-label">Domain</label>
+                  <select class="aze-select-field" id="cefrDomainSelect">
+                    <option value="Business English">Business English</option>
+                    <option value="General English">General English</option>
+                    <option value="Academic English">Academic English</option>
+                  </select>
+                </div>
+                <div class="form-field-group">
+                  <label class="field-label">Status</label>
+                  <select class="aze-select-field" id="cefrStatusSelect">
+                    <option value="Active">Active</option>
+                    <option value="Draft">Draft</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="field-label">GSE Min <span class="req">*</span></label>
+                  <input type="number" class="aze-input" id="cefrMin" value="85">
+                </div>
+                <div class="form-field-group">
+                  <label class="field-label">GSE Max <span class="req">*</span></label>
+                  <input type="number" class="aze-input" id="cefrMax" value="90">
+                </div>
+              </div>
+            </div>
+            <div class="aze-dialog-footer">
+              <button class="btn-aze-outline" onclick="closeModal()">Cancel</button>
+              <button class="btn-aze-primary" onclick="handleSaveCefrLevel()">Save CEFR Level</button>
+            </div>
+          </div>
+        </div>
+      `;
+      modal.style.display = 'flex';
+    }
+
+    function handleSaveCefrLevel() {
+      const lvl = document.getElementById('cefrLevelSelect')?.value;
+      const title = document.getElementById('cefrTitleInput')?.value;
+      const clusterId = document.getElementById('cefrClusterSelect')?.value;
+      const domain = document.getElementById('cefrDomainSelect')?.value;
+      const min = document.getElementById('cefrMin')?.value || '85';
+      const max = document.getElementById('cefrMax')?.value || '90';
+
+      const existing = cefrLevelsData.find(x => x.level === lvl);
+      if (existing) {
+        existing.title = title;
+        existing.clusterId = clusterId;
+        existing.domain = domain;
+        existing.gseMin = parseInt(min);
+        existing.gseMax = parseInt(max);
+        existing.gseRange = `${min} - ${max}`;
+      } else {
+        cefrLevelsData.unshift({
+          id: `LVL-${lvl}`,
+          level: lvl,
+          levelClass: lvl.toLowerCase(),
+          title: title,
+          clusterId: clusterId,
+          domain: domain,
+          gseMin: parseInt(min),
+          gseMax: parseInt(max),
+          gseRange: `${min} - ${max}`,
+          status: 'Active',
+          statements: []
+        });
+      }
+
+      closeModal();
+      showToast(`CEFR Level "${lvl}" saved successfully!`, 'success');
+      render();
+    }
+
+    /* -------------------------------------------------------------
+       4. ADD NEW QUESTION FIELD MODAL (For Can Do Statements Tab)
+       Matches media_1791291313109.png & media_1791292101045.png
+       Features Dynamic Evidence section with 100% validation!
+       ------------------------------------------------------------- */
+    function openAddQuestionFieldModal(defaultType = null, levelToEdit = null) {
+      const modal = document.getElementById('modalContainer');
+      if (!modal) return;
+      if (defaultType) {
+        selectedQuestionFieldType = defaultType;
+      } else if (activeSubTab === 'cefr-levels') {
+        selectedQuestionFieldType = 'CEFR Levels';
+      } else if (activeSubTab === 'clusters') {
+        selectedQuestionFieldType = 'Clusters';
+      } else {
+        selectedQuestionFieldType = 'CEFR Can Do Statements';
+      }
+      cefrModalMode = 'single';
+      renderAddQuestionFieldContent(levelToEdit);
+      modal.style.display = 'flex';
+    }
+
+    function renderAddQuestionFieldContent(levelToEdit = null) {
+      const modal = document.getElementById('modalContainer');
+      if (!modal) return;
+      const totalWeight = evidenceEntries.reduce((sum, e) => sum + (parseInt(e.weight) || 0), 0);
+      const isValid = totalWeight === 100;
+
+      const isCefrTab = selectedQuestionFieldType === 'CEFR Levels';
+      const isCanDoTab = selectedQuestionFieldType === 'CEFR Can Do Statements';
+      const isClustersTab = selectedQuestionFieldType === 'Clusters';
+
+      let innerFormHtml = '';
+
+      if (isCefrTab) {
+        // MATCHING SCREENSHOT 2 (media_1791451984582.png) + MULTI-LEVEL CREATION
+        innerFormHtml = `
+          <!-- Mode Tabs: Single Level vs Batch Multi-Level -->
+          <div class="modal-tab-pill-group">
+            <button class="modal-tab-pill ${cefrModalMode === 'single' ? 'active' : ''}" onclick="setCefrModalMode('single')">
+              Single CEFR Level
+            </button>
+            <button class="modal-tab-pill ${cefrModalMode === 'batch' ? 'active' : ''}" onclick="setCefrModalMode('batch')">
+              Batch Multi-Level Creator
+            </button>
+          </div>
+
+          ${cefrModalMode === 'single' ? `
+            <!-- 2-Column Row: Level & GSE Score matching Screenshot 2 -->
+            <div class="form-grid-2">
+              <div class="form-field-group">
+                <label class="field-label">Level <span class="req">*</span></label>
+                <select class="aze-select-field" id="fieldCefrLevelSelect" onchange="handleFieldCefrLevelChange(this.value)">
+                  <option value="" disabled ${!levelToEdit ? 'selected' : ''}>Select Level</option>
+                  <option value="C2" ${levelToEdit?.level === 'C2' ? 'selected' : ''}>C2</option>
+                  <option value="C1" ${levelToEdit?.level === 'C1' ? 'selected' : ''}>C1</option>
+                  <option value="B2" ${levelToEdit?.level === 'B2' ? 'selected' : ''}>B2</option>
+                  <option value="B1" ${levelToEdit?.level === 'B1' ? 'selected' : ''}>B1</option>
+                  <option value="A2" ${levelToEdit?.level === 'A2' ? 'selected' : ''}>A2</option>
+                  <option value="A1" ${levelToEdit?.level === 'A1' ? 'selected' : ''}>A1</option>
+                  <option value="Pre-A1" ${levelToEdit?.level === 'Pre-A1' ? 'selected' : ''}>Pre-A1 (A0)</option>
+                  <option value="C2+" ${levelToEdit?.level === 'C2+' ? 'selected' : ''}>C2+ (Mastery+)</option>
+                  <option value="custom">Custom Level...</option>
+                </select>
+              </div>
+
+              <div class="form-field-group">
+                <label class="field-label">GSE Score</label>
+                <input type="text" class="aze-input font-mono" id="fieldGseScoreInput" 
+                  value="${levelToEdit ? levelToEdit.gseRange : ''}" 
+                  placeholder="${levelToEdit ? levelToEdit.gseRange : 'Select Level first'}" 
+                  ${!levelToEdit ? 'disabled' : ''} style="color:#38bdf8;font-weight:600;">
+              </div>
+            </div>
+
+            <!-- Custom GSE Min & Max tuning -->
+            <div class="form-grid-2" style="margin-top:6px;">
+              <div class="form-field-group">
+                <label class="field-label" style="font-size:11px;color:var(--dim-text);">GSE Min Range</label>
+                <input type="number" class="aze-input font-mono" id="fieldGseMinInput" value="${levelToEdit ? levelToEdit.gseMin : 85}" min="10" max="90" oninput="document.getElementById('fieldGseScoreInput').value = this.value + ' - ' + document.getElementById('fieldGseMaxInput').value">
+              </div>
+              <div class="form-field-group">
+                <label class="field-label" style="font-size:11px;color:var(--dim-text);">GSE Max Range</label>
+                <input type="number" class="aze-input font-mono" id="fieldGseMaxInput" value="${levelToEdit ? levelToEdit.gseMax : 90}" min="10" max="90" oninput="document.getElementById('fieldGseScoreInput').value = document.getElementById('fieldGseMinInput').value + ' - ' + this.value">
+              </div>
+            </div>
+
+            <!-- Domain matching Screenshot 2 -->
+            <div class="form-field-group">
+              <label class="field-label">Domain</label>
+              <select class="aze-select-field" id="fieldDomainSelect">
+                <option value="" disabled>Select Domain</option>
+                <option value="General Adult" selected>General Adult</option>
+                <option value="Business English">Business English</option>
+                <option value="Academic English">Academic English</option>
+                <option value="Professional">Professional</option>
+              </select>
+            </div>
+
+            <!-- Continuous creation checkbox: Admin can create multiple CEFR levels in one session! -->
+            <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:6px;padding:10px 14px;margin-top:12px;display:flex;align-items:center;gap:10px;">
+              <input type="checkbox" id="createAnotherCefrCheckbox" checked style="accent-color:#06b6d4;width:15px;height:15px;">
+              <div>
+                <label for="createAnotherCefrCheckbox" style="font-size:12px;font-weight:600;color:#f1f5f9;cursor:pointer;">Create another CEFR level after saving</label>
+                <div style="font-size:11px;color:var(--dim-text);">Allows rapid creation of multiple CEFR levels without closing this modal.</div>
+              </div>
+            </div>
+          ` : `
+            <!-- BATCH MULTI-LEVEL CREATION MODE -->
+            <div style="font-size:12px;color:var(--muted-text);margin-bottom:10px;">
+              Select multiple standard CEFR levels to generate all at once for this skill:
+            </div>
+            <div class="batch-cefr-grid">
+              ${Object.keys(CEFR_PRESETS).map(lvl => {
+                const p = CEFR_PRESETS[lvl];
+                const isChecked = batchSelectedLevels.has(lvl);
+                return `
+                  <div class="batch-cefr-item ${isChecked ? 'selected' : ''}" onclick="toggleBatchLevelSelection('${lvl}')">
+                    <input type="checkbox" class="aze-checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); toggleBatchLevelSelection('${lvl}')">
+                    <span class="cefr-badge ${p.class}">${lvl}</span>
+                    <span class="font-mono" style="color:#cbd5e1;font-size:11.5px;">${p.range}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <div class="form-field-group">
+              <label class="field-label">Default Domain for Batch</label>
+              <select class="aze-select-field" id="batchDomainSelect">
+                <option value="General Adult" selected>General Adult</option>
+                <option value="Business English">Business English</option>
+                <option value="Academic English">Academic English</option>
+              </select>
+            </div>
+            <div style="font-size:11px;color:#38bdf8;display:flex;align-items:center;gap:6px;margin-top:8px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>${batchSelectedLevels.size} levels selected for instant creation.</span>
+            </div>
+          `}
+        `;
+      } else if (isClustersTab) {
+        // Redirection to cluster creator
+        innerFormHtml = `
+          <div style="padding:16px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:8px;margin-bottom:16px;">
+            <div style="font-weight:600;color:#fff;margin-bottom:4px;">Cluster Configuration Mode</div>
+            <div style="font-size:12px;color:var(--muted-text);">Creating a Cluster groups multiple CEFR Levels and Can Do Statements together without a Progressing Domain.</div>
+          </div>
+          <button class="btn-aze-primary" style="width:100%;justify-content:center;" onclick="closeModal(); openAddClusterModal();">
+            Open Advanced Cluster Builder &rarr;
+          </button>
+        `;
+      } else {
+        // CEFR CAN DO STATEMENTS FORM (with Dynamic Evidence section)
+        innerFormHtml = `
+          <div class="form-grid-2">
+            <div class="form-field-group">
+              <label class="field-label">Level</label>
+              <select class="aze-select-field" id="fieldCanDoLevelSelect">
+                <option value="C1">C1</option>
+                <option value="C2">C2</option>
+                <option value="B2">B2</option>
+                <option value="B1">B1</option>
+                <option value="A2">A2</option>
+                <option value="A1">A1</option>
+              </select>
+            </div>
+            <div class="form-field-group">
+              <label class="field-label">GSE Score</label>
+              <input type="number" class="aze-input" id="fieldCanDoGseInput" value="80" placeholder="e.g. 80">
+            </div>
+          </div>
+
+          <div class="form-field-group">
+            <label class="field-label">Can Do Statement Text <span class="req">*</span></label>
+            <textarea class="aze-textarea" id="fieldCanDoStatementText" placeholder="Enter clear, observable communicative Can Do descriptor..."></textarea>
+          </div>
+
+          <div class="form-field-group">
+            <label class="field-label">Domain</label>
+            <select class="aze-select-field" id="fieldDomainSelect" onchange="toggleEvidenceSection(this.value)">
+              <option value="Progressing" selected>Progressing</option>
+              <option value="Business English">Business English</option>
+              <option value="General English">General English</option>
+              <option value="Academic English">Academic English</option>
+            </select>
+          </div>
+
+          <div id="domainActiveHint" style="font-size:12px;color:#38bdf8;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>&quot;Progressing&quot; is active &mdash; Evidence section added below</span>
+          </div>
+
+          <!-- DYNAMIC EVIDENCE SECTION -->
+          <div id="evidenceRepeaterBlock" class="evidence-section-container">
+            <div class="evidence-header-line">
+              <div class="evidence-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:#06b6d4;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
+                <span>Evidence</span>
+              </div>
+              <span style="font-size:11.5px;color:var(--dim-text);">Add multiple Evidence entries</span>
+            </div>
+
+            <div id="evidenceRowsContainer">
+              ${evidenceEntries.map(e => `
+                <div class="evidence-row">
+                  <input type="text" class="aze-input" value="${e.text}" placeholder="Describe evidence..." oninput="updateEvidenceText(${e.id}, this.value)" style="flex:1;">
+                  <div class="evidence-weight-input-wrap">
+                    <input type="number" value="${e.weight}" min="1" max="100" oninput="updateEvidenceWeight(${e.id}, this.value)">
+                    <span>%</span>
+                  </div>
+                  <button class="row-action-btn btn-delete" onclick="removeEvidence(${e.id})" title="Delete entry">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+
+            <button class="btn-add-evidence-dashed" onclick="addEvidence()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+              <span>+ Add Evidence</span>
+            </button>
+
+            <!-- Validation Status Banner -->
+            <div class="evidence-weight-banner ${isValid ? 'valid' : 'invalid'}">
+              <div>
+                ${isValid ? `
+                  <div style="font-weight:600;display:flex;align-items:center;gap:6px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Total Weightage Valid (100%)</span>
+                  </div>
+                  <div style="font-size:11px;margin-top:2px;">All Evidence entries total 100%. Ready to save.</div>
+                ` : `
+                  <div style="font-weight:600;display:flex;align-items:center;gap:6px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                    <span>Total Weightage Invalid (${totalWeight}%)</span>
+                  </div>
+                  <div style="font-size:11px;margin-top:2px;">Sum must equal exactly 100%. Current shortfall: ${100 - totalWeight}%.</div>
+                `}
+              </div>
+              <strong style="font-family:var(--font-mono);font-size:14px;">${totalWeight}% / 100%</strong>
+            </div>
+          </div>
+        `;
+      }
+
+      modal.innerHTML = `
+        <div class="aze-dialog-backdrop" onclick="if(event.target === this) closeModal()">
+          <div class="aze-dialog-box" style="max-width: 600px;">
+            <div class="aze-dialog-header">
+              <span class="aze-dialog-title">${levelToEdit ? 'Edit CEFR Level' : 'Add New Question Field'}</span>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <button class="icon-btn-ghost" title="Question field info" onclick="showToast('Configure question fields, taxonomy levels and CEFR scale mappings.', 'info')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </button>
+                <button class="aze-dialog-close" onclick="closeModal()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="aze-dialog-body">
+              <!-- Select Language matching Screenshot 2 -->
+              <div class="form-field-group">
+                <label class="field-label">Select Language</label>
+                <select class="aze-select-field">
+                  <option value="English" selected>English</option>
+                  <option value="Arabic">Arabic</option>
+                  <option value="French">French</option>
+                </select>
+              </div>
+
+              <!-- 2-Column Row: Skill * & Question Field * matching Screenshot 2 -->
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="field-label">Skill <span class="req">*</span></label>
+                  <select class="aze-select-field" id="fieldSkillSelect">
+                    <option value="Language Awareness" ${activeSkill === 'Language Awareness' ? 'selected' : ''}>Language Awareness</option>
+                    <option value="Listening" ${activeSkill === 'Listening' ? 'selected' : ''}>Listening</option>
+                    <option value="Reading" ${activeSkill === 'Reading' ? 'selected' : ''}>Reading</option>
+                    <option value="Speaking" ${activeSkill === 'Speaking' ? 'selected' : ''}>Speaking</option>
+                    <option value="Writing" ${activeSkill === 'Writing' ? 'selected' : ''}>Writing</option>
+                  </select>
+                </div>
+                <div class="form-field-group">
+                  <label class="field-label">Question Field <span class="req">*</span></label>
+                  <select class="aze-select-field" id="fieldQuestionFieldSelect" onchange="handleQuestionFieldTypeChange(this.value)">
+                    <option value="CEFR Levels" ${selectedQuestionFieldType === 'CEFR Levels' ? 'selected' : ''}>CEFR Levels</option>
+                    <option value="CEFR Can Do Statements" ${selectedQuestionFieldType === 'CEFR Can Do Statements' ? 'selected' : ''}>CEFR Can Do Statements</option>
+                    <option value="Clusters" ${selectedQuestionFieldType === 'Clusters' ? 'selected' : ''}>Clusters</option>
+                    <option value="Tasks" ${selectedQuestionFieldType === 'Tasks' ? 'selected' : ''}>Tasks</option>
+                    <option value="Topics" ${selectedQuestionFieldType === 'Topics' ? 'selected' : ''}>Topics</option>
+                    <option value="Sub Types" ${selectedQuestionFieldType === 'Sub Types' ? 'selected' : ''}>Sub Types</option>
+                    <option value="Skill Focus" ${selectedQuestionFieldType === 'Skill Focus' ? 'selected' : ''}>Skill Focus</option>
+                  </select>
+                </div>
+              </div>
+
+              ${innerFormHtml}
+            </div>
+
+            <div class="aze-dialog-footer">
+              <button class="btn-aze-outline" onclick="closeModal()">Cancel</button>
+              ${isCefrTab ? `
+                <button class="btn-aze-primary" onclick="handleSaveCefrFromModal('${levelToEdit ? levelToEdit.level : ''}')">
+                  ${levelToEdit ? 'Save CEFR Level' : '+ Add Question Field'}
+                </button>
+              ` : (isClustersTab ? `
+                <button class="btn-aze-primary" onclick="closeModal(); openAddClusterModal();">
+                  Open Cluster Builder
+                </button>
+              ` : `
+                <button class="btn-aze-primary" ${!isValid ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="handleSaveQuestionField(${isValid})">
+                  + Add Question Field
+                </button>
+              `)}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleEvidenceSection(domainVal) {
+      const block = document.getElementById('evidenceRepeaterBlock');
+      const hint = document.getElementById('domainActiveHint');
+      if (domainVal === 'Progressing') {
+        if (block) block.style.display = 'block';
+        if (hint) hint.style.display = 'flex';
+      } else {
+        if (block) block.style.display = 'none';
+        if (hint) hint.style.display = 'none';
+      }
+    }
+
+    function addEvidence() {
+      const newId = Date.now();
+      evidenceEntries.push({ id: newId, text: '', weight: 0 });
+      renderAddQuestionFieldContent();
+    }
+
+    function removeEvidence(id) {
+      if (evidenceEntries.length <= 1) {
+        showToast('At least one evidence entry is required', 'info');
+        return;
+      }
+      evidenceEntries = evidenceEntries.filter(e => e.id !== id);
+      renderAddQuestionFieldContent();
+    }
+
+    function updateEvidenceText(id, val) {
+      const item = evidenceEntries.find(e => e.id === id);
+      if (item) item.text = val;
+    }
+
+    function updateEvidenceWeight(id, val) {
+      const item = evidenceEntries.find(e => e.id === id);
+      if (item) {
+        item.weight = parseInt(val) || 0;
+        renderAddQuestionFieldContent();
+      }
+    }
+
+    function handleSaveQuestionField(isValid) {
+      if (!isValid) {
+        showToast('Cannot save: Evidence weightage must equal exactly 100%', 'destructive');
+        return;
+      }
+      closeModal();
+      showToast('Question Field saved successfully!', 'success');
+      render();
+    }
+
+    /* -------------------------------------------------------------
+       5. DELETE CONFIRMATION MODAL (Matches DeleteQuestionFieldModal.jsx)
+       ------------------------------------------------------------- */
+    function openDeleteModal(displayName, itemType, onConfirmCallback) {
+      const modal = document.getElementById('modalContainer');
+      if (!modal) return;
+
+      modal.innerHTML = `
+        <div class="aze-dialog-backdrop" onclick="if(event.target === this) closeModal()">
+          <div class="aze-dialog-box" style="max-width: 440px; text-align:center;">
+            <div class="aze-dialog-body" style="padding: 28px 24px 20px;">
+              <div style="width:52px;height:52px;border-radius:9999px;background:rgba(239,68,68,0.15);color:#ef4444;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:26px;height:26px;"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+              </div>
+              <h3 style="font-size:18px;font-weight:700;color:#fff;margin-bottom:8px;">Delete ${itemType || 'Field'}</h3>
+              <p style="font-size:13px;color:var(--muted-text);line-height:1.5;max-width:340px;margin:0 auto;">
+                Are you sure you want to delete <strong style="color:#f1f5f9;">${displayName}</strong>? This action cannot be undone.
+              </p>
+            </div>
+            <div class="aze-dialog-footer" style="justify-content:center;gap:12px;padding:16px 24px;">
+              <button class="btn-aze-outline" onclick="closeModal()">Cancel</button>
+              <button class="btn-aze-primary" style="background:#ef4444;border-color:#ef4444;color:#fff;" onclick="closeModal(); if (typeof onConfirmCallback === 'function') onConfirmCallback();">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      modal.style.display = 'flex';
+    }
+
+    /* -------------------------------------------------------------
+       6. IMPORT MODAL (Matches ImportQuestionFieldsModal.jsx)
+       ------------------------------------------------------------- */
+    function openImportModal() {
+      const modal = document.getElementById('modalContainer');
+      if (!modal) return;
+
+      modal.innerHTML = `
+        <div class="aze-dialog-backdrop" onclick="if(event.target === this) closeModal()">
+          <div class="aze-dialog-box" style="max-width: 540px;">
+            <div class="aze-dialog-header">
+              <span class="aze-dialog-title">Import Question Fields</span>
+              <button class="aze-dialog-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+            <div class="aze-dialog-body">
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="field-label">Skill <span class="req">*</span></label>
+                  <select class="aze-select-field">
+                    <option value="Language Awareness">Language Awareness</option>
+                    <option value="Listening">Listening</option>
+                    <option value="Reading">Reading</option>
+                  </select>
+                </div>
+                <div class="form-field-group">
+                  <label class="field-label">Question Field <span class="req">*</span></label>
+                  <select class="aze-select-field">
+                    <option value="CEFR Can Do Statements">CEFR Can Do Statements</option>
+                    <option value="Tasks">Tasks</option>
+                    <option value="Topics">Topics</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Drag & Drop Zone -->
+              <div style="border:2px dashed #24355a;border-radius:8px;padding:36px 20px;text-align:center;background:#040917;margin:12px 0;cursor:pointer;" onclick="showToast('File dialog simulated', 'info')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:36px;height:36px;color:#06b6d4;margin:0 auto 10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px;">Drag and drop your CSV file here, or click to browse</div>
+                <div style="font-size:11px;color:var(--dim-text);">Supports .csv files up to 10MB</div>
+              </div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;margin-top:8px;">
+                <a href="javascript:void(0)" onclick="showToast('Sample CSV template downloaded', 'success')" style="color:#38bdf8;text-decoration:none;display:flex;align-items:center;gap:5px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                  Download Sample CSV
+                </a>
+              </div>
+            </div>
+            <div class="aze-dialog-footer">
+              <button class="btn-aze-outline" onclick="closeModal()">Cancel</button>
+              <button class="btn-aze-primary" onclick="closeModal(); showToast('Question fields imported successfully!', 'success');">Import CSV</button>
+            </div>
+          </div>
+        </div>
+      `;
+      modal.style.display = 'flex';
+    }
+
+    /* -------------------------------------------------------------
+       7. EVIDENCE BREAKDOWN POPOVER
+       ------------------------------------------------------------- */
+    let activeEvidencePopoverId = null;
+
+    function toggleEvidencePopover(event, stmtId) {
+      if (activeEvidencePopoverId === stmtId) {
+        closeEvidencePopover();
+        return;
+      }
+
+      closeEvidencePopover();
+      activeEvidencePopoverId = stmtId;
+
+      const stmt = canDoStatementsData.find(s => s.id === stmtId);
+      if (!stmt || !stmt.evidence || stmt.evidence.length === 0) return;
+
+      const triggerBtn = event ? (event.currentTarget || event.target) : document.querySelector('.evidence-info-chip');
+      let top = 400;
+      let left = 600;
+
+      if (triggerBtn && triggerBtn.getBoundingClientRect) {
+        const rect = triggerBtn.getBoundingClientRect();
+        const popoverWidth = 380;
+        top = rect.bottom + 8;
+        left = Math.min(rect.left, window.innerWidth - popoverWidth - 24);
+        if (left < 16) left = 16;
+      }
+
+      const totalWeight = stmt.evidence.reduce((sum, item) => sum + Number(item.weight || 0), 0);
+
+      const popoverWrap = document.createElement('div');
+      popoverWrap.id = 'evidencePopoverWrap';
+
+      popoverWrap.innerHTML = `
+        <div class="evidence-popover-backdrop" onclick="closeEvidencePopover()"></div>
+        <div class="evidence-popover" style="top: ${top}px; left: ${left}px;">
+          <div class="evidence-popover-header">
+            <div class="evidence-popover-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:#06b6d4;"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
+              <span>Evidence Breakdown</span>
+              <span class="evidence-weight-badge" style="margin-left:4px;font-size:10px;padding:1px 5px;">${stmt.evidence.length} Items</span>
+            </div>
+            <button class="aze-dialog-close" style="width:22px;height:22px;cursor:pointer;" onclick="closeEvidencePopover()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+
+          <div style="font-size:11px;color:var(--dim-text);margin-bottom:10px;line-height:1.4;">
+            Evidence evaluation criteria attached to Statement #${stmt.no} (${stmt.level}):
+          </div>
+
+          <div class="evidence-popover-list">
+            ${stmt.evidence.map((ev, idx) => `
+              <div class="evidence-popover-item">
+                <span style="font-family:var(--font-mono);color:var(--dim-text);font-size:11px;padding-top:1px;">#${idx + 1}</span>
+                <span class="text">${ev.text}</span>
+                <span class="evidence-weight-badge">${ev.weight}%</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="evidence-popover-footer">
+            <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#34d399;font-weight:600;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Total Weightage: ${totalWeight}%</span>
+            </div>
+            <span style="font-size:11px;color:var(--dim-text);font-weight:500;">Valid (100%)</span>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(popoverWrap);
+    }
+
+    function closeEvidencePopover() {
+      activeEvidencePopoverId = null;
+      const el = document.getElementById('evidencePopoverWrap');
+      if (el) el.remove();
+    }
+    
+
+    // Auto initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab') || params.get('question_fields_tab');
+      if (tabParam) {
+        const tp = tabParam.toLowerCase();
+        if (tp === 'cefr' || tp === 'cefr-levels' || tp === 'cefr_levels' || tp === 'levels') activeSubTab = 'cefr-levels';
+        else if (tp === 'cando' || tp === 'can-do' || tp === 'can-do-statements' || tp === 'cefr_can_do_statements' || tp === 'statements') activeSubTab = 'can-do-statements';
+        else if (tp === 'clusters' || tp === 'cluster') activeSubTab = 'clusters';
+        else activeSubTab = tp;
+      } else {
+        activeSubTab = 'cefr-levels'; // First tab default per requirement
+      }
+      const skillParam = params.get('skill');
+      if (skillParam) activeSkill = skillParam;
+
+      const searchParam = params.get('search');
+      if (searchParam) searchQuery = searchParam.toLowerCase().trim();
+
+      render();
+
+      const modalParam = params.get('modal');
+      if (modalParam === 'cluster-detail') {
+        openClusterDetailModal('CLUST-ADV-01');
+      } else if (modalParam === 'add-cluster') {
+        openAddClusterModal();
+      } else if (modalParam === 'add-field') {
+        openAddQuestionFieldModal();
+      } else if (modalParam === 'delete') {
+        openDeleteModal('CLUST-ADV-01 — Advanced Professional Mastery', 'Cluster');
+      } else if (modalParam === 'import') {
+        openImportModal();
+      }
+
+      const popoverParam = params.get('popover');
+      if (popoverParam === 'evidence') {
+        setTimeout(() => {
+          toggleEvidencePopover(null, 'stmt-11');
+        }, 80);
+      }
+    });
+  </script>
+</body>
+</html>
