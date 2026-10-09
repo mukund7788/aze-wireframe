@@ -637,44 +637,6 @@
       box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
     }
 
-    /* Viewport switcher */
-    .viewport-switcher {
-      display: flex;
-      align-items: center;
-      background: var(--viewport-bar-bg);
-      border: 1px solid var(--viewport-bar-border);
-      border-radius: var(--radius-sm);
-      padding: 3px;
-      gap: 2px;
-    }
-
-    .viewport-btn {
-      background: transparent;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 11.5px;
-      font-weight: 600;
-      font-family: var(--font-main);
-      color: var(--viewport-btn-color);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s;
-    }
-
-    .viewport-btn:hover {
-      color: var(--text-main);
-    }
-
-    .viewport-btn.active {
-      background: var(--viewport-btn-active-bg);
-      color: var(--viewport-btn-active-color);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-      font-weight: 700;
-    }
-
     .top-action-btn {
       font-size: 12px;
       font-weight: 600;
@@ -723,35 +685,10 @@
     .viewport-wrapper {
       width: 100%;
       height: 100%;
-      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       display: flex;
       flex-direction: column;
-    }
-
-    .viewport-wrapper.viewport-desktop {
-      width: 100%;
       background: #000000;
-    }
-
-    .viewport-wrapper.viewport-tablet {
-      width: 1024px;
-      margin: 16px auto;
-      height: calc(100% - 32px);
-      border-radius: 12px;
-      box-shadow: var(--shadow-lg);
-      border: 2px solid var(--border-color);
-      overflow: hidden;
-    }
-
-    .viewport-wrapper.viewport-mobile {
-      width: 414px;
-      margin: 16px auto;
-      height: calc(100% - 32px);
-      border-radius: 28px;
-      box-shadow: var(--shadow-lg);
-      border: 8px solid #0B132B;
-      overflow: hidden;
     }
 
     iframe.wireframe-frame {
@@ -1308,19 +1245,6 @@
           <span id="themeToggleText">Light</span>
         </button>
 
-        <!-- Viewport Switcher -->
-        <div class="viewport-switcher" id="viewportSwitcher">
-          <button class="viewport-btn active" data-viewport="desktop" title="Full Desktop View">
-            <span>💻</span> Desktop
-          </button>
-          <button class="viewport-btn" data-viewport="tablet" title="Tablet / Small Laptop (1024px)">
-            <span>📱</span> Tablet
-          </button>
-          <button class="viewport-btn" data-viewport="mobile" title="Mobile Frame (414px)">
-            <span>📲</span> Mobile
-          </button>
-        </div>
-
         <!-- Open Standalone Button -->
         <a href="#" target="_blank" class="top-action-btn top-action-btn-primary" id="openStandaloneBtn">
           <span>↗ Open Standalone</span>
@@ -1337,8 +1261,8 @@
         <div class="loader-text" id="loaderText">Loading prototype...</div>
       </div>
 
-      <!-- Wrapper for responsive scaling -->
-      <div class="viewport-wrapper viewport-desktop" id="viewportWrapper">
+      <!-- Content workspace wrapper -->
+      <div class="viewport-wrapper" id="viewportWrapper">
 
         <!-- Embedded Wireframe iframe -->
         <iframe class="wireframe-frame" id="wireframeIframe" style="display: none;" src="about:blank"></iframe>
@@ -1684,8 +1608,6 @@
     const infoContainer = document.getElementById('infoContainer');
     const frameLoader = document.getElementById('frameLoader');
     const loaderText = document.getElementById('loaderText');
-    const viewportWrapper = document.getElementById('viewportWrapper');
-    const viewportBtns = document.querySelectorAll('.viewport-btn');
 
     // ── SIDEBAR TOGGLE & COLLAPSE ──
     function toggleSidebar() {
@@ -1806,16 +1728,6 @@
 
     window.addEventListener('hashchange', handleHashChange);
     window.addEventListener('DOMContentLoaded', handleHashChange);
-
-    // ── VIEWPORT SWITCHER ──
-    viewportBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        viewportBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const viewport = btn.dataset.viewport;
-        viewportWrapper.className = `viewport-wrapper viewport-${viewport}`;
-      });
-    });
 
     // ── SEARCH FILTER ──
     searchInput.addEventListener('input', (e) => {

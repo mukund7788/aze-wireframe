@@ -16,7 +16,6 @@ The **AZE Wireframe Hub** organizes all interactive UX prototypes, feature simul
 
 ### Key Capabilities
 * **Three Platform Portals:** Seamlessly switch between Admin Portal, Client Portal, and Student Portal wireframes.
-* **Responsive Viewport Simulator:** Test layouts instantly across **Desktop (100%)**, **Tablet / Laptop (1024px)**, and **Mobile Device Frame (414px)**.
 * **Instant Standalone Access:** Open any wireframe directly in a standalone browser tab with one click (`↗ Open Standalone`).
 * **Real-Time Search & Collapsible Navigation:** Collapsible sidebar panel (`Ctrl+B`) and accordion sections with instant keyword filtering.
 
