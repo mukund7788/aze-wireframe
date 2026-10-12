@@ -1667,6 +1667,27 @@
       from { transform: translateY(12px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+  /* ===== ADDED: generic section editor & site settings ===== */
+    .schema-group { border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 14px 16px 4px; margin: 0 0 18px; }
+    .schema-group legend { padding: 0 6px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--primary); }
+    .schema-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 12px 14px 2px; }
+    .schema-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 11.5px; font-weight: 700; color: var(--muted-text); text-transform: uppercase; letter-spacing: .05em; }
+    .schema-row-tools { display: flex; align-items: center; gap: 4px; }
+    .schema-row-tools .repeater-icon-btn[disabled] { opacity: .35; cursor: default; }
+    .schema-add { font-size: 11px; color: var(--primary); cursor: pointer; font-weight: 600; }
+    .schema-check.form-group { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 8px; cursor: pointer; }
+    .schema-card .form-group, .schema-group .form-group { margin-bottom: 14px; }
+    #sim-nav-links { white-space: nowrap; gap: 9px !important; font-size: 10px !important; }
+    #sim-nav-links { min-width: 0; overflow: hidden; }
+    #sim-nav-links span { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    #sim-nav-links button { white-space: nowrap; flex-shrink: 0; }
+    .mobile-mode #sim-nav-links span { display: none; }
+    .settings-help { font-size: 12.5px; color: var(--muted-text); margin: 0 0 18px; line-height: 1.5; }
+    .nav-new-badge { font-size: 9px; font-weight: 700; letter-spacing: .05em; padding: 1px 6px; border-radius: 999px; background: rgba(6,182,212,.15); color: #06b6d4; border: 1px solid rgba(6,182,212,.35); margin-left: 6px; }
+    .sim-list { display: grid; gap: 6px; margin-top: 12px; }
+    .sim-list-item { font-size: 11px; color: #cbd5e1; padding: 7px 10px; border-radius: 8px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); display: grid; gap: 2px; }
+    .sim-list-item b { color: #f8fafc; font-weight: 600; }
+    .sim-list-item span { color: #94a3b8; }
   </style>
 </head>
 <body>
@@ -1700,7 +1721,7 @@
               <span>Students</span>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
-              <span class="nav-count-badge">16</span>
+              <span class="nav-count-badge">18</span>
               <span class="nav-chevron">▶</span>
             </div>
           </button>
@@ -1715,10 +1736,12 @@
             <div class="sub-nav-item" data-sec="advisory" onclick="navigateModule('students', 'advisory')">Advisory Board</div>
             <div class="sub-nav-item" data-sec="comparison" onclick="navigateModule('students', 'comparison')">Why AZE Comparison</div>
             <div class="sub-nav-item" data-sec="howItWorks" onclick="navigateModule('students', 'howItWorks')">How It Works (Steps)</div>
+            <div class="sub-nav-item" data-sec="scoring" onclick="navigateModule('students', 'scoring')">CEFR Score Scale</div>
             <div class="sub-nav-item" data-sec="pricing" onclick="navigateModule('students', 'pricing')">Pricing Preview</div>
             <div class="sub-nav-item" data-sec="blog" onclick="navigateModule('students', 'blog')">Blog Teaser Listing</div>
             <div class="sub-nav-item" data-sec="faqs" onclick="navigateModule('students', 'faqs')">Frequently Asked Questions</div>
             <div class="sub-nav-item" data-sec="finalCta" onclick="navigateModule('students', 'finalCta')">Final Call to Action</div>
+            <div class="sub-nav-item" data-sec="forBusiness" onclick="navigateModule('students', 'forBusiness')">For Business Band</div>
             <div class="sub-nav-item" data-sec="aboutUs" onclick="navigateModule('students', 'aboutUs')">About Us</div>
             <div class="sub-nav-item" data-sec="footer" onclick="navigateModule('students', 'footer')">Footer Section</div>
           </div>
@@ -1729,7 +1752,7 @@
               <span>Institutions</span>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
-              <span class="nav-count-badge">14</span>
+              <span class="nav-count-badge">16</span>
               <span class="nav-chevron">▶</span>
             </div>
           </button>
@@ -1737,17 +1760,44 @@
             <div class="sub-nav-item" data-sec="hero" onclick="navigateModule('institutions', 'hero')">Hero Banner</div>
             <div class="sub-nav-item" data-sec="numbers" onclick="navigateModule('institutions', 'numbers')">Institutional Numbers</div>
             <div class="sub-nav-item" data-sec="technology" onclick="navigateModule('institutions', 'technology')">Technology & ML</div>
-            <div class="sub-nav-item" data-sec="tools" onclick="navigateModule('institutions', 'tools')">Platform Tools</div>
-            <div class="sub-nav-item" data-sec="platformFeatures" onclick="navigateModule('institutions', 'platformFeatures')">Enterprise Features</div>
-            <div class="sub-nav-item" data-sec="blockchain" onclick="navigateModule('institutions', 'blockchain')">Blockchain Verification</div>
-            <div class="sub-nav-item" data-sec="advisory" onclick="navigateModule('institutions', 'advisory')">Advisory Board</div>
+            <div class="sub-nav-item" data-sec="tools" onclick="navigateModule('institutions', 'tools')">Institutional Assessment Tools</div>
+            <div class="sub-nav-item" data-sec="platformFeatures" onclick="navigateModule('institutions', 'platformFeatures')">Platform Features</div>
+            <div class="sub-nav-item" data-sec="blockchain" onclick="navigateModule('institutions', 'blockchain')">Blockchain Security</div>
+            <div class="sub-nav-item" data-sec="advisory" onclick="navigateModule('institutions', 'advisory')">Academic Advisory Board</div>
             <div class="sub-nav-item" data-sec="comparison" onclick="navigateModule('institutions', 'comparison')">Benchmark Comparison</div>
+            <div class="sub-nav-item" data-sec="scoring" onclick="navigateModule('institutions', 'scoring')">CEFR Framework Alignment</div>
+            <div class="sub-nav-item" data-sec="security" onclick="navigateModule('institutions', 'security')">Security & Compliance</div>
             <div class="sub-nav-item" data-sec="howItWorks" onclick="navigateModule('institutions', 'howItWorks')">Rollout Steps</div>
             <div class="sub-nav-item" data-sec="pricing" onclick="navigateModule('institutions', 'pricing')">Pricing Preview</div>
             <div class="sub-nav-item" data-sec="faqs" onclick="navigateModule('institutions', 'faqs')">Enterprise FAQs</div>
             <div class="sub-nav-item" data-sec="finalCta" onclick="navigateModule('institutions', 'finalCta')">Institutional CTA</div>
             <div class="sub-nav-item" data-sec="aboutUs" onclick="navigateModule('institutions', 'aboutUs')">About Us</div>
             <div class="sub-nav-item" data-sec="footer" onclick="navigateModule('institutions', 'footer')">Footer Section</div>
+          </div>
+        <!-- Placement Test Group (ADDED) -->
+          <button class="nav-parent-btn" id="btn-group-placement" onclick="toggleNavGroup('placement')" style="margin-top:4px;">
+            <div class="nav-btn-left">
+              <span>Placement Test</span><span class="nav-new-badge">NEW</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="nav-count-badge">13</span>
+              <span class="nav-chevron">▶</span>
+            </div>
+          </button>
+          <div class="submenu-list" id="submenu-placement" style="display:none;">
+            <div class="sub-nav-item active" data-sec="hero" onclick="navigateModule('placement', 'hero')">Hero Banner</div>
+            <div class="sub-nav-item" data-sec="numbers" onclick="navigateModule('placement', 'numbers')">Key Numbers</div>
+            <div class="sub-nav-item" data-sec="devices" onclick="navigateModule('placement', 'devices')">Devices & Live Results</div>
+            <div class="sub-nav-item" data-sec="howItWorks" onclick="navigateModule('placement', 'howItWorks')">How It Works (Invite, Test, Place)</div>
+            <div class="sub-nav-item" data-sec="report" onclick="navigateModule('placement', 'report')">Placement Report</div>
+            <div class="sub-nav-item" data-sec="clientPortal" onclick="navigateModule('placement', 'clientPortal')">Client Portal</div>
+            <div class="sub-nav-item" data-sec="audiences" onclick="navigateModule('placement', 'audiences')">Who It's For</div>
+            <div class="sub-nav-item" data-sec="comparison" onclick="navigateModule('placement', 'comparison')">Comparison Table</div>
+            <div class="sub-nav-item" data-sec="pricing" onclick="navigateModule('placement', 'pricing')">Pack Pricing</div>
+            <div class="sub-nav-item" data-sec="faqs" onclick="navigateModule('placement', 'faqs')">Placement Test FAQs</div>
+            <div class="sub-nav-item" data-sec="finalCta" onclick="navigateModule('placement', 'finalCta')">Final Call to Action</div>
+            <div class="sub-nav-item" data-sec="crossPromo" onclick="navigateModule('placement', 'crossPromo')">Placement Band (Other Pages)</div>
+            <div class="sub-nav-item" data-sec="footer" onclick="navigateModule('placement', 'footer')">Footer Section</div>
           </div>
         </div>
 
@@ -1772,6 +1822,13 @@
           <button class="nav-parent-btn" id="btn-group-legal" onclick="navigateModule('legal')" style="margin-top:2px;">
             <div class="nav-btn-left">
               <span>Legal Pages</span>
+            </div>
+            <span class="nav-count-badge">3</span>
+          </button>
+
+          <button class="nav-parent-btn" id="btn-group-settings" onclick="navigateModule('settings')" style="margin-top:2px;">
+            <div class="nav-btn-left">
+              <span>Site Settings</span><span class="nav-new-badge">NEW</span>
             </div>
             <span class="nav-count-badge">3</span>
           </button>
@@ -1970,8 +2027,22 @@
             </div>
           </div>
 
+        <!-- MODULE CONTAINER 5: SITE SETTINGS (ADDED) -->
+          <div id="module-settings-manager" style="display:none;">
+            <div class="editor-card-shell">
+              <div class="editor-card-header">
+                <div class="editor-header-left">
+                  <div class="preview-device-switcher" id="settings-tabs"></div>
+                </div>
+                <div class="status-badge published"><span>●</span><span>Applies to all landing pages</span></div>
+              </div>
+              <div class="editor-card-body">
+                <p class="settings-help" id="settings-help"></p>
+                <div id="settings-fields"></div>
+              </div>
+            </div>
+          </div>
         </div>
-
         <!-- SPLIT-SCREEN LIVE PREVIEW PANE -->
         <div id="live-preview-pane">
           <div class="preview-header-bar">
@@ -2000,7 +2071,7 @@
                   <div class="brand-mark" style="width:24px; height:24px; font-size:12px;">A</div>
                   <span style="font-weight:700; font-size:13px; color:#fff;">AZE</span>
                 </div>
-                <div style="display:flex; align-items:center; gap:12px; font-size:11px; color:#94a3b8;">
+                <div id="sim-nav-links" style="display:flex; align-items:center; gap:12px; font-size:11px; color:#94a3b8;">
                   <span>Technology</span>
                   <span>Skills</span>
                   <span>Pricing</span>
@@ -2010,6 +2081,7 @@
 
               <!-- Sim Hero -->
               <div class="sim-hero-section">
+                <div id="sim-hero-eyebrow" style="display:none; font-size:11px; color:#94a3b8; margin-bottom:8px;"></div>
                 <div class="sim-hero-badges" id="sim-hero-badges">
                   <!-- Badges rendered reactively -->
                 </div>
@@ -2105,6 +2177,7 @@
                 <div style="font-size:12px; color:#94a3b8; line-height:1.5;" id="sim-sec-body">
                   Built by language education experts, linguists, assessment researchers and machine learning specialists.
                 </div>
+                <div class="sim-list" id="sim-sec-list"></div>
               </div>
 
               <!-- Sim Blog Section -->
@@ -2693,6 +2766,862 @@
       ]
     };
 
+    /* ===== ADDED: Placement Test landing page, missing sections, and site settings ===== */
+(function(){
+  const S = CmsStore.sections;
+
+  S.placement = {
+    hero: {
+      title: 'Hero Banner', status: 'published',
+      eyebrow: 'For schools and language centres',
+      heading: 'English Placement Test,',
+      headingHighlight: 'Before Students Arrive',
+      subheading: 'Send students a link, or a username and password. They test from anywhere. You get a CEFR level for every skill within 5 minutes, so every learner starts in the right class on day one.',
+      primaryBtn: { label: 'Start with 50 Free Tests', action: 'modal:trial' },
+      secondaryBtn: { label: 'Book a Demo', action: 'modal:demo' },
+      handwrittenNote: 'the right class, day one',
+      badges: [
+        { text: 'All five skills' },
+        { text: 'Results in 5 minutes' },
+        { text: 'Remote proctoring' }
+      ],
+      illustration: {
+        studentName: 'Layla M.',
+        intakeName: 'September intake',
+        completions: '48',
+        placedLevel: 'B2',
+        suggestedClass: 'Upper Intermediate class'
+      }
+    },
+    numbers: {
+      title: 'Key Numbers', status: 'published',
+      stats: [
+        { value: '5', label: 'Skills Tested' },
+        { value: '6', label: 'CEFR Levels, A1 to C2' },
+        { value: '5min', label: 'To Get Results' },
+        { value: '150+', label: 'Skills Analysed' }
+      ]
+    },
+    devices: {
+      title: 'Devices & Live Results', status: 'published',
+      eyebrow: 'One Test, Every Screen',
+      heading: 'Students Test Anywhere. You See Results Live.',
+      body: 'Students take the test on a laptop or phone. Your team watches levels arrive on the dashboard in real time.',
+      floatingNotes: [
+        { title: 'Link sent', caption: '48 students invited' },
+        { title: 'Identity verified', caption: 'Proctoring active' },
+        { title: 'Results in 5 minutes', caption: 'All five skills scored' }
+      ],
+      figureLabels: ['Student', 'Your team']
+    },
+    howItWorks: {
+      title: 'How It Works (Invite, Test, Place)', status: 'published',
+      eyebrow: 'The Process',
+      heading: 'How the Placement Test Works',
+      body: 'Three steps take a new student from an invitation link to a suggested class.',
+      steps: [
+        { num: '01', badge: 'Invite', title: 'Send a Link or a Login', desc: 'Share a placement link by email, WhatsApp or your enrolment form, or give each student a username and password. Students can test before they travel or on their first morning.', pills: 'Link, or username and password | Organise by group or intake | Bulk invites' },
+        { num: '02', badge: 'Test', title: 'Students Take the Test', desc: 'One AI-proctored test covers Reading, Listening, Language Awareness, Writing and Speaking. Questions adapt as students answer, so beginners are not left struggling with advanced questions.', pills: 'All five skills | Adaptive questions | AI proctoring' },
+        { num: '03', badge: 'Place', title: 'Get the Report and Suggested Classes', desc: 'Results reach your dashboard within 5 minutes. You see a CEFR level for each skill, strengths and weaknesses, and a suggested class for every student, so your classes are planned before students arrive.', pills: 'CEFR level per skill | Strengths and weaknesses | Suggested class grouping' }
+      ]
+    },
+    report: {
+      title: 'Placement Report', status: 'published',
+      eyebrow: 'The Report',
+      heading: 'A Plan, Not Just a Score',
+      body: 'Each report gives your team a skill-by-skill picture of the student that they can act on straight away. Students also get their own portal to follow their progress.',
+      points: [
+        { title: 'A level for every skill', desc: 'Spot the B2 listener who writes at A2, and place them properly.' },
+        { title: 'Strengths and focus areas', desc: 'Drawn from 150+ skills, so teachers know where to start.' },
+        { title: 'Results you can trust', desc: 'A proctoring report with identity checks and flagged moments for every test.' }
+      ],
+      sampleStudents: [
+        { name: 'Layla M.', level: 'B1', group: 'September intake', suggestedClass: 'General English B1', strengths: 'Follows extended conversations | Confident everyday speaking', focusAreas: 'Paragraph structure | Past tense accuracy' },
+        { name: 'Daniel K.', level: 'A2', group: 'Evening classes', suggestedClass: 'General English A2', strengths: 'Handles routine exchanges | Clear pronunciation', focusAreas: 'Question forms | Vocabulary range' },
+        { name: 'Sofia R.', level: 'C1', group: 'September intake', suggestedClass: 'Advanced / IELTS Preparation', strengths: '', focusAreas: '' }
+      ]
+    },
+    clientPortal: {
+      title: 'Client Portal', status: 'published',
+      eyebrow: 'The Client Portal',
+      heading: 'Track, Record and Assign, All in One Place',
+      body: "Every placement test feeds your institution's own AZE portal, so your team can follow progress across classes, campuses and intakes.",
+      features: [
+        { title: 'Track progress', desc: 'See every intake at a glance: tests sent, tests completed and levels, by class, campus or individual student.' },
+        { title: 'Keep a record', desc: "Every result is saved to the student's profile with their skill levels, test history and proctoring report, ready to download." },
+        { title: 'Assign tests', desc: 'Send a placement test to a class, a group or one student, set a due date and follow completions as they come in.' }
+      ],
+      extras: ['Multiple campuses', 'Staff roles and access', 'Teacher view of own classes', 'Invoices and test credits'],
+      portalUrl: 'portal.azetest.ai'
+    },
+    audiences: {
+      title: "Who It's For", status: 'published',
+      eyebrow: "Who It's For",
+      heading: 'Built for Every Intake',
+      audiences: [
+        { title: 'Language Schools', desc: 'Place new arrivals before they land and cut first-day class changes.' },
+        { title: 'Colleges and Universities', desc: 'Stream foundation and pathway students and flag who needs English support.' },
+        { title: 'Corporate Training', desc: 'Group employees into the right cohorts and track progress on the same scale.' }
+      ]
+    },
+    comparison: {
+      title: 'Comparison Table', status: 'published',
+      eyebrow: 'AZE vs traditional entry tests',
+      heading: 'How AZE Compares to Traditional Entry Tests',
+      body: 'Many traditional entry tests check Reading, Listening and grammar only. AZE also scores Writing and Speaking, so students are placed on everything they will use in class.',
+      columnAze: 'AZE Placement Test',
+      columnOther: 'Traditional entry tests',
+      rows: [
+        { feature: 'Skills tested', aze: 'Reading, Listening, Language Awareness, Writing and Speaking', other: 'Often Reading, Listening and Language Knowledge only' },
+        { feature: 'Writing scored', aze: 'Yes', other: 'Often not' },
+        { feature: 'Speaking scored', aze: 'Yes', other: 'Often not' },
+        { feature: 'What you get back', aze: 'A CEFR level for each skill, with strengths and focus areas', other: 'Usually one score and a CEFR level' },
+        { feature: 'Results', aze: 'Within 5 minutes, including Writing and Speaking', other: 'Quick, but without Writing or Speaking' },
+        { feature: 'Where students take it', aze: 'Online, on a laptop or phone', other: 'Usually on a computer' },
+        { feature: 'Test security', aze: 'AI proctoring with identity checks and a report for every candidate', other: 'Often self-access, with no proctoring' },
+        { feature: 'Managing an intake', aze: 'Your own portal to assign tests and track every class and campus', other: 'Reports for students or groups' }
+      ],
+      footnote: 'Other tests vary. This compares AZE with what entry tests commonly offer, so check what each one covers before you choose.',
+      ctaLabel: 'Start with 50 Free Tests'
+    },
+    pricing: {
+      title: 'Pack Pricing', status: 'published',
+      eyebrow: 'Pricing',
+      heading: 'Pay Per Test, Save More in Bulk',
+      body: 'Buy a pack of placement tests. The more you buy, the less each test costs.',
+      boxTitle: 'Placement Test Pricing',
+      offerBanner: 'Limited time offer: 50% off',
+      discountPercent: 50,
+      baseCurrency: 'GBP',
+      currencyRates: { USD: 1.26, EUR: 1.17 },
+      packs: [
+        { quantity: 25, normalPriceGBP: 56.25 },
+        { quantity: 50, normalPriceGBP: 100 },
+        { quantity: 100, normalPriceGBP: 175 },
+        { quantity: 200, normalPriceGBP: 300 },
+        { quantity: 500, normalPriceGBP: 625 },
+        { quantity: 1000, normalPriceGBP: 1000 }
+      ],
+      footerHeading: 'Sign up today and start with 50 Free Tests',
+      footerCta: 'Get started',
+      footerNote: 'No credit card required to start',
+      freeTestsOnSignup: 50
+    },
+    faqs: {
+      title: 'Placement Test FAQs', status: 'published',
+      eyebrow: 'Questions',
+      heading: 'Placement Test FAQ',
+      items: [
+        { q: 'How does pricing work?', a: 'You pay per test. Buy a pack of 25 to 1,000 placement tests, and the more you buy, the less each test costs. New accounts start with 50 free tests.' },
+        { q: 'Which skills does the placement test cover?', a: 'All five: Reading, Listening, Language Awareness, Writing and Speaking. Each skill gets its own CEFR level, plus an overall level.' },
+        { q: 'Can students take it before they arrive?', a: 'Yes. The test runs online, so students can take it from home before they travel. You share a link, or a username and password, and results appear in your dashboard.' },
+        { q: 'How quickly do we get results?', a: 'Within 5 minutes of a student finishing. Writing and Speaking are scored automatically, so there is no marking queue.' },
+        { q: 'How do you stop students cheating?', a: 'Every test is AI-proctored. Each candidate report shows identity verification, confidence scores and flagged moments.' },
+        { q: 'Do I need a credit card to start?', a: 'No. Sign up and start with 50 free tests. No credit card is required.' },
+        { q: 'How is AZE different from other placement tests?', a: 'Many placement tests cover Reading, Listening and grammar only. The AZE Placement Test also scores Writing and Speaking, so you get a CEFR level for all five skills within 5 minutes.' },
+        { q: 'Is this an ESL exam or a grammar placement test?', a: 'It is both. Schools call it an English placement test, an English language placement test, an ESL exam or a grammar placement test. AZE covers grammar and vocabulary (Language Awareness) together with Reading, Listening, Writing and Speaking in one test.' }
+      ]
+    },
+    finalCta: {
+      title: 'Final Call to Action', status: 'published',
+      eyebrow: 'Get Started',
+      heading: 'Start Every Intake in the Right Class',
+      body: 'Sign up today and start with 50 free tests, or book a demo with our team.',
+      primaryBtn: { label: 'Start with 50 Free Tests', action: 'modal:trial' },
+      secondaryBtn: { label: 'Book a Demo', action: 'modal:demo' }
+    },
+    crossPromo: {
+      title: 'Placement Band (Other Pages)', status: 'published',
+      eyebrow: 'Placement Test',
+      note: 'The Placement Test band shown on the Students and Institutions pages.',
+      studentsHeading: 'Teaching a class? Place every learner with one test',
+      studentsBody: 'Send a link, or a username and password. Students test from anywhere, and each one gets a CEFR level for every skill within 5 minutes.',
+      institutionsHeading: 'Place Every Student Before Their First Day',
+      institutionsBody: 'Send students a link, or a username and password. They test from anywhere, and you get a CEFR level for every skill within 5 minutes, so every learner starts in the right class.',
+      primaryBtn: { label: 'See the Placement Test', action: '/placement-test' },
+      secondaryBtn: { label: 'Start with 50 Free Tests', action: '/placement-test/trial' },
+      testRangeTitle: 'A range of tests to suit your needs',
+      testRange: ['Placement Test', 'Full Assessment', 'Progress Test', 'Single-skill modules']
+    },
+    footer: {
+      title: 'Footer Section', status: 'published',
+      copyright: '© 2026 AZE. All rights reserved.',
+      seoLinksTitle: 'Placement tests',
+      seoLinks: ['English placement test', 'English language placement test', 'ESL exam', 'Grammar placement test']
+    }
+  };
+
+  /* Sections that exist on the live Students and Institutions pages but were missing from the CMS */
+  S.students.scoring = {
+    title: 'CEFR Score Scale', status: 'published',
+    eyebrow: 'How Scoring Works',
+    heading: 'A CEFR Score Anyone Can Read',
+    body: 'AZE is built to the CEFR standard, the same global framework behind IELTS and TOEFL. Your result places you from A1 to C2, with a level for every skill.',
+    bands: [
+      { level: 'C2', azeRange: '86–100', ielts: '8.5 – 9.0', toefl: '114 – 120' },
+      { level: 'C1', azeRange: '74–85', ielts: '7.0 – 8.0', toefl: '95 – 113' },
+      { level: 'B2', azeRange: '58–73', ielts: '5.5 – 6.5', toefl: '72 – 94' },
+      { level: 'B1', azeRange: '41–57', ielts: '4.0 – 5.0', toefl: '42 – 71' },
+      { level: 'A2', azeRange: '29–40', ielts: '—', toefl: '—' },
+      { level: 'A1', azeRange: '10–28', ielts: '—', toefl: '—' },
+      { level: 'Pre-A1', azeRange: '0–9', ielts: '—', toefl: '—' }
+    ],
+    footnote: 'AZE gives you one score out of 100 and a CEFR level from Pre-A1 to C2. IELTS and TOEFL give no useful score at the lowest levels (shown as —). This comparison is a guide, so check exact bands before you rely on them.'
+  };
+  S.students.forBusiness = {
+    title: 'For Business Band', status: 'published',
+    eyebrow: 'For business & institutions',
+    heading: 'Testing a team or a cohort?',
+    body: 'AZE lets HR teams, recruiters and universities test hundreds of people from one dashboard, with AI proctoring, volume pricing and CEFR scores.',
+    primaryBtn: { label: 'See AZE for business', action: '/institutions' },
+    secondaryBtn: { label: 'Request a demo & bulk pricing', action: '/institutions/demo' }
+  };
+  S.institutions.scoring = {
+    title: 'CEFR Score Scale', status: 'published',
+    eyebrow: 'How Scoring Works',
+    heading: 'CEFR Scores Your Whole Organisation Can Compare',
+    body: 'Every candidate gets a CEFR level from A1 to C2, the same scale used by IELTS and TOEFL. Compare individuals, teams and cohorts on one scale, and see who meets the level a course or role requires.',
+    footnote: 'AZE reports one score out of 100 and a CEFR level from Pre-A1 to C2. IELTS and TOEFL give no meaningful score at the lowest levels (shown as —). Mapping is indicative; confirm exact bands before relying on them.',
+    bandsNote: 'The band table itself is shared with the Students page (Students > CEFR Score Scale).'
+  };
+  S.institutions.security = {
+    title: 'Security & Compliance', status: 'published',
+    eyebrow: 'Security & Compliance',
+    heading: 'Built to Pass Procurement',
+    cardLabel: 'Enterprise-ready',
+    cardHeading: 'Everything IT, legal and procurement need to sign off.',
+    body: 'Each standard your reviewers check for is listed here, so approval does not stall while your team waits for detail.',
+    items: [
+      'Information security managed to the ISO/IEC 27001 standard',
+      'GDPR and FERPA compliant data handling',
+      'End-to-end encryption, in transit and at rest',
+      'Data residency options for regional requirements',
+      'AI proctoring with a report for every candidate',
+      'Audit logs and role-based access control'
+    ],
+    badges: ['ISO 27001', 'GDPR', 'Encrypted']
+  };
+
+  /* Site-wide settings: SEO, header navigation and the forms behind every CTA */
+  CmsStore.siteSettings = {
+    seo: {
+      students: { pageTitle: 'Online CEFR English Test with Certificate & Score Chart | AZE', metaDescription: "Take AZE's online CEFR English test from home. Get a certificate and the most detailed skills report on the market, with results in 5 minutes, from $9.", slug: '/', canonicalUrl: '', ogImage: '', indexable: true },
+      institutions: { pageTitle: 'Corporate English Testing at Scale | Bespoke B2B Solutions | AZE', metaDescription: 'Bespoke B2B English assessment for HR, recruitment and universities. Custom testing at scale, with CEFR-aligned scores, proctoring and 5-minute results.', slug: '/institutions', canonicalUrl: '', ogImage: '', indexable: true },
+      placement: { pageTitle: 'English Placement Test for Schools and Institutions | AZE', metaDescription: 'Online English placement test and placement exam for schools, colleges and employers. Send a link or a login: five skills, a CEFR level for each skill within 5 minutes.', slug: '/placement-test', canonicalUrl: '', ogImage: '', indexable: true }
+    },
+    navigation: {
+      menuLinks: [
+        { label: 'For Students', url: '/' },
+        { label: 'For Institutions', url: '/institutions' },
+        { label: 'Placement Test', url: '/placement-test' },
+        { label: 'Pricing', url: '#pricing' }
+      ],
+      headerButtons: {
+        students: { secondary: 'Sign In', primary: 'Get certified' },
+        institutions: { secondary: 'Start Free Trial', primary: 'Book a Demo' },
+        placement: { secondary: 'Book a Demo', primary: 'Start with 50 Free Tests', primaryShortMobile: '50 Free Tests' }
+      },
+      footerTagline: 'Online English certification. Verified forever.'
+    },
+    forms: {
+      notificationEmail: 'sales@azetest.ai',
+      institutionsDemo: { title: 'Request a Demo', subtitle: 'See how AZE tests, scores and reports on a full cohort.', button: 'Request Demo', successTitle: 'Request Received', successText: 'Our team will contact you within 24 hours to schedule your demo.', volumeFieldLabel: 'Estimated Annual Test Volume' },
+      placementDemo: { title: 'Request a Demo', subtitle: 'See how the AZE Placement Test works for your institution.', button: 'Request Demo', successTitle: 'Request Received', successText: 'Our team will contact you within 24 hours to schedule your demo.', volumeFieldLabel: 'Students per Intake' },
+      institutionsTrial: { title: 'Start Your Free Trial', subtitle: 'Create your account and run your first tests today. No credit card required.', button: 'Start Free Trial', successTitle: "You're In", successText: 'Check your inbox for a link to set up your account.' },
+      placementTrial: { title: 'Start with 50 Free Tests', subtitle: 'Create your account and send your first placement test today. No credit card required.', button: 'Get Started', successTitle: "You're In", successText: 'Check your inbox for a link to set up your account and use your 50 free tests.' },
+      placementPack: { title: 'Get Started', subtitle: 'Start with 50 free tests, then buy your pack when you are ready. No credit card required.', button: 'Get Started', successTitle: "You're In", successText: 'Check your inbox for a link to set up your account. We have noted the pack you chose.' }
+    }
+  };
+  CmsStore.settingsTab = 'seo';
+})();
+
+/* ===== ADDED: Students and Institutions content replaced with the latest website design ===== */
+(function(){
+  const S = CmsStore.sections;
+  const keep = S.students;
+  const notInDesign = (o, title) => Object.assign(o, { title: title + ' (unused)', status: 'draft' });
+  const advisoryCards = (aiDesc) => [
+    { title: 'Admissions Leaders', desc: 'University enrolment' },
+    { title: 'Assessment Experts', desc: 'Psychometric specialists' },
+    { title: 'AI Researchers', desc: aiDesc },
+    { title: 'Policy Advisors', desc: 'Global mobility' }
+  ];
+  const bands = [
+    { level: 'C2', azeRange: '86–100', ielts: '8.5 – 9.0', toefl: '114 – 120' },
+    { level: 'C1', azeRange: '74–85', ielts: '7.0 – 8.0', toefl: '95 – 113' },
+    { level: 'B2', azeRange: '58–73', ielts: '5.5 – 6.5', toefl: '72 – 94' },
+    { level: 'B1', azeRange: '41–57', ielts: '4.0 – 5.0', toefl: '42 – 71' },
+    { level: 'A2', azeRange: '29–40', ielts: '—', toefl: '—' },
+    { level: 'A1', azeRange: '10–28', ielts: '—', toefl: '—' },
+    { level: 'Pre-A1', azeRange: '0–9', ielts: '—', toefl: '—' }
+  ];
+  const certFlow = (d1, d3) => [
+    { label: 'Take Test', desc: d1 }, { label: 'Encrypted', desc: 'Results secured' },
+    { label: 'Blockchain', desc: d3 }, { label: 'Share', desc: 'Verify instantly' }
+  ];
+
+  S.students = {
+    hero: {
+      title: 'Hero Banner', status: 'published',
+      eyebrow: 'Find out your real English level',
+      heading: 'The online English test that',
+      headingHighlight: 'explains every score.',
+      subheading: 'Know your English level, understand your results and see where you can improve. AZE assesses five English language skills and gives you personalised feedback, with results within 5 minutes.',
+      primaryBtn: { label: 'Take the Free Practice Test', action: 'free-english-level-test.html' },
+      secondaryBtn: { label: 'Get Your Certificate', action: 'modal:checkout' },
+      handwrittenNote: 'your real level',
+      badges: [ { text: 'CEFR level' }, { text: 'Five English language skills' }, { text: 'Personalised feedback' }, { text: 'Results within 5 minutes' } ]
+    },
+    numbers: {
+      title: 'Key Numbers & Stats', status: 'published',
+      stats: [
+        { value: '150+', label: 'Skills Scored' }, { value: '5min', label: 'To Get Results' },
+        { value: '$9', label: 'Full Test and Certificate' }, { value: '∞', label: 'Certificate Never Expires' }
+      ]
+    },
+    videoOverview: Object.assign(keep.videoOverview, { title: 'Product Video Slider', status: 'published' }),
+    technology: {
+      title: 'Technology Overview', status: 'published',
+      eyebrow: 'How AZE Scores',
+      heading: 'Built by Teachers, Tested on a Decade of Real Learners',
+      body: 'AZE was developed by language teachers, linguists and assessment researchers. It is trained on more than 10 years of real learner data at every level, so your score reflects your actual level.',
+      cards: [
+        { title: 'Questions That Match Your Level', desc: 'Question difficulty adjusts as you answer, to identify your exact CEFR level. The test takes about 45 minutes.' },
+        { title: '150+ Skills Analysed', desc: 'We score your pronunciation, grammar, vocabulary, fluency and coherence, with over 90% accuracy.' },
+        { title: 'Blockchain-Verified Certificate', desc: 'Employers can verify your certificate online in seconds. You can share it as many times as you need.' }
+      ],
+      primaryBtn: { label: 'Take the free practice test', action: 'free-english-level-test.html' },
+      secondaryBtn: { label: 'Get Certified for $9', action: 'modal:checkout' }
+    },
+    skills: {
+      title: 'Test Skills (Skill Cards)', status: 'published',
+      eyebrow: 'Your Report',
+      heading: "What You'll Get in Your English Report",
+      body: "Your AZE report scores you across five skill areas and tells you exactly what to improve in each. Here's the feedback you'll receive, skill by skill.",
+      skillCards: [
+        { badge: 'Speaking Assessment', name: 'Speaking', intro: 'You will talk about everyday topics and be assessed on your', highlight: 'pronunciation and fluency', outro: '. Your report shows how clearly and naturally you speak, and which sounds you can improve.', pills: 'Pronunciation scoring | Fluency scoring | Phoneme analysis' },
+        { badge: 'Writing Assessment', name: 'Writing', intro: 'You will write short texts, such as an email or a short essay, and be assessed on your', highlight: 'grammar, spelling and vocabulary', outro: '. Your report shows how clearly you organise your ideas and what you can improve in your writing.', pills: 'Grammar analysis | Vocabulary range | Coherence scoring' },
+        { badge: 'Listening Assessment', name: 'Listening', intro: 'You will listen to real conversations in different accents and be assessed on how well you', highlight: 'understand the main idea and key details', outro: '. Your report shows how well you follow spoken English and where you can improve.', pills: 'Multi-accent listening | Detail retention | Inference evaluation' },
+        { badge: 'Reading Assessment', name: 'Reading', intro: 'You will read short, real texts and be assessed on how well you', highlight: 'understand the main idea, find key information and make inferences', outro: '. Your report shows your reading performance and where you can improve.', pills: 'Main idea comprehension | Detail extraction | Inference skills' },
+        { badge: 'Overall Assessment', name: 'Language Awareness', intro: 'You will answer adaptive questions on', highlight: 'grammar, vocabulary and sentence structure', outro: '. The difficulty changes as you answer, so the questions match your level. Your report shows where your grammar and vocabulary are strong and where you can improve.', pills: 'Adaptive difficulty | Vocabulary depth | Multi-skill analysis' }
+      ],
+      tickerItems: ['Language Awareness', 'Speaking Skills', 'Writing Proficiency', 'Reading Comprehension', 'Listening Ability', '150+ Skills']
+    },
+    platformFeatures: {
+      title: 'Report Features', status: 'published',
+      eyebrow: 'Feedback and Progress',
+      heading: 'The Most Detailed English Report on the Market',
+      body: 'Other tests give you one score. AZE scores 150+ skills, explains each result, and shows you what to improve next.',
+      featureBlocks: [
+        { label: 'Clear Feedback', heading: 'Every skill scored, every score explained.', desc: 'Each score includes a short explanation, so you understand the result as well as the number. You can see which skills are strong and which need more practice.', bullets: 'A score for each of 150+ skills | A clear list of what to improve next | A CEFR level for every skill' },
+        { label: 'Progress Tracking', heading: 'Watch your English improve, test by test.', desc: 'Each new test result is added to your student portal. You can compare your scores and see how much you have improved since your first test.', bullets: 'Charts that show your progress over time | See how each skill improves | Clear goals to work towards' },
+        { label: 'Data Protection', heading: 'Your data and privacy are protected.', desc: 'Your test results and personal details belong to you. They are protected under ISO 27001 and GDPR, and only you decide who can see your results.', bullets: 'ISO/IEC 27001 certified information security | All your data is encrypted | GDPR compliant data handling | You control who sees your results' }
+      ],
+      dataBadges: ['GDPR', 'Encrypted', 'ISO 27001']
+    },
+    blockchain: {
+      title: 'Blockchain Verification', status: 'published',
+      eyebrow: 'Verification',
+      heading: "Certificates That Can't Be Faked",
+      subheading: 'Anyone who receives your AZE certificate can confirm online that it is real.',
+      body: 'Your certificate is saved as a permanent record when it is issued, so it cannot be changed later. Each certificate has its own link. The person you send it to opens the link and sees your result in seconds, with no fees and no waiting.',
+      flowSteps: certFlow('Complete all five sections', 'Permanent record'),
+      highlights: ['Tamper-proof records', 'Never expires', 'Unlimited sharing'],
+      primaryBtn: { label: 'Take the free practice test', action: 'free-english-level-test.html' },
+      secondaryBtn: { label: 'Get Certified for $9', action: 'modal:checkout' }
+    },
+    advisory: {
+      title: 'Advisory Board', status: 'published',
+      eyebrow: 'Expert Backed',
+      heading: 'Guided by Global Leaders in Language Assessment',
+      body: 'The AZE Global Advisory Group brings together leaders from higher education, language assessment and admissions, with decades of experience in English language testing and international student admissions.',
+      body2: 'Their guidance helps keep AZE fair for learners and reliable for the schools and employers who receive your results.',
+      roles: advisoryCards('Machine Learning & NLP specialists'),
+      illustration: 'Four faceless experts at work (drawn in code, follows the theme)'
+    },
+    comparison: {
+      title: 'Why AZE Comparison', status: 'published',
+      eyebrow: 'Why AZE',
+      heading: 'How AZE Compares to IELTS and TOEFL',
+      body: 'AZE uses the same CEFR scale as traditional English tests, in less time and at a lower cost.',
+      columnOther: 'Traditional Tests',
+      rows: [
+        { feature: 'Test from home', aze: 'Yes', other: 'No' },
+        { feature: 'No appointment needed', aze: 'Yes', other: 'No' },
+        { feature: 'Test duration', aze: '45 min', other: '3-4 hours' },
+        { feature: 'Results delivered', aze: '5 minutes', other: '2-4 weeks' },
+        { feature: 'Blockchain certificate', aze: 'Yes', other: 'No' },
+        { feature: 'Unlimited sharing', aze: 'Yes', other: 'No' },
+        { feature: 'Price', aze: '$9', other: '$200-300' }
+      ]
+    },
+    howItWorks: {
+      title: 'How It Works (Steps)', status: 'published',
+      eyebrow: 'The Process',
+      heading: 'How the AZE Online English Test Works',
+      body: 'Three simple steps to your verified English certificate.',
+      steps: [
+        { num: '01', badge: 'Assessment', title: 'Register & Take the Test', desc: 'Create your account in seconds and begin immediately. You complete all five sections from home, at any time, and the difficulty adjusts to match your level.', pills: 'Quick registration | Available 24/7 | 5 skills tested' },
+        { num: '02', badge: 'Results', title: 'Get Results & Track Progress', desc: 'Receive your full score report in 5 minutes. Your student portal shows your progress over time, a breakdown of 150+ skills, and clear guidance on what to improve next.', pills: 'Results in 5 minutes | Personal dashboard | Progress tracking' },
+        { num: '03', badge: 'Certificate', title: 'Share Your Certificate Forever', desc: 'Download your certificate immediately and share it as often as you need with employers and universities. It is stored permanently and never expires.', pills: 'Blockchain verified | Unlimited sharing | Instant download' }
+      ]
+    },
+    scoring: {
+      title: 'CEFR Score Scale', status: 'published',
+      eyebrow: 'How Scoring Works',
+      heading: 'A CEFR Score Anyone Can Read',
+      body: 'AZE is built to the CEFR standard, the same global framework behind IELTS and TOEFL. Your result places you from A1 to C2, with a level for every skill.',
+      bands: bands,
+      notes: ['AZE scores you at every level and shows you what to improve.', 'Other tests do not measure these levels.'],
+      footnote: 'AZE gives you one score out of 100 and a CEFR level from Pre-A1 to C2. IELTS and TOEFL give no useful score at the lowest levels (shown as —). This comparison is a guide, so check exact bands before you rely on them.'
+    },
+    pricing: {
+      title: 'Pricing Preview', status: 'published',
+      eyebrow: 'Pricing',
+      heading: 'Choose the Test That Suits You',
+      subheading: 'Start with a free practice test and upgrade when you are ready.',
+      toggleLabels: { single: 'Single Test', bundle: 'Bundle', saveBadge: 'Save 20%' },
+      note: 'Plans and prices are managed in Pricing Plans.'
+    },
+    blog: Object.assign(keep.blog, { title: 'Blog Teaser Listing', status: 'published' }),
+    faqs: {
+      title: 'Frequently Asked Questions', status: 'published',
+      eyebrow: 'Questions',
+      heading: 'Frequently Asked Questions',
+      items: [
+        { q: 'How long does the test take?', a: 'About 45 minutes. You complete all five sections in one sitting, from home, and get your results 5 minutes after you finish.' },
+        { q: 'How long is my certificate valid?', a: 'Your AZE certificate never expires. It is blockchain-verified, so anyone you share it with can verify it online in seconds.' },
+        { q: 'Is AZE accepted by universities?', a: 'AZE is a preparation and self-assessment tool, not a replacement for official entrance exams. It gives you a precise CEFR level and a detailed report on what to improve, so you are ready before you apply. Always check which English tests your university or employer accepts.' },
+        { q: 'How can I check my English level?', a: 'Take the AZE test from home. You answer questions across five skills. Within 5 minutes of finishing, you get your CEFR level, from A1 to C2, with a clear report on what to improve.' },
+        { q: 'What device do I need?', a: 'A laptop or desktop computer with a microphone, a camera and a stable internet connection. You take the test in your browser, so there is nothing to install. A quiet room is recommended for the Speaking section.' }
+      ]
+    },
+    forBusiness: S.students.forBusiness,
+    finalCta: Object.assign(keep.finalCta, { title: 'Final Call to Action', status: 'published' }),
+    aboutUs: {
+      title: 'About Us', status: 'published',
+      eyebrow: 'About us',
+      heading: 'A Decade of',
+      headingHighlight: 'Teaching',
+      headingEnd: ', Built Into Every Score',
+      body: 'AZE was developed with ES World, an English education provider with over a decade of teaching in Dubai and London. Our assessment is built on real learner data at every level, so it reflects how people learn and where they need support.',
+      experience: { value: '10+', label: 'years of experience' },
+      stats: [ { value: '450,000+', label: 'Tests taken' }, { value: '80,000+', label: 'Students trained' } ],
+      primaryBtn: { label: 'Free Practice Test', action: 'free-english-level-test.html' }
+    },
+    footer: {
+      title: 'Footer Section', status: 'published',
+      tagline: 'Online English certification. Verified forever.',
+      copyright: '© 2026 AZE. All rights reserved.',
+      links: 'Privacy · Terms · Security',
+      siteLinks: ['For Students', 'For Institutions', 'Placement Test', 'Pricing', 'Verify Certificate', 'API Docs']
+    }
+  };
+
+  const keepInst = S.institutions;
+  S.institutions = {
+    hero: {
+      title: 'Hero Banner', status: 'published',
+      eyebrow: 'For schools, universities and employers',
+      heading: 'Corporate English Assessment,',
+      headingHighlight: 'Built to Test Teams at Scale',
+      subheading: 'Test your whole workforce or intake in days, not weeks, with consistent CEFR scores, cohort analytics and verifiable certificates.',
+      primaryBtn: { label: 'Book a Demo', action: 'modal:demo' },
+      secondaryBtn: { label: 'Start Free Trial', action: 'modal:trial' },
+      handwrittenNote: 'your brand on it',
+      badges: [ { text: 'Assess unlimited students' }, { text: 'Results in 5 minutes' }, { text: 'Full analytics dashboard' } ]
+    },
+    numbers: {
+      title: 'Institutional Numbers', status: 'published',
+      stats: [
+        { value: '150+', label: 'Skills Analysed' }, { value: '5min', label: 'To Get Results' },
+        { value: '80%', label: 'Less Marking Time' }, { value: '24/7', label: 'Testing Available' }
+      ]
+    },
+    technology: {
+      title: 'Technology & Benefits', status: 'published',
+      eyebrow: 'How AZE Scores',
+      heading: 'Built by Teachers, Calibrated on a Decade of Real Learners',
+      body: 'The scoring models were developed by language education experts, assessment researchers and machine learning specialists, then calibrated on more than 10 years of real learner data across every CEFR level.',
+      cards: [
+        { title: 'Adaptive Question Engine', desc: "Questions adapt in real time to each candidate's answers, so one 45-minute test pinpoints their CEFR level." },
+        { title: '150+ Skills Analysed', desc: 'Pronunciation, grammar, vocabulary, fluency and coherence are each scored, with 90%+ accuracy.' },
+        { title: 'Blockchain Verification', desc: 'Tamper-proof certificates that anyone can verify online in seconds and share without limit.' }
+      ],
+      benefitsTitle: 'What This Means for Your Institution',
+      benefits: [
+        { stat: '90%+', title: 'Examiner Accuracy', desc: 'Scores match human examiners, on the same CEFR standards as IELTS and TOEFL.' },
+        { stat: '5 min', title: 'Results at Scale', desc: 'Assess hundreds of candidates at the same time, with results in 5 minutes instead of weeks.' },
+        { stat: '100%', title: 'Online Testing', desc: 'No test centres or invigilators needed. Candidates test from anywhere under AI proctoring.' },
+        { stat: 'Detailed', title: 'Skill-by-Skill Reports', desc: 'Every candidate gets a CEFR level for each skill, so you can see gaps at a glance and track progress over time.' }
+      ]
+    },
+    tools: {
+      title: 'Platform Tools', status: 'published',
+      eyebrow: 'Platform Tools',
+      heading: 'Everything You Need to Assess at Scale',
+      body: 'One platform for branding, analytics, invitations and group management, built for schools, universities and companies.',
+      toolsList: [
+        { badge: 'White-Label Platform', name: 'Your Brand. Your Platform.', desc: 'Put your logo and colours on every test, report and email, and manage all your students from one central dashboard.', pills: 'Custom branding | Student management | Cohort organisation' },
+        { badge: 'Analytics Dashboard', name: 'See Every Score as It Lands.', desc: 'Real-time dashboards show completions, CEFR levels and progress across every cohort, and any report can be exported.', pills: 'Real-time analytics | Exportable reports | Progress tracking' },
+        { badge: 'Bulk Operations & LMS', name: 'Scale Without Extra Admin.', desc: 'Buy test credits in bulk, invite candidates by link, WhatsApp or email, and sync scores to your LMS by LTI or API. Works with Canvas, Blackboard, Google Classroom and Moodle.', pills: 'Bulk credits | Email invites | LTI & API' },
+        { badge: 'Student Progress', name: "Track Every Student's Progress.", desc: "Follow each student's level, skill breakdown and improvement over time, and spot who needs extra support early. Every student also gets their own portal.", pills: 'Progress timelines | Skill breakdowns | Improvement tracking' },
+        { badge: 'Group Management', name: 'Manage Groups Without Spreadsheets.', desc: 'Group candidates by class, cohort or department, assign a test to a whole group in one step, and compare results across your organisation.', pills: 'Unlimited groups | Cohort comparison | Batch assignments' }
+      ],
+      tickerItems: ['White-Label', 'Analytics', 'Bulk Credits', 'LMS Integration', 'Progress Tracking', 'Group Management']
+    },
+    platformFeatures: {
+      title: 'Enterprise Features', status: 'published',
+      eyebrow: 'Platform Features',
+      heading: 'Built to Cut Admin and Prevent Fraud',
+      featureBlocks: [
+        { label: 'Candidate Reports', heading: 'Reports your teachers can act on.', desc: 'A single overall score does not tell a teacher where to start. Each candidate report shows what the student already does well and which areas to cover first, so lessons can be planned around real gaps.', bullets: 'Detailed skill-by-skill breakdown | Specific improvement recommendations | A CEFR level for each skill' },
+        { label: 'Admin Relief', heading: 'Cut marking time by 80%.', desc: 'Scoring and corrections run automatically, so teachers get hours back each week. They also see who is thriving, who needs support, and which topics the class should revisit.', bullets: 'Visual progress charts over time | Cohort-level analytics dashboard | Automated marking saves hours' },
+        { label: 'Secure Testing', heading: 'Secure proctoring. Verified results.', desc: 'Every test is monitored by AI proctoring, so you do not need invigilators or a test centre. Afterwards you get a report for each candidate showing confidence scores, flagged moments and verification status.', bullets: 'Secure identity verification | Tab-switching and focus detection | Detailed integrity reports' },
+        { label: 'Data Protection', heading: "Keep your learners' data safe.", desc: 'We collect only the data we need, encrypt it in transit and at rest, and handle it in line with GDPR.', bullets: 'Strict child-safety guidelines | GDPR and FERPA compliant data handling | No harmful interactions, ever' }
+      ],
+      dataBadges: ['GDPR', 'FERPA', 'ISO 27001']
+    },
+    blockchain: {
+      title: 'Blockchain Verification', status: 'published',
+      eyebrow: 'Verification',
+      heading: "Certificates That Can't Be Faked",
+      subheading: 'Your admissions or HR team can confirm any AZE result in seconds, so forged and edited certificates are caught before a decision is made.',
+      body: 'Each result is timestamped and recorded on blockchain when it is issued, and every certificate carries its own verification link. Open the link to see the original result. A forged or altered certificate fails the check.',
+      flowSteps: certFlow('Complete assessment', 'Immutable record'),
+      highlights: ['Tamper-proof records', 'Never expires', 'Unlimited sharing'],
+      primaryBtn: { label: 'Book a Demo', action: 'modal:demo' },
+      secondaryBtn: { label: 'Start Free Trial', action: 'modal:trial' }
+    },
+    advisory: {
+      title: 'Advisory Board', status: 'published',
+      eyebrow: 'Expert Backed',
+      heading: 'Guided by Global Leaders in Language Assessment',
+      body: 'The AZE Global Advisory Group brings together leaders from higher education, language assessment and education technology, with decades of experience in admissions, assessment policy and global student mobility.',
+      body2: 'Their guidance keeps AZE reliable for academic institutions and accessible for learners around the world.',
+      roles: advisoryCards('ML & NLP engineers'),
+      illustration: 'Four faceless experts at work (drawn in code, follows the theme)'
+    },
+    comparison: {
+      title: 'Benchmark Comparison', status: 'published',
+      eyebrow: 'Why AZE',
+      heading: 'How AZE Compares to Traditional Test Centres',
+      body: 'Candidates test online without a booking, and results arrive in 5 minutes with no marking queue on your side.',
+      columnOther: 'Traditional Tests',
+      rows: [
+        { feature: 'Test from anywhere', aze: 'Yes', other: 'No' },
+        { feature: 'No scheduling required', aze: 'Yes', other: 'No' },
+        { feature: 'Results delivered', aze: '5 minutes', other: '2-4 weeks' },
+        { feature: 'Bulk testing', aze: 'Yes', other: 'No' },
+        { feature: 'API integration', aze: 'Yes', other: 'No' },
+        { feature: 'Progress analytics', aze: 'Yes', other: 'No' },
+        { feature: 'Blockchain certificates', aze: 'Yes', other: 'No' }
+      ]
+    },
+    scoring: S.institutions.scoring,
+    security: S.institutions.security,
+    howItWorks: {
+      title: 'Rollout Steps', status: 'published',
+      eyebrow: 'The Process',
+      heading: 'How It Works for Institutions',
+      body: 'Three steps from setup to certified results, with no manual marking.',
+      steps: [
+        { num: '01', badge: 'Setup', title: 'Set Up & Invite Students', desc: 'Create your account in minutes, add your branding and set up classes or cohorts. Invite students by link, WhatsApp, email or directly through your LMS.', pills: 'Quick setup | Bulk invites | LMS integration' },
+        { num: '02', badge: 'Analysis', title: 'Instant Analysis & Results', desc: 'Candidates take the test from anywhere, at any time. Every response is scored automatically, and detailed results reach your dashboard within 5 minutes.', pills: '5-minute results | Automated skill scoring | 150+ skills analysed' },
+        { num: '03', badge: 'Certification', title: 'Track Progress & Certify', desc: 'Monitor cohort progress on your analytics dashboard. Each student receives a blockchain-verified certificate that employers and other institutions can verify in seconds.', pills: 'Analytics dashboard | Blockchain verified | Unlimited sharing' }
+      ]
+    },
+    pricing: {
+      title: 'Pricing Preview', status: 'published',
+      eyebrow: 'Pricing',
+      heading: 'Pricing That Scales With Your Organisation',
+      subheading: 'Pay monthly, or save 20% with yearly billing.',
+      toggleLabels: { monthly: 'Monthly', yearly: 'Yearly', saveBadge: 'Save 20%' },
+      note: 'Plans and prices are managed in Pricing Plans.'
+    },
+    faqs: {
+      title: 'Enterprise FAQs', status: 'published',
+      eyebrow: 'Questions',
+      heading: 'Business & Institution FAQ',
+      items: [
+        { q: 'Do you offer bulk discounts for teams?', a: 'Yes. We offer volume pricing for teams and cohorts. Buy test credits in bulk, pay less per test, and use them whenever you need.' },
+        { q: 'Is candidate data GDPR-compliant?', a: 'Yes. We handle candidate data in line with GDPR, with encryption in transit and at rest. Data residency options are available for regional requirements.' },
+        { q: 'How does proctoring prevent cheating?', a: "AI proctoring verifies each candidate's identity and detects tab-switching and loss of focus during the test. You then get a report for each candidate showing confidence scores, flagged moments and verification status." },
+        { q: 'Can AZE integrate with our ATS or LMS?', a: 'Yes. AZE connects to your ATS or LMS by API, so scores land in the tools you already use.' },
+        { q: 'What security standards does AZE meet?', a: 'AZE is managed to ISO/IEC 27001 and handles personal data under GDPR, with encryption in transit and at rest.' }
+      ]
+    },
+    finalCta: {
+      title: 'Institutional CTA', status: 'published',
+      eyebrow: 'Get Started',
+      heading: 'Ready to Stop Marking Tests by Hand?',
+      body: 'Book a demo to see AZE with your own cohort, or start your free trial today.',
+      primaryBtn: { label: 'Book a Demo', action: 'modal:demo' },
+      secondaryBtn: { label: 'Start Free Trial', action: 'modal:trial' }
+    },
+    aboutUs: {
+      title: 'About Us', status: 'published',
+      eyebrow: 'About us',
+      heading: 'Built on',
+      headingHighlight: 'a Decade',
+      headingEnd: 'of English Teaching',
+      body: 'Our scoring is purpose-built for language assessment. It was developed with ES World, an English education provider with over a decade of teaching in Dubai and London, and refined on real learner data at every level.',
+      experience: { value: '10+', label: 'years of experience' },
+      stats: [ { value: '450,000+', label: 'Tests taken' }, { value: '80,000+', label: 'Students trained' } ],
+      primaryBtn: { label: 'Book a Demo', action: 'modal:demo' },
+      secondaryBtn: { label: 'Start Free Trial', action: 'modal:trial' }
+    },
+    footer: {
+      title: 'Footer Section', status: 'published',
+      tagline: 'Online English certification. Verified forever.',
+      copyright: '© 2026 AZE. All rights reserved.',
+      links: 'Privacy · Terms · Security',
+      siteLinks: ['For Students', 'For Institutions', 'Placement Test', 'Pricing', 'Verify Certificate', 'API Docs']
+    }
+  };
+
+  /* Pricing Plans collection: the plans on the live pages (students show single / bundle of 5) */
+  CmsStore.pricingPlans = [
+    { id: 'p1', audience: 'students', tier: 'FREE', name: 'Try AZE', priceM: 'Free', priceY: 'Free', features: 4, isFeatured: false, status: 'published' },
+    { id: 'p2', audience: 'students', tier: 'QUICK TEST', name: 'Quick Level Check', priceM: '$5', priceY: '$20 / 5 tests', features: 4, isFeatured: false, status: 'published' },
+    { id: 'p3', audience: 'students', tier: 'FULL TEST', name: 'Full Certification', priceM: '$9', priceY: '$36 / 5 tests', features: 6, isFeatured: true, status: 'published' },
+    { id: 'p4', audience: 'institutions', tier: 'STARTER', name: 'Small Teams', priceM: '$99', priceY: '$79/mo', features: 4, isFeatured: false, status: 'published' },
+    { id: 'p5', audience: 'institutions', tier: 'PROFESSIONAL', name: 'Growing Institutions', priceM: '$299', priceY: '$239/mo', features: 5, isFeatured: true, status: 'published' },
+    { id: 'p6', audience: 'institutions', tier: 'ENTERPRISE', name: 'Large Organisations', priceM: 'Custom', priceY: 'Custom', features: 4, isFeatured: false, status: 'published' }
+  ];
+})();
+
+/* ===== ADDED: generic editor that can edit every field and list in a section ===== */
+const LANDING_PAGES = ['students', 'institutions', 'placement'];
+const PAGE_LABELS = { students: 'Students', institutions: 'Institutions', placement: 'Placement Test' };
+const SECTION_ORDER = {
+  students: ['hero', 'numbers', 'videoOverview', 'technology', 'skills', 'platformFeatures', 'blockchain', 'advisory', 'comparison', 'howItWorks', 'scoring', 'pricing', 'blog', 'faqs', 'finalCta', 'forBusiness', 'aboutUs', 'footer'],
+  institutions: ['hero', 'numbers', 'technology', 'tools', 'platformFeatures', 'blockchain', 'advisory', 'comparison', 'scoring', 'security', 'howItWorks', 'pricing', 'faqs', 'finalCta', 'aboutUs', 'footer'],
+  placement: ['hero', 'numbers', 'devices', 'howItWorks', 'report', 'clientPortal', 'audiences', 'comparison', 'pricing', 'faqs', 'finalCta', 'crossPromo', 'footer']
+};
+Object.keys(SECTION_ORDER).forEach(p => {
+  const src = CmsStore.sections[p], out = {};
+  SECTION_ORDER[p].forEach(k => { if (src[k]) out[k] = src[k]; });
+  Object.keys(src).forEach(k => { if (!out[k]) out[k] = src[k]; });
+  CmsStore.sections[p] = out;
+});
+function isLandingPage(m) { return LANDING_PAGES.indexOf(m) !== -1; }
+/* Last published content: Discard restores from here, and empty lists take their item shape from it */
+const deepClone = o => JSON.parse(JSON.stringify(o));
+const PUBLISHED = { sections: deepClone(CmsStore.sections), siteSettings: deepClone(CmsStore.siteSettings) };
+CmsStore.lastPage = 'students';
+
+const FIELD_LABELS = {
+  eyebrow: 'Section Eyebrow / Tag', heading: 'Heading', headingHighlight: 'Heading (Highlighted Line)', subheading: 'Subtext / Value Proposition',
+  body: 'Section Description', desc: 'Description', q: 'Question', a: 'Answer', primaryBtn: 'Primary Button', secondaryBtn: 'Secondary Button',
+  label: 'Label', action: 'Link / Route (or modal:name)', badges: 'Highlights Strip', stats: 'Metrics', steps: 'Steps', items: 'Items', pills: 'Feature Pills (separate with |)',
+  num: 'Number', handwrittenNote: 'Handwritten Annotation', illustration: 'Hero Illustration Sample Data', floatingNotes: 'Floating Notes on the Scene',
+  figureLabels: 'Figure Captions', points: 'Key Points', sampleStudents: 'Sample Students in the Report Demo', extras: 'Extra Portal Features',
+  aze: 'AZE Column', other: 'Other Column', feature: 'Row Label', rows: 'Comparison Rows', columnAze: 'AZE Column Heading', columnOther: 'Comparison Column Heading',
+  footnote: 'Footnote', ctaLabel: 'Button Label', packs: 'Pack Sizes & Prices', normalPriceGBP: 'Normal Price (GBP, before discount)', quantity: 'Tests in Pack',
+  currencyRates: 'Currency Rates (from GBP)', discountPercent: 'Discount (%)', offerBanner: 'Offer Banner', boxTitle: 'Pricing Box Title', baseCurrency: 'Base Currency',
+  freeTestsOnSignup: 'Free Tests on Sign-up', footerHeading: 'Box Footer Heading', footerCta: 'Box Footer Button', footerNote: 'Box Footer Note',
+  bands: 'CEFR Bands', azeRange: 'AZE Score Range', ielts: 'IELTS', toefl: 'TOEFL iBT', level: 'Level', seoLinks: 'SEO Links', seoLinksTitle: 'SEO Links Title',
+  testRange: 'Test Range List', testRangeTitle: 'Test Range Title', pageTitle: 'Page Title (browser tab & Google)', metaDescription: 'Meta Description',
+  slug: 'URL Slug', ogImage: 'Social Share Image', indexable: 'Allow search engines to index', menuLinks: 'Menu Links', headerButtons: 'Header Buttons per Page',
+  notificationEmail: 'Send Form Submissions To', successTitle: 'Success Title', successText: 'Success Message', volumeFieldLabel: 'Volume Field Label',
+  studentsHeading: 'Heading on Students Page', studentsBody: 'Text on Students Page', institutionsHeading: 'Heading on Institutions Page', institutionsBody: 'Text on Institutions Page'
+};
+const LONG_FIELDS = ['body','desc','subheading','a','metaDescription','successText','studentsBody','institutionsBody','footnote','subtitle'];
+const HIDDEN_FIELDS = ['title','status','activeSlideIndex'];
+
+const ITEM_NAMES = { packs: 'Pack', sampleStudents: 'Student', floatingNotes: 'Note', badges: 'Highlight', stats: 'Metric', steps: 'Step', items: 'Item', points: 'Point', features: 'Feature', audiences: 'Audience', rows: 'Row', bands: 'Band', menuLinks: 'Link', faqs: 'Question' };
+function humanise(k) { if (/^[A-Z0-9]+$/.test(k)) return k; return FIELD_LABELS[k] || k.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase()); }
+function itemName(k) { return ITEM_NAMES[k] || humanise(k).replace(/ies$/, 'y').replace(/s$/, ''); }
+function escAttr(v) { return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function pathAttr(p) { return escAttr(JSON.stringify(p)); }
+function getByPath(root, p) { return p.reduce((o, k) => (o == null ? o : o[k]), root); }
+function setByPath(root, p, v) { const last = p[p.length - 1]; getByPath(root, p.slice(0, -1))[last] = v; }
+
+function schemaRoot(src) {
+  src = src || CmsStore;
+  const m = CmsStore.activeModule;
+  if (m === 'settings') return src.siteSettings[CmsStore.settingsTab];
+  return (src.sections[m] || {})[CmsStore.activeSection];
+}
+function blankLike(tpl) { return (tpl && typeof tpl === 'object') ? JSON.parse(JSON.stringify(tpl, (k, v) => (typeof v === 'string' ? '' : typeof v === 'number' ? 0 : v))) : ''; }
+
+function renderScalar(key, val, path) {
+  const label = humanise(key);
+  if (typeof val === 'boolean') {
+    return `<label class="form-group schema-check"><input type="checkbox" ${val ? 'checked' : ''} onchange="onSchemaChange('${pathAttr(path)}', this.checked)"> <span class="form-label" style="margin:0">${label}</span></label>`;
+  }
+  const isNum = typeof val === 'number';
+  const long = LONG_FIELDS.indexOf(key) !== -1 || String(val).length > 90;
+  const input = long
+    ? `<textarea class="form-textarea" oninput="onSchemaChange('${pathAttr(path)}', this.value)">${escAttr(val)}</textarea>`
+    : `<input type="${isNum ? 'number' : 'text'}" step="any" class="form-input" value="${escAttr(val)}" oninput="onSchemaChange('${pathAttr(path)}', ${isNum ? 'parseFloat(this.value)||0' : 'this.value'})">`;
+  return `<div class="form-group"><label class="form-label"><span>${label}</span>${!isNum && !long ? `<span class="form-char-count">${String(val).length} chars</span>` : ''}</label>${input}</div>`;
+}
+
+function renderValue(key, val, path, depth) {
+  if (Array.isArray(val)) return renderArray(key, val, path, depth);
+  if (val && typeof val === 'object') {
+    const inner = Object.keys(val).map(k => renderValue(k, val[k], path.concat(k), depth + 1)).join('');
+    const allScalar = Object.keys(val).every(k => typeof val[k] !== 'object');
+    return `<fieldset class="schema-group"><legend>${humanise(key)}</legend><div class="${allScalar && Object.keys(val).length <= 4 ? 'form-grid-2' : ''}">${inner}</div></fieldset>`;
+  }
+  return renderScalar(key, val, path);
+}
+
+function renderArray(key, arr, path, depth) {
+  const isObj = arr.length && typeof arr[0] === 'object';
+  let rows = '';
+  arr.forEach((item, i) => {
+    const ip = path.concat(i);
+    const tools = `<div class="schema-row-tools">
+        <button type="button" class="repeater-icon-btn" title="Move up" onclick="moveSchemaItem('${pathAttr(path)}', ${i}, -1)" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button type="button" class="repeater-icon-btn" title="Move down" onclick="moveSchemaItem('${pathAttr(path)}', ${i}, 1)" ${i === arr.length - 1 ? 'disabled' : ''}>↓</button>
+        <button type="button" class="btn-trash" title="Remove" onclick="removeSchemaItem('${pathAttr(path)}', ${i})">🗑</button></div>`;
+    if (isObj) {
+      const fields = Object.keys(item).map(k => renderValue(k, item[k], ip.concat(k), depth + 1)).join('');
+      const short = Object.keys(item).length <= 4 && Object.keys(item).every(k => String(item[k]).length < 60);
+      rows += `<div class="schema-card"><div class="schema-card-head"><span>${itemName(key)} ${i + 1}</span>${tools}</div><div class="${short ? 'form-grid-2' : ''}">${fields}</div></div>`;
+    } else {
+      rows += `<div class="repeater-item"><input class="repeater-input" value="${escAttr(item)}" oninput="onSchemaChange('${pathAttr(ip)}', this.value)">${tools}</div>`;
+    }
+  });
+  return `<div class="form-group"><label class="form-label"><span>${humanise(key)} <span class="nav-count-badge" style="margin-left:6px">${arr.length}</span></span>
+      <span class="schema-add" onclick="addSchemaItem('${pathAttr(path)}')">+ Add</span></label>
+      <div class="repeater-box">${rows || '<div style="font-size:12px;color:var(--muted-text)">No items yet.</div>'}</div></div>`;
+}
+
+function renderSchemaEditor(container, obj) {
+  container.innerHTML = Object.keys(obj)
+    .filter(k => HIDDEN_FIELDS.indexOf(k) === -1 && typeof Object.getOwnPropertyDescriptor(obj, k).get !== 'function')
+    .map(k => renderValue(k, obj[k], [k], 0)).join('');
+}
+
+function rerenderActiveEditor() {
+  if (CmsStore.activeModule === 'settings') renderSettingsEditor(); else renderSectionEditor();
+}
+
+window.onSchemaChange = function(p, v) {
+  setByPath(schemaRoot(), JSON.parse(p), v);
+  updateReactivePreview();
+  markUnsaved();
+};
+window.addSchemaItem = function(p) {
+  const path = JSON.parse(p);
+  const arr = getByPath(schemaRoot(), path);
+  let tpl = arr.length ? arr[arr.length - 1] : undefined;
+  if (tpl === undefined) { const seed = getByPath(schemaRoot(PUBLISHED), path); tpl = (seed && seed.length) ? seed[0] : ''; }
+  arr.push(blankLike(tpl));
+  rerenderActiveEditor(); updateReactivePreview(); markUnsaved();
+};
+window.removeSchemaItem = function(p, i) {
+  getByPath(schemaRoot(), JSON.parse(p)).splice(i, 1);
+  rerenderActiveEditor(); updateReactivePreview(); markUnsaved();
+};
+window.moveSchemaItem = function(p, i, d) {
+  const arr = getByPath(schemaRoot(), JSON.parse(p)); const j = i + d;
+  if (j < 0 || j >= arr.length) return;
+  const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  rerenderActiveEditor(); updateReactivePreview(); markUnsaved();
+};
+
+/* Sidebar submenus are built from the data, so new sections appear automatically */
+function buildLandingNav() {
+  LANDING_PAGES.forEach(p => {
+    const list = document.getElementById('submenu-' + p);
+    if (!list) return;
+    const secs = CmsStore.sections[p];
+    list.innerHTML = Object.keys(secs).map(k => `<div class="sub-nav-item" data-sec="${k}" onclick="navigateModule('${p}', '${k}')">${secs[k].title}</div>`).join('');
+    const badge = document.querySelector('#btn-group-' + p + ' .nav-count-badge');
+    if (badge) badge.textContent = Object.keys(secs).length;
+  });
+}
+
+/* Site settings module: SEO & meta, navigation, forms */
+const SETTINGS_TABS = { seo: 'SEO & Social Sharing', navigation: 'Navigation & Header', forms: 'Forms & Lead Capture' };
+const SETTINGS_HELP = {
+  seo: 'Search and social sharing details for each landing page. These control what Google and link previews show.',
+  navigation: 'Menu links and the two header buttons, which change per page.',
+  forms: 'Copy for the pop-up forms behind every Book a Demo, Free Trial and Get Started button, and where submissions are sent.'
+};
+window.switchSettingsTab = function(tab) {
+  CmsStore.settingsTab = tab;
+  renderSettingsEditor();
+  document.getElementById('breadcrumb-current').textContent = 'Site Settings > ' + SETTINGS_TABS[tab];
+};
+function renderSettingsEditor() {
+  const tabs = document.getElementById('settings-tabs');
+  tabs.innerHTML = Object.keys(SETTINGS_TABS).map(t => `<button class="device-btn ${t === CmsStore.settingsTab ? 'active' : ''}" onclick="switchSettingsTab('${t}')">${SETTINGS_TABS[t]}</button>`).join('');
+  document.getElementById('settings-help').textContent = SETTINGS_HELP[CmsStore.settingsTab];
+  renderSchemaEditor(document.getElementById('settings-fields'), CmsStore.siteSettings[CmsStore.settingsTab]);
+}
+
+/* Preview additions: highlighted hero line, per-page header, and the section being edited */
+function updateExtendedPreview() {
+  if (isLandingPage(CmsStore.activeModule)) CmsStore.lastPage = CmsStore.activeModule;
+  const m = CmsStore.lastPage;
+  const data = CmsStore.sections[m];
+  const hero = data.hero || {};
+  const headEl = document.getElementById('sim-hero-heading');
+  if (headEl && hero.headingHighlight) headEl.innerHTML = escAttr(hero.heading) + ' <span style="background:linear-gradient(90deg,#a78bfa,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent">' + escAttr(hero.headingHighlight) + '</span>';
+  const eb = document.getElementById('sim-hero-eyebrow');
+  if (eb) { eb.textContent = hero.eyebrow || ''; eb.style.display = hero.eyebrow ? 'block' : 'none'; }
+
+  const stats = (data.numbers && data.numbers.stats) || [];
+  for (let i = 0; i < 4; i++) {
+    const v = document.getElementById(`sim-stat-${i}-val`), l = document.getElementById(`sim-stat-${i}-lbl`);
+    if (v) v.textContent = stats[i] ? stats[i].value : ''; if (l) l.textContent = stats[i] ? stats[i].label : '';
+  }
+  const cta2 = document.getElementById('sim-cta-secondary');
+  const videoLive = data.videoOverview && data.videoOverview.status === 'published';
+  const vs = document.getElementById('sim-video-section'); if (vs && !videoLive) vs.style.display = 'none';
+  if (cta2 && !videoLive) { cta2.textContent = (hero.secondaryBtn || {}).label || ''; cta2.onclick = () => showToast('Opens: ' + ((hero.secondaryBtn || {}).action || '')); }
+  const cta1 = document.getElementById('sim-cta-primary');
+  if (cta1) cta1.onclick = () => showToast('Opens: ' + ((hero.primaryBtn || {}).action || ''));
+  const nav = CmsStore.siteSettings.navigation;
+  const navEl = document.getElementById('sim-nav-links');
+  if (navEl && nav) {
+    const hb = nav.headerButtons[m] || {};
+    navEl.innerHTML = nav.menuLinks.map(l => `<span>${escAttr(l.label)}</span>`).join('') +
+      `<button class="sim-btn-secondary" style="padding:4px 10px; font-size:11px;">${escAttr(hb.secondary || '')}</button><button class="sim-btn-primary" style="padding:4px 10px; font-size:11px;">${escAttr(hb.primary || '')}</button>`;
+  }
+
+  const s = isLandingPage(CmsStore.activeModule) ? data[CmsStore.activeSection] : null;
+  const show = s && ['hero','numbers','videoOverview'].indexOf(CmsStore.activeSection) === -1 ? s : (data.technology || data.devices || {});
+  const eyebrowEl = document.getElementById('sim-sec-eyebrow');
+  const headingEl = document.getElementById('sim-sec-heading');
+  const bodyEl = document.getElementById('sim-sec-body');
+  if (eyebrowEl) eyebrowEl.textContent = show.eyebrow || show.title || '';
+  if (headingEl) headingEl.textContent = show.heading || show.title || '';
+  if (bodyEl) bodyEl.textContent = show.body || show.subheading || '';
+  const listEl = document.getElementById('sim-sec-list');
+  if (listEl) {
+    const arrKey = Object.keys(show).find(k => Array.isArray(show[k]) && show[k].length);
+    const arr = arrKey ? show[arrKey] : [];
+    listEl.innerHTML = arr.slice(0, 8).map(it => {
+      if (typeof it !== 'object') return `<div class="sim-list-item">${escAttr(it)}</div>`;
+      const t = it.title || it.q || it.feature || it.name || it.level || it.label || it.value || (it.quantity ? it.quantity + ' tests' : '');
+      const d = it.desc || it.a || it.aze || it.text || it.caption || it.azeRange || (it.normalPriceGBP ? '£' + (it.normalPriceGBP * (1 - (show.discountPercent || 0) / 100)).toFixed(2) : '');
+      return `<div class="sim-list-item"><b>${escAttr(t)}</b>${d ? `<span>${escAttr(d)}</span>` : ''}</div>`;
+    }).join('');
+  }
+  const blog = document.getElementById('sim-blog-section');
+  if (blog) blog.style.display = (data.blog && data.blog.status === 'published') ? 'block' : 'none';
+}
+
+/* Discard restores the last published version of what is open; Publish makes the current content the new baseline */
+function restorePublished() {
+  const m = CmsStore.activeModule;
+  if (m === 'settings') { CmsStore.siteSettings[CmsStore.settingsTab] = deepClone(PUBLISHED.siteSettings[CmsStore.settingsTab]); return true; }
+  if (isLandingPage(m) && PUBLISHED.sections[m][CmsStore.activeSection]) { CmsStore.sections[m][CmsStore.activeSection] = deepClone(PUBLISHED.sections[m][CmsStore.activeSection]); return true; }
+  return false;
+}
+function markPublished() {
+  const m = CmsStore.activeModule;
+  if (m === 'settings') PUBLISHED.siteSettings[CmsStore.settingsTab] = deepClone(CmsStore.siteSettings[CmsStore.settingsTab]);
+  else if (isLandingPage(m)) PUBLISHED.sections[m][CmsStore.activeSection] = deepClone(CmsStore.sections[m][CmsStore.activeSection]);
+}
+
     window.navigateModule = function(moduleKey, sectionKey) {
       CmsStore.activeModule = moduleKey;
       if (sectionKey) CmsStore.activeSection = sectionKey;
@@ -2701,20 +3630,27 @@
       const activeBtn = document.getElementById('btn-group-' + moduleKey);
       if (activeBtn) activeBtn.classList.add('active');
 
-      document.getElementById('module-section-editor').style.display = (moduleKey === 'students' || moduleKey === 'institutions') ? 'block' : 'none';
+      document.getElementById('module-section-editor').style.display = isLandingPage(moduleKey) ? 'block' : 'none';
+      document.getElementById('module-settings-manager').style.display = (moduleKey === 'settings') ? 'block' : 'none';
       document.getElementById('module-pricing-manager').style.display = (moduleKey === 'pricing') ? 'block' : 'none';
       document.getElementById('module-blog-manager').style.display = (moduleKey === 'blog') ? 'block' : 'none';
       document.getElementById('module-legal-manager').style.display = (moduleKey === 'legal') ? 'block' : 'none';
       
       const bottomToolbar = document.getElementById('bottom-toolbar');
       if (bottomToolbar) {
-        bottomToolbar.style.display = (moduleKey === 'students' || moduleKey === 'institutions' || moduleKey === 'legal') ? 'flex' : 'none';
+        bottomToolbar.style.display = (isLandingPage(moduleKey) || moduleKey === 'legal' || moduleKey === 'settings') ? 'flex' : 'none';
       }
 
       const breadcrumbEl = document.getElementById('breadcrumb-current');
-      if (moduleKey === 'students' || moduleKey === 'institutions') {
+      if (isLandingPage(moduleKey)) {
+        if (!CmsStore.sections[moduleKey][CmsStore.activeSection]) CmsStore.activeSection = 'hero';
         const secObj = CmsStore.sections[moduleKey][CmsStore.activeSection] || {};
-        breadcrumbEl.textContent = (moduleKey === 'students' ? 'Students' : 'Institutions') + ' > ' + (secObj.title || 'Section');
+        breadcrumbEl.textContent = PAGE_LABELS[moduleKey] + ' > ' + (secObj.title || 'Section');
+        LANDING_PAGES.forEach(pg => {
+          const sub = document.getElementById('submenu-' + pg);
+          const open = sub && sub.style.display !== 'none';
+          if (sub && open !== (pg === moduleKey)) toggleNavGroup(pg);
+        });
         renderHorizontalPills();
         renderSectionEditor();
       } else if (moduleKey === 'pricing') {
@@ -2726,8 +3662,13 @@
       } else if (moduleKey === 'legal') {
         breadcrumbEl.textContent = 'Legal Pages Manager';
         renderLegalEditor();
+      } else if (moduleKey === 'settings') {
+        breadcrumbEl.textContent = 'Site Settings > ' + SETTINGS_TABS[CmsStore.settingsTab];
+        renderHorizontalPills();
+        renderSettingsEditor();
       }
 
+      renderHorizontalPills();
       updateSidebarActiveItem();
       updateReactivePreview();
     };
@@ -2761,7 +3702,7 @@
       if (!container) return;
 
       const m = CmsStore.activeModule;
-      if (m !== 'students' && m !== 'institutions') {
+      if (!isLandingPage(m)) {
         container.style.display = 'none';
         return;
       }
@@ -2804,7 +3745,9 @@
       const fieldsContainer = document.getElementById('sec-editor-fields');
       fieldsContainer.innerHTML = '';
 
-      if (s === 'hero') {
+      if (s !== 'videoOverview') {
+        renderSchemaEditor(fieldsContainer, secObj);
+      } else if (s === 'hero') {
         fieldsContainer.innerHTML = `
           <div class="form-group">
             <label class="form-label">
@@ -3274,7 +4217,7 @@
         hero.badges.forEach(b => {
           const pill = document.createElement('div');
           pill.className = 'sim-badge-pill';
-          pill.innerHTML = `<span>${b.icon}</span> <span>${b.text}</span>`;
+          pill.innerHTML = (b.icon ? `<span>${b.icon}</span> ` : '') + `<span>${b.text}</span>`;
           badgesContainer.appendChild(pill);
         });
       }
@@ -3367,6 +4310,7 @@
 
       // Render Blog articles in preview
       renderSimBlog();
+      updateExtendedPreview();
     }
 
     let currentSimBlogCat = 'all';
@@ -3458,6 +4402,7 @@
 
     window.handleSaveDraft = function() {
       const m = CmsStore.activeModule;
+      if (m === 'settings' || m === 'legal') { document.getElementById('footer-save-status').textContent = '● Draft saved'; showToast(m === 'settings' ? 'Saved draft of Site Settings.' : 'Saved draft of Legal Pages.'); return; }
       const s = CmsStore.activeSection;
       if (CmsStore.sections[m] && CmsStore.sections[m][s]) {
         CmsStore.sections[m][s].status = 'draft';
@@ -3474,6 +4419,7 @@
 
     window.handlePublishLive = function() {
       const m = CmsStore.activeModule;
+      markPublished(); if (m === 'settings' || m === 'legal') { document.getElementById('footer-save-status').textContent = 'All changes published to azetest.ai'; showToast(m === 'settings' ? '🚀 Site Settings published live to azetest.ai!' : '🚀 Legal Pages published live to azetest.ai!'); return; }
       const s = CmsStore.activeSection;
       if (CmsStore.sections[m] && CmsStore.sections[m][s]) {
         CmsStore.sections[m][s].status = 'published';
@@ -3499,7 +4445,9 @@
     };
 
     window.discardEditorChanges = function() {
-      renderSectionEditor();
+      if (CmsStore.activeModule === 'legal') { renderLegalEditor(); document.getElementById('footer-save-status').textContent = 'Changes discarded'; showToast('Discarded unsaved modifications.'); return; }
+      restorePublished();
+      rerenderActiveEditor();
       updateReactivePreview();
       document.getElementById('footer-save-status').textContent = 'Changes discarded';
       showToast('Discarded unsaved modifications.');
@@ -3934,6 +4882,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', () => {
+      buildLandingNav();
       const urlParams = new URLSearchParams(window.location.search);
       const hash = window.location.hash.replace('#', '');
       
@@ -3950,6 +4899,10 @@
         navigateModule('blog');
       } else if (viewParam === 'legal') {
         navigateModule('legal');
+      } else if (viewParam === 'settings') {
+        navigateModule('settings');
+      } else if (viewParam === 'placement') {
+        navigateModule('placement', urlParams.get('section') || 'hero');
       } else if (viewParam === 'institutions') {
         const sec = urlParams.get('section') || 'hero';
         navigateModule('institutions', sec);
