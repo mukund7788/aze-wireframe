@@ -2283,6 +2283,225 @@ body {
   width: 100%;
 }
 
+/* ============================================================
+   AZE CLIENT PORTAL TOUR GUIDE / ONBOARDING COMPONENT
+   ============================================================ */
+.tour-guide-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 24, 0.78);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 99998;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tour-spotlight-active {
+  position: relative !important;
+  z-index: 99999 !important;
+  outline: 2px solid #a855f7 !important;
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.35), 0 0 30px rgba(168, 85, 247, 0.5) !important;
+  border-radius: 8px !important;
+  transition: box-shadow 0.25s ease, outline 0.25s ease !important;
+}
+
+.tour-guide-card {
+  position: fixed;
+  z-index: 100000;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  background: #0c1326;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 22px 24px 20px 24px;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(168, 85, 247, 0.18);
+  font-family: var(--font-sans, 'Poppins', sans-serif);
+  animation: tourCardPop 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.tour-guide-backdrop.tour-inside-modal {
+  z-index: 1000;
+}
+
+.demo-portal-overlay-modal .tour-spotlight-active {
+  z-index: 1001 !important;
+}
+
+.tour-guide-card.tour-inside-modal {
+  z-index: 1002;
+}
+
+@keyframes tourCardPop {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.tour-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.tour-step-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #8b5cf6;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.45);
+  font-family: var(--font-sans);
+}
+
+.tour-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tour-close-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tour-title {
+  font-size: 17.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 10px 0 6px 0;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+}
+
+.tour-desc {
+  font-size: 12.5px;
+  color: #94a3b8;
+  line-height: 1.55;
+  margin-bottom: 22px;
+  font-weight: 400;
+}
+
+.tour-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.tour-btn-back {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+  font-family: var(--font-sans);
+}
+
+.tour-btn-back:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.tour-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tour-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.tour-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.tour-dot.active {
+  width: 8px;
+  height: 8px;
+  background: #8b5cf6;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
+}
+
+.tour-btn-next {
+  background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+  color: #ffffff;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.tour-btn-next:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.55);
+}
+
+.btn-tour-pill {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  color: #e2e8f0;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.btn-tour-pill:hover {
+  background: rgba(168, 85, 247, 0.22);
+  border-color: #a855f7;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+}
+
 </style>
 </head>
 <body>
@@ -2824,7 +3043,13 @@ body {
           </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:16px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <!-- Platform Tour Button -->
+          <button class="btn-tour-pill" onclick="window.AzePortalTour.startCleanTour()" title="Start Clean Account Platform Tour">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>💡 Platform Tour</span>
+          </button>
+
           <!-- Notification Bell -->
           <div style="position:relative; cursor:pointer; display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:rgba(255,255,255,0.03);" onclick="alert('Notification Center: 3 new test attempts registered.')" title="Notifications">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -2872,6 +3097,9 @@ body {
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
+              <button class="btn-pill-compact-dark" onclick="window.AzePortalTour.startCleanTour()" style="padding:6px 14px; font-size:12px; display:flex; align-items:center; gap:6px;">
+                <span>💡 Take 30-Sec Tour</span>
+              </button>
               <button class="btn-pill-compact-primary" onclick="window.openAddStudentModal()" style="padding:6px 14px; font-size:12px;">
                 + Invite Students
               </button>
@@ -3755,6 +3983,10 @@ body {
       </div>
 
       <div style="display:flex; align-items:center; gap:12px;">
+        <button class="btn-tour-pill" onclick="window.AzePortalTour.startDemoTour()" title="Start Demo Showcase Guided Tour">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span>💡 Demo Tour</span>
+        </button>
         <span style="font-size:11px; color:#94a3b8; background:rgba(255,255,255,0.05); padding:3px 9px; border-radius:6px; border:1px solid rgba(255,255,255,0.08); font-family:var(--font-mono, monospace);">ESC to close</span>
         <button class="btn-demo-modal-close" onclick="window.closeDemoPortalModal()" title="Close Demo Portal (&times;)" aria-label="Close modal">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -5723,6 +5955,16 @@ window.switchStep = function(stepNum) {
   // If entering Step 2, ensure environment is set properly
   if (stepNum === 2) {
     window.setPortalEnvironment(AzePortalState.env || 'clean');
+    const urlParams = new URLSearchParams(window.location.search);
+    const tourParam = urlParams.get('tour');
+    const tourStepParam = parseInt(urlParams.get('tour_step')) || 0;
+    if (tourParam !== 'demo' && AzePortalState.env !== 'demo') {
+      setTimeout(() => {
+        if (window.AzePortalTour && !window.AzePortalTour.activeTour) {
+          window.AzePortalTour.startCleanTour(tourStepParam);
+        }
+      }, 400);
+    }
   }
 
   // 4. Update URL without reload
@@ -5972,13 +6214,20 @@ window.setPortalEnvironment = function(env) {
   window.switchPortalModule(AzePortalState.currentModule || 'dashboard');
 };
 
-window.openDemoPortalModal = function(targetModule) {
+window.openDemoPortalModal = function(targetModule, initialTourStep) {
   targetModule = targetModule || 'dashboard';
   const modal = document.getElementById('modal-demo-portal-overlay');
   if (modal) {
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     window.switchDemoModalModule(targetModule);
+    if (window.AzePortalTour) {
+      window.AzePortalTour.closeTour();
+      setTimeout(() => {
+        const step = (typeof initialTourStep === 'number') ? initialTourStep : 0;
+        window.AzePortalTour.startDemoTour(step);
+      }, 300);
+    }
   }
 };
 
@@ -5987,6 +6236,9 @@ window.closeDemoPortalModal = function() {
   if (modal) {
     modal.style.display = 'none';
     document.body.style.overflow = '';
+  }
+  if (window.AzePortalTour && window.AzePortalTour.activeTour === 'demo') {
+    window.AzePortalTour.closeTour();
   }
 };
 
@@ -6313,23 +6565,380 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (initialStep === 2) {
     window.setPortalEnvironment('clean');
     window.switchPortalModule(initialModule);
-    if (initialEnv === 'demo') {
-      window.openDemoPortalModal(initialModule);
+    const tourParam = urlParams.get('tour');
+    const tourStepParam = parseInt(urlParams.get('tour_step')) || 0;
+    if (initialEnv === 'demo' || tourParam === 'demo') {
+      window.openDemoPortalModal('dashboard', tourStepParam);
+    } else {
+      setTimeout(() => {
+        if (window.AzePortalTour && !window.AzePortalTour.activeTour) {
+          window.AzePortalTour.startCleanTour(tourStepParam);
+        }
+      }, 450);
     }
   }
 });
 
-// Global Escape key listener to close modals
+// ============================================================
+// AZE CLIENT PORTAL TOUR GUIDE / ONBOARDING CONTROLLER
+// ============================================================
+window.AzePortalTour = {
+  activeTour: null,
+  currentStepIndex: 0,
+  steps: {
+    clean: [
+      {
+        badge: '1',
+        badgeColor: '#8b5cf6',
+        target: 'center',
+        title: 'Welcome to AZE!',
+        desc: "Let's take a quick tour so you know where everything is. This will only take 30 seconds.",
+        actionText: '→ Let\'s go',
+        placement: 'center'
+      },
+      {
+        badge: '2',
+        badgeColor: '#3b82f6',
+        target: '.sidebar-available-tests-card',
+        title: '15 Free Trial Tests',
+        desc: 'Your corporate account starts with 15 complimentary test credits. No payment required — use them to evaluate automated CEFR assessments with real candidates.',
+        actionText: 'Next →',
+        placement: 'right'
+      },
+      {
+        badge: '3',
+        badgeColor: '#06b6d4',
+        target: '#portal-sidebar-nav [data-module="students"]',
+        title: 'Students & Invites',
+        desc: 'Add up to 15 candidates by email or CSV bulk upload. Each candidate automatically receives a magic link to take their CEFR assessment.',
+        actionText: 'Next →',
+        placement: 'right'
+      },
+      {
+        badge: '4',
+        badgeColor: '#38bdf8',
+        target: '#portal-sidebar-nav [data-module="results"]',
+        title: 'Real-Time Results & Scorecards',
+        desc: 'As candidates finish tests, live AI diagnostics populate here immediately across Speaking, Listening, Reading, and Writing, complete with audio playback.',
+        actionText: 'Next →',
+        placement: 'right'
+      },
+      {
+        badge: '5',
+        badgeColor: '#f59e0b',
+        target: '#portal-sidebar-nav [data-module="buy-tests"]',
+        title: 'Scale with Test Packages',
+        desc: 'Need more volume for campus hiring or employee audits? Unlock larger test bundles or enterprise subscriptions anytime.',
+        actionText: 'Next →',
+        placement: 'right'
+      },
+      {
+        badge: '6',
+        badgeColor: '#10b981',
+        target: '#portal-sidebar-nav [data-module="demo-portal"]',
+        title: 'Demo Portal Showcase',
+        desc: 'Curious what reports and candidate analytics look like with 30,000+ candidates? Click "Demo Portal" anytime to explore the interactive showcase!',
+        actionText: '✨ Open Demo Portal',
+        placement: 'right',
+        onComplete: function() {
+          window.openDemoPortalModal('dashboard');
+        }
+      }
+    ],
+    demo: [
+      {
+        badge: '1',
+        badgeColor: '#8b5cf6',
+        target: 'center',
+        title: 'Welcome to the Demo Showcase!',
+        desc: 'You are now exploring the populated Demo Portal with 34,941 sample candidate records, diagnostic scorecards, and live analytics.',
+        actionText: '→ Let\'s go',
+        placement: 'center'
+      },
+      {
+        badge: '2',
+        badgeColor: '#3b82f6',
+        target: '.demo-modal-body-layout .real-stats-4col, .demo-modal-body-layout .portal-kpi-grid, #module-dashboard .real-stats-4col',
+        title: 'Executive Assessment KPIs',
+        desc: 'Track enterprise-wide candidate volume (34,941), average CEFR benchmark level (B2 Mastery), active tests, and available test balances in real time.',
+        actionText: 'Next →',
+        placement: 'bottom'
+      },
+      {
+        badge: '3',
+        badgeColor: '#06b6d4',
+        target: '.demo-modal-body-layout .dash-charts-2col, .demo-modal-body-layout .dash-chart-card, #module-dashboard .dash-charts-2col',
+        title: 'CEFR Cohort Distributions',
+        desc: 'Visualize candidate cohorts mapped across CEFR levels (Pre-A1 to C2) with departmental benchmarking and pass/fail distributions.',
+        actionText: 'Next →',
+        placement: 'bottom'
+      },
+      {
+        badge: '4',
+        badgeColor: '#38bdf8',
+        target: '#demo-modal-sidebar-nav [data-module="results"]',
+        title: 'AI Speech & Diagnostic Reports',
+        desc: 'Explore deep AI evaluations in the Results tab: phoneme-level pronunciation, speech rate (WPM), audio waveforms, and CEFR sub-scores.',
+        actionText: 'Next →',
+        placement: 'right'
+      },
+      {
+        badge: '5',
+        badgeColor: '#10b981',
+        target: '.btn-demo-modal-back',
+        title: 'Isolated Sandbox — Safe Return',
+        desc: 'This showcase is strictly read-only and separate from your data. Return to your clean account anytime to invite your first real student with your 15 free test credits!',
+        actionText: '✓ Return to My Account',
+        placement: 'bottom-left',
+        onComplete: function() {
+          window.closeDemoPortalModal();
+        }
+      }
+    ]
+  },
+
+  startCleanTour: function(stepIndex) {
+    this.activeTour = 'clean';
+    this.currentStepIndex = parseInt(stepIndex) || 0;
+    this.showTour();
+  },
+
+  startDemoTour: function(stepIndex) {
+    this.activeTour = 'demo';
+    this.currentStepIndex = parseInt(stepIndex) || 0;
+    this.showTour();
+  },
+
+  showTour: function() {
+    const backdrop = document.getElementById('tour-guide-backdrop');
+    const card = document.getElementById('tour-guide-card');
+    const demoModal = document.getElementById('modal-demo-portal-overlay');
+
+    if (this.activeTour === 'demo' && demoModal) {
+      if (backdrop && backdrop.parentElement !== demoModal) {
+        demoModal.appendChild(backdrop);
+      }
+      if (card && card.parentElement !== demoModal) {
+        demoModal.appendChild(card);
+      }
+      if (backdrop) backdrop.classList.add('tour-inside-modal');
+      if (card) card.classList.add('tour-inside-modal');
+    } else {
+      if (backdrop && backdrop.parentElement !== document.body) {
+        document.body.appendChild(backdrop);
+      }
+      if (card && card.parentElement !== document.body) {
+        document.body.appendChild(card);
+      }
+      if (backdrop) backdrop.classList.remove('tour-inside-modal');
+      if (card) card.classList.remove('tour-inside-modal');
+    }
+
+    if (backdrop) backdrop.style.display = 'block';
+    if (card) card.style.display = 'block';
+    this.renderCurrentStep();
+  },
+
+  closeTour: function() {
+    const backdrop = document.getElementById('tour-guide-backdrop');
+    const card = document.getElementById('tour-guide-card');
+    this.clearSpotlight();
+    this.activeTour = null;
+    if (backdrop) {
+      backdrop.style.display = 'none';
+      backdrop.classList.remove('tour-inside-modal');
+      if (backdrop.parentElement !== document.body) document.body.appendChild(backdrop);
+    }
+    if (card) {
+      card.style.display = 'none';
+      card.classList.remove('tour-inside-modal');
+      if (card.parentElement !== document.body) document.body.appendChild(card);
+    }
+  },
+
+  clearSpotlight: function() {
+    document.querySelectorAll('.tour-spotlight-active').forEach(el => {
+      el.classList.remove('tour-spotlight-active');
+    });
+  },
+
+  nextStep: function() {
+    const tourList = this.steps[this.activeTour] || [];
+    const currentStep = tourList[this.currentStepIndex];
+    if (this.currentStepIndex < tourList.length - 1) {
+      this.currentStepIndex++;
+      this.renderCurrentStep();
+    } else {
+      if (currentStep && typeof currentStep.onComplete === 'function') {
+        currentStep.onComplete();
+      }
+      this.closeTour();
+    }
+  },
+
+  prevStep: function() {
+    if (this.currentStepIndex > 0) {
+      this.currentStepIndex--;
+      this.renderCurrentStep();
+    }
+  },
+
+  goToStep: function(index) {
+    const tourList = this.steps[this.activeTour] || [];
+    if (index >= 0 && index < tourList.length) {
+      this.currentStepIndex = index;
+      this.renderCurrentStep();
+    }
+  },
+
+  renderCurrentStep: function() {
+    const tourList = this.steps[this.activeTour] || [];
+    if (!tourList.length) return;
+    const step = tourList[this.currentStepIndex];
+    if (!step) return;
+
+    this.clearSpotlight();
+
+    const badgeEl = document.getElementById('tour-step-badge');
+    const titleEl = document.getElementById('tour-step-title');
+    const descEl = document.getElementById('tour-step-desc');
+    const backBtn = document.getElementById('tour-btn-back');
+    const nextBtnLabel = document.getElementById('tour-next-label');
+    const dotsContainer = document.getElementById('tour-dots-container');
+    const card = document.getElementById('tour-guide-card');
+
+    if (badgeEl) {
+      badgeEl.textContent = step.badge;
+      badgeEl.style.background = step.badgeColor || '#8b5cf6';
+    }
+    if (titleEl) titleEl.textContent = step.title;
+    if (descEl) descEl.textContent = step.desc;
+
+    if (backBtn) {
+      backBtn.style.display = (this.currentStepIndex === 0) ? 'none' : 'inline-flex';
+    }
+    if (nextBtnLabel) {
+      nextBtnLabel.textContent = step.actionText || ((this.currentStepIndex === tourList.length - 1) ? '✓ Finish Tour' : 'Next →');
+    }
+
+    if (dotsContainer) {
+      dotsContainer.innerHTML = '';
+      tourList.forEach((s, idx) => {
+        const dot = document.createElement('div');
+        dot.className = 'tour-dot' + (idx === this.currentStepIndex ? ' active' : '');
+        if (idx === this.currentStepIndex && step.badgeColor) {
+          dot.style.background = step.badgeColor;
+          dot.style.boxShadow = '0 0 10px ' + step.badgeColor;
+        }
+        dot.onclick = () => window.AzePortalTour.goToStep(idx);
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    let targetEl = null;
+    if (step.target && step.target !== 'center') {
+      const selectors = step.target.split(',');
+      for (let sel of selectors) {
+        const found = document.querySelector(sel.trim());
+        if (found && (found.offsetWidth > 0 || found.offsetHeight > 0)) {
+          targetEl = found;
+          break;
+        }
+      }
+    }
+
+    if (targetEl) {
+      targetEl.classList.add('tour-spotlight-active');
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      const rect = targetEl.getBoundingClientRect();
+      const cardWidth = Math.min(380, window.innerWidth - 32);
+      const cardHeight = card.offsetHeight || 260;
+
+      if (step.placement === 'right') {
+        let left = rect.right + 20;
+        if (left + cardWidth > window.innerWidth - 16) {
+          left = Math.max(16, Math.min(window.innerWidth - cardWidth - 16, rect.left));
+          let top = rect.bottom + 16;
+          card.style.left = left + 'px';
+          card.style.top = Math.min(window.innerHeight - cardHeight - 16, top) + 'px';
+        } else {
+          let top = Math.max(70, Math.min(window.innerHeight - cardHeight - 20, rect.top + (rect.height / 2) - 80));
+          card.style.left = left + 'px';
+          card.style.top = top + 'px';
+        }
+        card.style.transform = 'none';
+      } else if (step.placement === 'bottom') {
+        let left = Math.max(16, Math.min(window.innerWidth - cardWidth - 16, rect.left + (rect.width / 2) - (cardWidth / 2)));
+        let top = Math.min(window.innerHeight - cardHeight - 20, rect.bottom + 16);
+        card.style.left = left + 'px';
+        card.style.top = top + 'px';
+        card.style.transform = 'none';
+      } else if (step.placement === 'bottom-left') {
+        let left = Math.max(16, rect.left);
+        let top = Math.min(window.innerHeight - cardHeight - 20, rect.bottom + 16);
+        card.style.left = left + 'px';
+        card.style.top = top + 'px';
+        card.style.transform = 'none';
+      } else {
+        card.style.top = 'calc(50% - 130px)';
+        card.style.left = 'calc(50% - 190px)';
+        card.style.transform = 'none';
+      }
+    } else {
+      card.style.top = 'calc(50% - 130px)';
+      card.style.left = 'calc(50% - 190px)';
+      card.style.transform = 'none';
+    }
+  }
+};
+
+// Global key listener for tour and modals
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
+    if (window.AzePortalTour && window.AzePortalTour.activeTour) {
+      window.AzePortalTour.closeTour();
+      return;
+    }
     const modal = document.getElementById('modal-demo-portal-overlay');
     if (modal && modal.style.display !== 'none') {
       window.closeDemoPortalModal();
+    }
+  } else if (e.key === 'ArrowRight') {
+    if (window.AzePortalTour && window.AzePortalTour.activeTour) {
+      window.AzePortalTour.nextStep();
+    }
+  } else if (e.key === 'ArrowLeft') {
+    if (window.AzePortalTour && window.AzePortalTour.activeTour) {
+      window.AzePortalTour.prevStep();
     }
   }
 });
 
 </script>
+
+  <!-- ============================================================
+       AZE CLIENT PORTAL TOUR GUIDE / ONBOARDING COMPONENT
+       ============================================================ -->
+  <div id="tour-guide-backdrop" class="tour-guide-backdrop" style="display:none;" onclick="if(event.target === this) window.AzePortalTour.closeTour();"></div>
+  
+  <div id="tour-guide-card" class="tour-guide-card" style="display:none;" role="dialog" aria-modal="true" aria-label="AZE Platform Tour">
+    <div class="tour-card-header">
+      <div id="tour-step-badge" class="tour-step-badge">1</div>
+      <button class="tour-close-btn" onclick="window.AzePortalTour.closeTour()" title="Close Tour (&times;)" aria-label="Close tour">&times;</button>
+    </div>
+    <h3 id="tour-step-title" class="tour-title">Welcome to AZE!</h3>
+    <p id="tour-step-desc" class="tour-desc">Let's take a quick tour so you know where everything is. This will only take 30 seconds.</p>
+    <div class="tour-footer">
+      <button id="tour-btn-back" class="tour-btn-back" onclick="window.AzePortalTour.prevStep()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Back</span>
+      </button>
+      <div id="tour-dots-container" class="tour-dots"></div>
+      <button id="tour-btn-next" class="tour-btn-next" onclick="window.AzePortalTour.nextStep()">
+        <span id="tour-next-label">→ Let's go</span>
+      </button>
+    </div>
+  </div>
 
 
   <!-- INTERACTIVE ADD STUDENT MODAL -->

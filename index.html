@@ -1118,18 +1118,51 @@
         </ul>
       </div>
 
-      <!-- ADMIN PORTAL GROUP -->
-      <div class="nav-group" data-group="admin-portal">
+      <!-- LANDING PAGE GROUP -->
+      <div class="nav-group" data-group="landing-page">
         <div class="nav-group-title" role="button" tabindex="0" title="Click to collapse / expand">
-          <span class="nav-group-name">Admin Portal</span>
+          <span class="nav-group-name">Landing Page</span>
           <div class="nav-group-meta">
-            <span class="nav-group-count">3</span>
+            <span class="nav-group-count">2</span>
             <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </div>
         </div>
         <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#landing_page" class="nav-link" data-key="landing_page">
+              <span class="nav-label">Landing Page New Design</span>
+              <span class="nav-pill nav-pill-featured">Featured</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#cms_portal" class="nav-link" data-key="cms_portal">
+              <span class="nav-label">CMS Portal</span>
+              <span class="nav-pill nav-pill-new">New</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ADMIN PORTAL GROUP -->
+      <div class="nav-group" data-group="admin-portal">
+        <div class="nav-group-title" role="button" tabindex="0" title="Click to collapse / expand">
+          <span class="nav-group-name">Admin Portal</span>
+          <div class="nav-group-meta">
+            <span class="nav-group-count">4</span>
+            <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+        </div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#cms_studio" class="nav-link" data-key="cms_studio">
+              <span class="nav-label">CMS Studio Portal</span>
+              <span class="nav-pill nav-pill-new">New</span>
+            </a>
+          </li>
           <li class="nav-item">
             <a href="#cost_dashboard" class="nav-link" data-key="cost_dashboard">
               <span class="nav-label">Third-Party Cost Dashboard</span>
@@ -1284,7 +1317,7 @@
 
               <div class="hero-stats-row">
                 <div class="hero-stat-card">
-                  <div class="hero-stat-val">7</div>
+                  <div class="hero-stat-val">10</div>
                   <div class="hero-stat-lbl">Interactive Prototypes</div>
                 </div>
                 <div class="hero-stat-card">
@@ -1313,7 +1346,73 @@
 
               <div class="wireframes-grid">
 
-                <!-- 1. Third-Party Cost Dashboard (Admin Portal) -->
+                <!-- 1. Landing Page New Design (Landing Page) -->
+                <div class="module-card" onclick="window.location.hash='#landing_page'">
+                  <div class="card-top">
+                    <div class="card-icon-wrap">🌐</div>
+                    <span class="card-category">Landing Page</span>
+                  </div>
+                  <h3 class="card-title">Landing Page New Design</h3>
+                  <p class="card-desc">
+                    Comprehensive high-fidelity responsive marketing wireframe featuring an interactive 3-video product slider, live blog section with multi-topic filtering, real-time score calculation engine, and CEFR diagnostic breakdown.
+                  </p>
+                  <div class="card-tags">
+                    <span class="card-tag">Video Slider</span>
+                    <span class="card-tag">Blog Integration</span>
+                    <span class="card-tag">CEFR Scoring</span>
+                    <span class="card-tag">Design System</span>
+                  </div>
+                  <div class="card-footer">
+                    <span class="card-launch-btn">Explore Prototype →</span>
+                    <a href="aze-website- final.html" target="_blank" class="card-standalone-link" onclick="event.stopPropagation()">↗ Standalone</a>
+                  </div>
+                </div>
+
+                <!-- 2. CMS Portal (Landing Page) -->
+                <div class="module-card" onclick="window.location.hash='#cms_portal'">
+                  <div class="card-top">
+                    <div class="card-icon-wrap">🎨</div>
+                    <span class="card-category">Landing Page</span>
+                  </div>
+                  <h3 class="card-title">CMS Portal & Live Studio</h3>
+                  <p class="card-desc">
+                    Enterprise visual content management portal empowering administrators to edit Students & Institutions sections, configure multi-video slider items with reordering, manage tiered pricing, and curate blog articles with split-screen reactive preview.
+                  </p>
+                  <div class="card-tags">
+                    <span class="card-tag">Slider Manager</span>
+                    <span class="card-tag">Students & Inst.</span>
+                    <span class="card-tag">Blog Manager</span>
+                    <span class="card-tag">Split Preview</span>
+                  </div>
+                  <div class="card-footer">
+                    <span class="card-launch-btn">Explore Prototype →</span>
+                    <a href="cms_studio_wireframe.html" target="_blank" class="card-standalone-link" onclick="event.stopPropagation()">↗ Standalone</a>
+                  </div>
+                </div>
+
+                <!-- 3. CMS Studio Portal (Admin Portal) -->
+                <div class="module-card" onclick="window.location.hash='#cms_studio'">
+                  <div class="card-top">
+                    <div class="card-icon-wrap">⚙️</div>
+                    <span class="card-category">Admin Portal</span>
+                  </div>
+                  <h3 class="card-title">CMS Studio Portal & Live Preview</h3>
+                  <p class="card-desc">
+                    Enterprise visual content management suite for Students & Institutions landing pages (29 sections), tiered Pricing Plans manager, Blog & News publication, and Legal policies editor with split-screen reactive preview.
+                  </p>
+                  <div class="card-tags">
+                    <span class="card-tag">Students & Inst.</span>
+                    <span class="card-tag">Pricing Manager</span>
+                    <span class="card-tag">Blog & Legal</span>
+                    <span class="card-tag">Split Preview</span>
+                  </div>
+                  <div class="card-footer">
+                    <span class="card-launch-btn">Explore Prototype →</span>
+                    <a href="cms_studio_wireframe.html" target="_blank" class="card-standalone-link" onclick="event.stopPropagation()">↗ Standalone</a>
+                  </div>
+                </div>
+
+                <!-- 2. Third-Party Cost Dashboard (Admin Portal) -->
                 <div class="module-card" onclick="window.location.hash='#cost_dashboard'">
                   <div class="card-top">
                     <div class="card-icon-wrap">📊</div>
@@ -1536,10 +1635,29 @@
       'wireframe_info': {
         title: 'AZE Wireframe Hub Overview',
         category: 'Overview',
-        desc: 'Central catalog of interactive AZE Voice AI prototypes, UX specifications, and live wireframes across Admin, Client, and Student Portals.',
+        desc: 'Central catalog of interactive AZE Voice AI prototypes, UX specifications, and live wireframes across Landing Page, Admin, Client, and Student Portals.',
         file: null, // Renders the built-in guide
       },
+      // Landing Page
+      'landing_page': {
+        title: 'AZE Candidate & Institutional Landing Page — New Design',
+        category: 'Landing Page',
+        desc: 'New responsive marketing landing page wireframe featuring multi-video product slider, CEFR proficiency benchmarking, live blog integration, and high-fidelity Zignuts design system components.',
+        file: 'aze-website- final.html'
+      },
+      'cms_portal': {
+        title: 'AZE Content Management Studio — CMS Portal',
+        category: 'Landing Page',
+        desc: 'Visual content management suite for Students & Institutions landing pages (29 sections), video slider manager, tiered Pricing Plans, Blog & News publication, and Legal policies with split-screen live preview.',
+        file: 'cms_studio_wireframe.html'
+      },
       // Admin Portal
+      'cms_studio': {
+        title: 'AZE Admin Portal — CMS Studio',
+        category: 'Admin Portal',
+        desc: 'Visual content management suite for Students & Institutions landing pages (29 sections), tiered Pricing Plans, Blog & News publication, and Legal policies with split-screen live preview.',
+        file: 'cms_studio_wireframe.html'
+      },
       'cost_dashboard': {
         title: 'Third-Party LLM & Speech Cost Dashboard',
         category: 'Admin Portal',
@@ -1702,6 +1820,11 @@
         loaderText.textContent = `Loading ${config.title}...`;
         frameLoader.style.display = 'flex';
 
+        clearTimeout(window.loaderFallbackTimeout);
+        window.loaderFallbackTimeout = setTimeout(() => {
+          frameLoader.style.display = 'none';
+        }, 1200);
+
         // Check if iframe already points to this file to avoid reload flicker
         const currentSrc = wireframeIframe.getAttribute('src');
         if (currentSrc !== config.file) {
@@ -1717,6 +1840,7 @@
 
     // iframe load listener
     wireframeIframe.addEventListener('load', () => {
+      clearTimeout(window.loaderFallbackTimeout);
       frameLoader.style.display = 'none';
     });
 

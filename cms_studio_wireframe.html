@@ -1,0 +1,3967 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AZE Admin Portal — CMS Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background: #030712;
+      --foreground: #f8fafc;
+      --sidebar-bg: #040817;
+      --sidebar-border: #111c35;
+      --sidebar-text: #94a3b8;
+      --sidebar-active-bg: rgba(6, 182, 212, 0.12);
+      --sidebar-active-text: #38bdf8;
+      --sidebar-active-border: #06b6d4;
+      --topbar-bg: #040817;
+      --topbar-border: #111c35;
+      --card-bg: #060d1f;
+      --card-border: #131f38;
+      --card-header: #081128;
+      --input-bg: #070e20;
+      --input-border: #17233f;
+      --input-focus: #06b6d4;
+      --primary: #06b6d4;
+      --primary-hover: #0891b2;
+      --primary-glow: rgba(6, 182, 212, 0.25);
+      --secondary: #8b5cf6;
+      --secondary-hover: #7c3aed;
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --success-border: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --warning-border: rgba(245, 158, 11, 0.3);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --muted-text: #94a3b8;
+      --dim-text: #64748b;
+      --table-header: #081128;
+      --table-row-hover: #0a142c;
+      --table-border: #111d38;
+      --preview-bg: #020617;
+      --preview-border: #1e293b;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 10px;
+      --radius-xl: 14px;
+      --font-poppins: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    [data-theme="light"] {
+      --background: #f8fafc;
+      --foreground: #061d42;
+      --sidebar-bg: #ffffff;
+      --sidebar-border: #e2e8f0;
+      --sidebar-text: #475569;
+      --sidebar-active-bg: #dbeeff;
+      --sidebar-active-text: #0d6efd;
+      --sidebar-active-border: #0d6efd;
+      --topbar-bg: #ffffff;
+      --topbar-border: #e2e8f0;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --card-header: #f1f5f9;
+      --input-bg: #f8fafc;
+      --input-border: #cbd5e1;
+      --input-focus: #0d6efd;
+      --primary: #0d6efd;
+      --primary-hover: #0b5ed7;
+      --primary-glow: rgba(13, 110, 253, 0.2);
+      --secondary: #6366f1;
+      --secondary-hover: #4f46e5;
+      --success: #059669;
+      --success-bg: #ecfdf5;
+      --success-border: #a7f3d0;
+      --warning: #d97706;
+      --warning-bg: #fef3c7;
+      --warning-border: #fde68a;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --muted-text: #64748b;
+      --dim-text: #94a3b8;
+      --table-header: #f1f5f9;
+      --table-row-hover: #f8fafc;
+      --table-border: #e2e8f0;
+      --preview-bg: #0b1120;
+      --preview-border: #cbd5e1;
+      --shadow-soft: 0 8px 24px rgba(6, 29, 66, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-poppins);
+      background-color: var(--background);
+      color: var(--foreground);
+      min-height: 100vh;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.25);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.45);
+    }
+
+    #app-container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #sidebar {
+      width: 250px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s ease;
+      z-index: 40;
+      overflow: hidden;
+    }
+
+    #sidebar.collapsed {
+      width: 64px;
+    }
+
+    .sidebar-header {
+      height: 56px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--sidebar-border);
+      flex-shrink: 0;
+    }
+
+    .brand-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: opacity 0.15s ease;
+    }
+
+    #sidebar.collapsed .brand-text {
+      opacity: 0;
+      pointer-events: none;
+      display: none;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--foreground);
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-badge {
+      font-size: 9.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-size: 10.5px;
+      color: var(--dim-text);
+      margin-top: 1px;
+    }
+
+    .sidebar-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .nav-section {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-section-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--dim-text);
+      padding: 6px 10px 4px 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: opacity 0.15s ease;
+    }
+
+    #sidebar.collapsed .nav-section-title {
+      opacity: 0;
+      display: none;
+    }
+
+    .nav-parent-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--sidebar-text);
+      font-family: var(--font-poppins);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .nav-parent-btn:hover {
+      background: var(--table-row-hover);
+      color: var(--foreground);
+    }
+
+    .nav-parent-btn.active {
+      background: var(--sidebar-active-bg);
+      color: var(--sidebar-active-text);
+      border-color: var(--sidebar-active-border);
+      font-weight: 600;
+    }
+
+    .nav-btn-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .nav-chevron {
+      font-size: 10px;
+      color: var(--dim-text);
+      transition: transform 0.2s ease;
+    }
+
+    .nav-parent-btn.open .nav-chevron {
+      transform: rotate(90deg);
+    }
+
+    #sidebar.collapsed .nav-chevron,
+    #sidebar.collapsed .nav-count-badge {
+      display: none;
+    }
+
+    .nav-count-badge {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--dim-text);
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .submenu-list {
+      margin-left: 12px;
+      padding-left: 8px;
+      border-left: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 2px;
+      margin-bottom: 4px;
+    }
+
+    #sidebar.collapsed .submenu-list {
+      display: none !important;
+    }
+
+    .sub-nav-item {
+      padding: 6px 10px;
+      font-size: 12px;
+      border-radius: var(--radius-sm);
+      color: var(--sidebar-text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      transition: all 0.12s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sub-nav-item:hover {
+      background: var(--table-row-hover);
+      color: var(--foreground);
+    }
+
+    .sub-nav-item.active {
+      background: var(--sidebar-active-bg);
+      color: var(--sidebar-active-text);
+      font-weight: 600;
+    }
+
+    .sidebar-footer {
+      padding: 12px 14px;
+      border-top: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--card-header);
+    }
+
+    .api-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted-text);
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+      flex-shrink: 0;
+    }
+
+    #sidebar.collapsed .sidebar-footer {
+      padding: 12px 8px;
+      align-items: center;
+    }
+
+    #sidebar.collapsed .api-status-text {
+      display: none;
+    }
+
+    #main-content-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #topbar {
+      height: 56px;
+      border-bottom: 1px solid var(--topbar-border);
+      background: var(--topbar-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+      z-index: 30;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-icon-toggle {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: 1px solid var(--sidebar-border);
+      color: var(--foreground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon-toggle:hover {
+      background: var(--table-row-hover);
+      border-color: var(--primary);
+    }
+
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--dim-text);
+    }
+
+    .breadcrumb-active {
+      color: var(--foreground);
+      font-weight: 600;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-preview-toggle {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-poppins);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--foreground);
+    }
+
+    .btn-preview-toggle:hover {
+      border-color: var(--primary);
+    }
+
+    .btn-preview-toggle.active {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.2);
+    }
+
+    .btn-theme-switcher {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-md);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--foreground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-theme-switcher:hover {
+      border-color: var(--primary);
+    }
+
+    .user-profile-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px 4px 6px;
+      border-radius: 999px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .user-avatar-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #06b6d4, #10b981);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    #workspace-container {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #editor-pane {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px 80px 32px;
+      min-width: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #live-preview-pane {
+      width: 48%;
+      background: var(--preview-bg);
+      border-left: 1px solid var(--preview-border);
+      display: none;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+      animation: previewSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.35);
+      z-index: 25;
+    }
+
+    #live-preview-pane.active {
+      display: flex;
+    }
+
+    @keyframes previewSlideIn {
+      from { transform: translateX(20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .preview-header-bar {
+      height: 48px;
+      background: var(--topbar-bg);
+      border-bottom: 1px solid var(--topbar-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+
+    .preview-title-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--foreground);
+    }
+
+    .preview-device-switcher {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 4px;
+      border-radius: var(--radius-sm);
+    }
+
+    .device-btn {
+      padding: 3px 8px;
+      font-size: 11px;
+      border-radius: 3px;
+      border: none;
+      background: transparent;
+      color: var(--dim-text);
+      cursor: pointer;
+      font-family: var(--font-poppins);
+    }
+
+    .device-btn.active {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .preview-viewport-wrap {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      background: #020617;
+    }
+
+    .simulated-landing-page {
+      width: 100%;
+      max-width: 760px;
+      background: #030712;
+      border-radius: var(--radius-lg);
+      border: 1px solid #1e293b;
+      overflow: hidden;
+      color: #f8fafc;
+      font-family: var(--font-poppins);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      transition: max-width 0.25s ease;
+    }
+
+    .simulated-landing-page.mobile-mode {
+      max-width: 375px;
+    }
+
+    .sim-navbar {
+      height: 48px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(10px);
+    }
+
+    .sim-hero-section {
+      padding: 36px 24px;
+      text-align: center;
+      background: radial-gradient(circle at 50% 20%, rgba(6, 182, 212, 0.12) 0%, transparent 60%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sim-hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .sim-badge-pill {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sim-hero-heading {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .sim-hero-subtext {
+      font-size: 13px;
+      color: #94a3b8;
+      max-width: 500px;
+      margin: 0 auto 20px auto;
+      line-height: 1.5;
+    }
+
+    .sim-cta-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .sim-btn-primary {
+      padding: 8px 18px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      color: #fff;
+      font-weight: 600;
+      font-size: 12px;
+      border: none;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+    }
+
+    .sim-btn-secondary {
+      padding: 8px 18px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #f8fafc;
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    .sim-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+
+    .sim-stat-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .sim-stat-lbl {
+      font-size: 10.5px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    /* Simulated Video Overview Preview */
+    .sim-video-section {
+      padding: 24px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: radial-gradient(circle at 50% 0%, rgba(13, 110, 253, 0.08) 0%, transparent 70%);
+    }
+
+    .sim-video-card {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      background: #091224;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .sim-video-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(13, 110, 253, 0.5);
+    }
+
+    .sim-video-poster {
+      min-height: 200px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background: linear-gradient(135deg, rgba(13, 110, 253, 0.25) 0%, rgba(15, 23, 42, 0.95) 100%),
+                  radial-gradient(ellipse at 30% 20%, rgba(56, 189, 248, 0.2) 0%, transparent 60%);
+    }
+
+    .sim-video-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sim-video-duration {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    .sim-video-play-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .sim-video-play-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d6efd, #06b6d4);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 24px rgba(13, 110, 253, 0.6);
+      transition: transform 0.2s ease;
+    }
+
+    .sim-video-card:hover .sim-video-play-btn {
+      transform: scale(1.08);
+    }
+
+    .sim-video-mini-window {
+      align-self: flex-end;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(8px);
+      max-width: 260px;
+    }
+
+    /* Simulated Video Slider Controls */
+    .sim-video-slider-wrap {
+      position: relative;
+    }
+
+    .sim-video-nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .sim-video-nav-arrow:hover {
+      background: #0d6efd;
+      border-color: #0d6efd;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .sim-video-nav-arrow.prev { left: -12px; }
+    .sim-video-nav-arrow.next { right: -12px; }
+
+    .sim-video-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .sim-video-pagination-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 10.5px;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .sim-video-pagination-tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+    }
+
+    .sim-video-pagination-tab.active {
+      background: rgba(13, 110, 253, 0.2);
+      border-color: #0d6efd;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .sim-video-pagination-tab .sim-tab-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* CMS Editor Video Slide Tab Switcher */
+    .cms-video-slides-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 16px;
+    }
+
+    .cms-video-slide-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 8px;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      color: var(--muted-text);
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .cms-video-slide-pill:hover {
+      border-color: var(--primary);
+      color: var(--foreground);
+    }
+
+    .cms-video-slide-pill.active {
+      background: rgba(13, 110, 253, 0.12);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .cms-video-slide-pill .pill-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(13, 110, 253, 0.15);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .cms-video-slide-pill.active .pill-num {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* Simulated Blog Section Preview */
+    .sim-blog-section {
+      padding: 24px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .sim-blog-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+
+    .sim-blog-pill {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .sim-blog-pill.active, .sim-blog-pill:hover {
+      background: rgba(13, 110, 253, 0.15);
+      border-color: rgba(13, 110, 253, 0.4);
+      color: #38bdf8;
+    }
+
+    .sim-blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .sim-blog-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .sim-blog-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(13, 110, 253, 0.4);
+    }
+
+    .sim-blog-banner {
+      height: 60px;
+      background: linear-gradient(135deg, rgba(13, 110, 253, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .sim-blog-content {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .sim-blog-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.35;
+      margin-top: 4px;
+      margin-bottom: 6px;
+    }
+
+    .sim-blog-meta {
+      font-size: 10px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-pills-scroller {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--sidebar-border);
+    }
+
+    .sec-tab-pill {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--muted-text);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .sec-tab-pill:hover {
+      color: var(--foreground);
+      border-color: var(--primary);
+    }
+
+    .sec-tab-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #04111d;
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    .editor-card-shell {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 24px;
+    }
+
+    .editor-card-header {
+      padding: 18px 24px;
+      background: var(--card-header);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .editor-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .editor-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+
+    .status-badge {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-badge.published {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success);
+    }
+
+    .status-badge.draft {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      color: var(--warning);
+    }
+
+    .editor-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-secondary-sm {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--foreground);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font-poppins);
+      transition: all 0.15s ease;
+    }
+
+    .btn-secondary-sm:hover {
+      background: var(--table-row-hover);
+      border-color: var(--primary);
+    }
+
+    .editor-card-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--foreground);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .form-char-count {
+      font-size: 11px;
+      color: var(--dim-text);
+      font-family: var(--font-mono);
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      font-size: 13px;
+      color: var(--foreground);
+      font-family: var(--font-poppins);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      outline: none;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .form-textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .repeater-box {
+      border: 1px solid var(--card-border);
+      background: var(--card-header);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .repeater-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+    }
+
+    .repeater-icon-btn {
+      padding: 5px 9px;
+      border-radius: var(--radius-sm);
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--primary);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .repeater-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--foreground);
+      font-size: 12.5px;
+      font-family: var(--font-poppins);
+      outline: none;
+    }
+
+    .btn-trash {
+      background: transparent;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .btn-trash:hover {
+      background: var(--danger-bg);
+    }
+
+    .bottom-action-toolbar {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      left: 250px;
+      height: 60px;
+      background: var(--topbar-bg);
+      border-top: 1px solid var(--topbar-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      z-index: 35;
+      transition: left 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    #sidebar.collapsed ~ #main-content-wrap .bottom-action-toolbar {
+      left: 64px;
+    }
+
+    .action-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--muted-text);
+    }
+
+    .action-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-primary-action {
+      padding: 8px 20px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #06b6d4, #0284c7);
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 600;
+      font-family: var(--font-poppins);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+      transition: all 0.15s ease;
+    }
+
+    .btn-primary-action:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-save-draft {
+      padding: 8px 18px;
+      border-radius: var(--radius-md);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--foreground);
+      font-size: 12.5px;
+      font-weight: 600;
+      font-family: var(--font-poppins);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-save-draft:hover {
+      border-color: var(--primary);
+      background: var(--table-row-hover);
+    }
+
+    .data-table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .table-toolbar {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--card-border);
+      background: var(--card-header);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .table-filters {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      width: 260px;
+    }
+
+    .search-input-wrap input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      padding: 7px 12px 7px 32px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      color: var(--foreground);
+      outline: none;
+      font-family: var(--font-poppins);
+    }
+
+    .search-icon-svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dim-text);
+      font-size: 13px;
+    }
+
+    .cms-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12.5px;
+    }
+
+    .cms-table th {
+      background: var(--table-header);
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--dim-text);
+      border-bottom: 1px solid var(--table-border);
+    }
+
+    .cms-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--table-border);
+      color: var(--foreground);
+    }
+
+    .cms-table tr:hover td {
+      background: var(--table-row-hover);
+    }
+
+    .tier-pill {
+      font-size: 10.5px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #c084fc;
+      text-transform: uppercase;
+    }
+
+    .actions-flex {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-action-icon {
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--foreground);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.12s ease;
+    }
+
+    .btn-action-icon:hover {
+      border-color: var(--primary);
+      background: var(--table-row-hover);
+    }
+
+    #version-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(2px);
+      z-index: 100;
+      display: none;
+    }
+
+    #version-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 420px;
+      max-width: 100vw;
+      background: var(--card-bg);
+      border-left: 1px solid var(--card-border);
+      z-index: 101;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: -12px 0 40px rgba(0, 0, 0, 0.6);
+    }
+
+    #version-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--card-border);
+      background: var(--card-header);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drawer-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .version-card {
+      border: 1px solid var(--card-border);
+      background: var(--card-header);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .version-card.current {
+      border-color: var(--primary);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    .version-top-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .version-tag {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .version-time {
+      font-size: 11px;
+      color: var(--dim-text);
+    }
+
+    .version-diff-note {
+      font-size: 12px;
+      color: var(--muted-text);
+      line-height: 1.4;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-dialog {
+      width: 580px;
+      max-width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+      animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      background: var(--card-header);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+
+    .modal-body {
+      padding: 20px;
+      max-height: calc(85vh - 120px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-footer {
+      padding: 14px 20px;
+      background: var(--card-header);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast-msg {
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      background: #0f172a;
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 500;
+      border-left: 4px solid var(--primary);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      animation: toastIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-container">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <a href="#students/hero" class="brand-logo-wrap" onclick="navigateModule('students', 'hero')">
+          <div class="brand-mark">A</div>
+          <div class="brand-text">
+            <div class="brand-title">
+              <span>AZE</span>
+              <span class="brand-badge">STUDIO</span>
+            </div>
+            <div class="brand-sub">Content Management</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="sidebar-scroll">
+        
+        <!-- SECTION GROUP 1: LANDING PAGES -->
+        <div class="nav-section">
+          <div class="nav-section-title">Landing Pages</div>
+          
+          <!-- Students Group -->
+          <button class="nav-parent-btn open" id="btn-group-students" onclick="toggleNavGroup('students')">
+            <div class="nav-btn-left">
+              <span>Students</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="nav-count-badge">16</span>
+              <span class="nav-chevron">▶</span>
+            </div>
+          </button>
+          <div class="submenu-list" id="submenu-students">
+            <div class="sub-nav-item active" data-sec="hero" onclick="navigateModule('students', 'hero')">Hero Banner</div>
+            <div class="sub-nav-item" data-sec="numbers" onclick="navigateModule('students', 'numbers')">Key Numbers & Stats</div>
+            <div class="sub-nav-item" data-sec="videoOverview" onclick="navigateModule('students', 'videoOverview')">Product Video Slider</div>
+            <div class="sub-nav-item" data-sec="technology" onclick="navigateModule('students', 'technology')">Technology Overview</div>
+            <div class="sub-nav-item" data-sec="skills" onclick="navigateModule('students', 'skills')">Test Skills & Experience</div>
+            <div class="sub-nav-item" data-sec="platformFeatures" onclick="navigateModule('students', 'platformFeatures')">Platform Features</div>
+            <div class="sub-nav-item" data-sec="blockchain" onclick="navigateModule('students', 'blockchain')">Blockchain Verification</div>
+            <div class="sub-nav-item" data-sec="advisory" onclick="navigateModule('students', 'advisory')">Advisory Board</div>
+            <div class="sub-nav-item" data-sec="comparison" onclick="navigateModule('students', 'comparison')">Why AZE Comparison</div>
+            <div class="sub-nav-item" data-sec="howItWorks" onclick="navigateModule('students', 'howItWorks')">How It Works (Steps)</div>
+            <div class="sub-nav-item" data-sec="pricing" onclick="navigateModule('students', 'pricing')">Pricing Preview</div>
+            <div class="sub-nav-item" data-sec="blog" onclick="navigateModule('students', 'blog')">Blog Teaser Listing</div>
+            <div class="sub-nav-item" data-sec="faqs" onclick="navigateModule('students', 'faqs')">Frequently Asked Questions</div>
+            <div class="sub-nav-item" data-sec="finalCta" onclick="navigateModule('students', 'finalCta')">Final Call to Action</div>
+            <div class="sub-nav-item" data-sec="aboutUs" onclick="navigateModule('students', 'aboutUs')">About Us</div>
+            <div class="sub-nav-item" data-sec="footer" onclick="navigateModule('students', 'footer')">Footer Section</div>
+          </div>
+
+          <!-- Institutions Group -->
+          <button class="nav-parent-btn" id="btn-group-institutions" onclick="toggleNavGroup('institutions')" style="margin-top:4px;">
+            <div class="nav-btn-left">
+              <span>Institutions</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="nav-count-badge">14</span>
+              <span class="nav-chevron">▶</span>
+            </div>
+          </button>
+          <div class="submenu-list" id="submenu-institutions" style="display:none;">
+            <div class="sub-nav-item" data-sec="hero" onclick="navigateModule('institutions', 'hero')">Hero Banner</div>
+            <div class="sub-nav-item" data-sec="numbers" onclick="navigateModule('institutions', 'numbers')">Institutional Numbers</div>
+            <div class="sub-nav-item" data-sec="technology" onclick="navigateModule('institutions', 'technology')">Technology & ML</div>
+            <div class="sub-nav-item" data-sec="tools" onclick="navigateModule('institutions', 'tools')">Platform Tools</div>
+            <div class="sub-nav-item" data-sec="platformFeatures" onclick="navigateModule('institutions', 'platformFeatures')">Enterprise Features</div>
+            <div class="sub-nav-item" data-sec="blockchain" onclick="navigateModule('institutions', 'blockchain')">Blockchain Verification</div>
+            <div class="sub-nav-item" data-sec="advisory" onclick="navigateModule('institutions', 'advisory')">Advisory Board</div>
+            <div class="sub-nav-item" data-sec="comparison" onclick="navigateModule('institutions', 'comparison')">Benchmark Comparison</div>
+            <div class="sub-nav-item" data-sec="howItWorks" onclick="navigateModule('institutions', 'howItWorks')">Rollout Steps</div>
+            <div class="sub-nav-item" data-sec="pricing" onclick="navigateModule('institutions', 'pricing')">Pricing Preview</div>
+            <div class="sub-nav-item" data-sec="faqs" onclick="navigateModule('institutions', 'faqs')">Enterprise FAQs</div>
+            <div class="sub-nav-item" data-sec="finalCta" onclick="navigateModule('institutions', 'finalCta')">Institutional CTA</div>
+            <div class="sub-nav-item" data-sec="aboutUs" onclick="navigateModule('institutions', 'aboutUs')">About Us</div>
+            <div class="sub-nav-item" data-sec="footer" onclick="navigateModule('institutions', 'footer')">Footer Section</div>
+          </div>
+        </div>
+
+        <!-- SECTION GROUP 2: CONTENT COLLECTIONS -->
+        <div class="nav-section">
+          <div class="nav-section-title">Collections & Global</div>
+          
+          <button class="nav-parent-btn" id="btn-group-pricing" onclick="navigateModule('pricing')">
+            <div class="nav-btn-left">
+              <span>Pricing Plans</span>
+            </div>
+            <span class="nav-count-badge">6</span>
+          </button>
+
+          <button class="nav-parent-btn" id="btn-group-blog" onclick="navigateModule('blog')" style="margin-top:2px;">
+            <div class="nav-btn-left">
+              <span>Blog & News</span>
+            </div>
+            <span class="nav-count-badge">6</span>
+          </button>
+
+          <button class="nav-parent-btn" id="btn-group-legal" onclick="navigateModule('legal')" style="margin-top:2px;">
+            <div class="nav-btn-left">
+              <span>Legal Pages</span>
+            </div>
+            <span class="nav-count-badge">3</span>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="api-status-badge">
+          <div class="pulse-dot"></div>
+          <span class="api-status-text">azetest.ai API Connected</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main id="main-content-wrap">
+      
+      <!-- TOPBAR -->
+      <header id="topbar">
+        <div class="topbar-left">
+          <button class="btn-icon-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+            ☰
+          </button>
+          <div class="breadcrumbs">
+            <span>Admin</span>
+            <span>/</span>
+            <span>CMS Studio</span>
+            <span>/</span>
+            <span class="breadcrumb-active" id="breadcrumb-current">Students > Hero Banner</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Live Preview Toggle Button -->
+          <button class="btn-preview-toggle" id="btn-toggle-preview" onclick="toggleLivePreview()">
+            <span>👁️</span>
+            <span>Preview Site</span>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button class="btn-theme-switcher" onclick="toggleTheme()" title="Switch Theme (Dark / Light)">
+            🌓
+          </button>
+
+          <!-- User Profile -->
+          <div class="user-profile-pill" title="Super Admin">
+            <div class="user-avatar-circle">T</div>
+            <span style="font-weight:600;">Tejas Patel</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- WORKSPACE CONTAINER -->
+      <div id="workspace-container">
+        
+        <!-- EDITOR PANE -->
+        <div id="editor-pane">
+          
+          <!-- HORIZONTAL SUB-SECTION PILLS -->
+          <div class="section-pills-scroller" id="horizontal-sec-pills">
+            <!-- Populated dynamically via JS -->
+          </div>
+
+          <!-- MODULE CONTAINER 1: LANDING PAGE SECTION EDITOR -->
+          <div id="module-section-editor" style="display:block;">
+            <div class="editor-card-shell">
+              <div class="editor-card-header">
+                <div class="editor-header-left">
+                  <h2 class="editor-title" id="sec-editor-title">Hero Banner Editor</h2>
+                  <div class="status-badge published" id="sec-status-badge">
+                    <span style="width:6px; height:6px; border-radius:50%; background:currentColor;"></span>
+                    <span id="sec-status-text">Published Live</span>
+                  </div>
+                </div>
+
+                <div class="editor-header-actions">
+                  <button class="btn-secondary-sm" onclick="openVersionHistory()">
+                    <span>🕒</span>
+                    <span>Version History</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="editor-card-body" id="sec-editor-fields">
+                <!-- Dynamically rendered based on active section -->
+              </div>
+            </div>
+          </div>
+
+          <!-- MODULE CONTAINER 2: PRICING PLANS MANAGER -->
+          <div id="module-pricing-manager" style="display:none;">
+            <div class="data-table-card">
+              <div class="table-toolbar">
+                <div class="table-filters">
+                  <div class="preview-device-switcher">
+                    <button class="device-btn active" id="btn-audience-students" onclick="switchPricingAudience('students')">For Students</button>
+                    <button class="device-btn" id="btn-audience-institutions" onclick="switchPricingAudience('institutions')">For Institutions</button>
+                  </div>
+                  <div class="search-input-wrap">
+                    <span class="search-icon-svg">🔍</span>
+                    <input type="text" placeholder="Search plans..." id="pricing-search" oninput="renderPricingTable()">
+                  </div>
+                </div>
+
+                <button class="btn-primary-action" onclick="openPlanModal()">
+                  <span>+</span>
+                  <span>Add Pricing Plan</span>
+                </button>
+              </div>
+
+              <table class="cms-table">
+                <thead>
+                  <tr>
+                    <th>Tier</th>
+                    <th>Plan Name</th>
+                    <th>Monthly Price</th>
+                    <th>Yearly Price</th>
+                    <th>Features</th>
+                    <th>Featured</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="pricing-table-body">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- MODULE CONTAINER 3: BLOG POSTS MANAGER -->
+          <div id="module-blog-manager" style="display:none;">
+            <div class="data-table-card">
+              <div class="table-toolbar">
+                <div class="table-filters">
+                  <div class="search-input-wrap">
+                    <span class="search-icon-svg">🔍</span>
+                    <input type="text" placeholder="Search blog articles..." id="blog-search" oninput="renderBlogTable()">
+                  </div>
+                  <select class="form-select" id="blog-cat-filter" style="width:170px; padding:6px 10px; font-size:12px;" onchange="renderBlogTable()">
+                    <option value="all">All Categories</option>
+                    <option value="Student Progress">Student Progress</option>
+                    <option value="AI Proctoring">AI Proctoring</option>
+                    <option value="Speaking Assessment">Speaking Assessment</option>
+                    <option value="Adaptive Assessment">Adaptive Assessment</option>
+                    <option value="English Assessment">English Assessment</option>
+                    <option value="AI Assessment">AI Assessment</option>
+                  </select>
+                </div>
+
+                <button class="btn-primary-action" onclick="openBlogModal()">
+                  <span>+</span>
+                  <span>Create Blog Post</span>
+                </button>
+              </div>
+
+              <table class="cms-table">
+                <thead>
+                  <tr>
+                    <th>Article Title</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Read Time</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="blog-table-body">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- MODULE CONTAINER 4: LEGAL PAGES MANAGER -->
+          <div id="module-legal-manager" style="display:none;">
+            <div class="editor-card-shell">
+              <div class="editor-card-header">
+                <div class="editor-header-left">
+                  <div class="preview-device-switcher">
+                    <button class="device-btn active" id="btn-legal-privacy" onclick="switchLegalDoc('privacy')">Privacy Policy</button>
+                    <button class="device-btn" id="btn-legal-support" onclick="switchLegalDoc('support')">Support Page</button>
+                    <button class="device-btn" id="btn-legal-terms" onclick="switchLegalDoc('terms')">Terms of Service</button>
+                  </div>
+                </div>
+                <div class="status-badge published">
+                  <span>●</span>
+                  <span>Published Live (v2.4)</span>
+                </div>
+              </div>
+
+              <div class="editor-card-body" id="legal-doc-fields">
+                <!-- Legal document editor -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SPLIT-SCREEN LIVE PREVIEW PANE -->
+        <div id="live-preview-pane">
+          <div class="preview-header-bar">
+            <div class="preview-title-box">
+              <span style="font-size:15px;">🌐</span>
+              <span>Live Draft Preview</span>
+              <span class="brand-badge" style="font-size:9px;">REACTIVE</span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div class="preview-device-switcher">
+                <button class="device-btn active" id="btn-view-desktop" onclick="setPreviewDevice('desktop')">Desktop</button>
+                <button class="device-btn" id="btn-view-mobile" onclick="setPreviewDevice('mobile')">Mobile</button>
+              </div>
+              <button class="btn-icon-toggle" onclick="refreshPreview()" title="Refresh Preview">↻</button>
+              <button class="btn-icon-toggle" onclick="toggleLivePreview()" title="Close Live Preview">✕</button>
+            </div>
+          </div>
+
+          <div class="preview-viewport-wrap">
+            <div class="simulated-landing-page" id="sim-landing-page">
+              
+              <!-- Sim Navbar -->
+              <div class="sim-navbar">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <div class="brand-mark" style="width:24px; height:24px; font-size:12px;">A</div>
+                  <span style="font-weight:700; font-size:13px; color:#fff;">AZE</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; font-size:11px; color:#94a3b8;">
+                  <span>Technology</span>
+                  <span>Skills</span>
+                  <span>Pricing</span>
+                  <button class="sim-btn-primary" style="padding:4px 10px; font-size:11px;">Sign In</button>
+                </div>
+              </div>
+
+              <!-- Sim Hero -->
+              <div class="sim-hero-section">
+                <div class="sim-hero-badges" id="sim-hero-badges">
+                  <!-- Badges rendered reactively -->
+                </div>
+
+                <h1 class="sim-hero-heading" id="sim-hero-heading">
+                  Next-Generation English Testing with Engineered AI
+                </h1>
+
+                <p class="sim-hero-subtext" id="sim-hero-subtext">
+                  Measure Your English, Not Your Test-Taking Skills
+                </p>
+
+                <div class="sim-cta-wrap">
+                  <button class="sim-btn-primary" id="sim-cta-primary">Free Practice Test</button>
+                  <button class="sim-btn-secondary" id="sim-cta-secondary">Purchase Test</button>
+                </div>
+              </div>
+
+              <!-- Sim Stats Bar -->
+              <div class="sim-stats-bar" id="sim-stats-bar">
+                <div>
+                  <div class="sim-stat-val" id="sim-stat-0-val">150+</div>
+                  <div class="sim-stat-lbl" id="sim-stat-0-lbl">Skills Analyzed</div>
+                </div>
+                <div>
+                  <div class="sim-stat-val" id="sim-stat-1-val">5min</div>
+                  <div class="sim-stat-lbl" id="sim-stat-1-lbl">To Get Results</div>
+                </div>
+                <div>
+                  <div class="sim-stat-val" id="sim-stat-2-val">$5</div>
+                  <div class="sim-stat-lbl" id="sim-stat-2-lbl">Starting From</div>
+                </div>
+                <div>
+                  <div class="sim-stat-val" id="sim-stat-3-val">450K+</div>
+                  <div class="sim-stat-lbl" id="sim-stat-3-lbl">Tests Completed</div>
+                </div>
+              </div>
+
+              <!-- Sim Product Video Overview (Slider) -->
+              <div class="sim-video-section" id="sim-video-section">
+                <div style="text-align:center; margin-bottom:14px;">
+                  <span class="sim-badge-pill" style="display:inline-flex; margin-bottom:6px;" id="sim-video-kicker">See AZE In Action</span>
+                  <h2 style="font-size:16px; font-weight:800; color:#fff; line-height:1.3; margin-bottom:6px;" id="sim-video-heading">
+                    Watch How AZE Transforms Language Assessment in 90 Seconds
+                  </h2>
+                  <p style="font-size:11.5px; color:#94a3b8; max-width:440px; margin:0 auto; line-height:1.45;" id="sim-video-desc">
+                    Explore our adaptive AI test engine, live biometric proctoring, and instant CEFR score report breakdown before you begin your certification.
+                  </p>
+                </div>
+
+                <div class="sim-video-slider-wrap">
+                  <button type="button" class="sim-video-nav-arrow prev" onclick="switchSimVideoSlide(window.simActiveSlide - 1)" title="Previous video slide">‹</button>
+                  <div class="sim-video-card" id="sim-video-card" onclick="openCmsVideoModal()" title="Click to test live video modal">
+                    <div class="sim-video-poster" id="sim-video-poster">
+                      <div class="sim-video-top-row">
+                        <span class="sim-badge-pill" id="sim-slide-badge" style="background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); border-color:rgba(255,255,255,0.15); color:#fff; font-size:10px;">
+                          01 / 03
+                        </span>
+                        <span class="sim-video-duration" id="sim-video-duration">Approx. 90 seconds</span>
+                      </div>
+
+                      <div class="sim-video-play-wrap">
+                        <div class="sim-video-play-btn" id="sim-video-play-btn">
+                          <span>▶</span>
+                        </div>
+                        <span style="font-size:11px; font-weight:700; color:#fff; text-shadow:0 2px 4px rgba(0,0,0,0.6);" id="sim-video-card-title">AZE Product Overview & Test Walkthrough</span>
+                      </div>
+
+                      <div class="sim-video-mini-window" id="sim-video-mini-window">
+                        <div style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.5px; color:#38bdf8; font-weight:700;" id="sim-mini-kicker">YOUR PERSONAL ENGLISH REPORT</div>
+                        <div style="font-size:11px; color:#f8fafc; font-weight:600; line-height:1.3; margin-top:2px;" id="sim-mini-text">More than a score. A clear next step.</div>
+                      </div>
+                    </div>
+                    <div style="padding:10px 14px; background:#0b1324; border-top:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between;">
+                      <div>
+                        <div style="font-size:12px; font-weight:700; color:#f8fafc;" id="sim-caption-head">AZE product overview</div>
+                        <div style="font-size:10.5px; color:#94a3b8;" id="sim-caption-desc">Learn how the assessment, score report and certificate work.</div>
+                      </div>
+                      <span style="font-size:10px; color:#38bdf8; font-weight:600;">Click to Play ↗</span>
+                    </div>
+                  </div>
+                  <button type="button" class="sim-video-nav-arrow next" onclick="switchSimVideoSlide(window.simActiveSlide + 1)" title="Next video slide">›</button>
+                </div>
+
+                <!-- Video Slider Pagination Pills -->
+                <div class="sim-video-pagination" id="sim-video-pagination"></div>
+              </div>
+
+              <!-- Sim Feature Snippet -->
+              <div style="padding:24px 20px;">
+                <div style="font-size:11px; text-transform:uppercase; color:#06b6d4; font-weight:700; margin-bottom:4px;" id="sim-sec-eyebrow">The Technology</div>
+                <div style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;" id="sim-sec-heading">The Future of Language Assessment</div>
+                <div style="font-size:12px; color:#94a3b8; line-height:1.5;" id="sim-sec-body">
+                  Built by language education experts, linguists, assessment researchers and machine learning specialists.
+                </div>
+              </div>
+
+              <!-- Sim Blog Section -->
+              <div class="sim-blog-section" id="sim-blog-section">
+                <div style="margin-bottom:12px;">
+                  <div style="font-size:10px; text-transform:uppercase; color:#06b6d4; font-weight:700; margin-bottom:3px;">Research & Insights</div>
+                  <div style="font-size:15px; font-weight:700; color:#fff;" id="sim-blog-heading">Latest from AZE Assessment Lab</div>
+                </div>
+                <div class="sim-blog-filter-bar" id="sim-blog-pills">
+                  <!-- Category filter pills generated via JS -->
+                </div>
+                <div class="sim-blog-grid" id="sim-blog-grid">
+                  <!-- Blog cards generated via JS -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STICKY BOTTOM ACTION TOOLBAR -->
+      <footer class="bottom-action-toolbar" id="bottom-toolbar">
+        <div class="action-toolbar-left">
+          <span id="footer-save-status">● Unsaved changes: 0</span>
+          <span>&bull;</span>
+          <span style="font-family:var(--font-mono); font-size:11px;">Schema: Validated</span>
+        </div>
+
+        <div class="action-toolbar-right">
+          <button class="btn-secondary-sm" onclick="discardEditorChanges()">Discard</button>
+          <button class="btn-save-draft" onclick="handleSaveDraft()">
+            <span>💾</span>
+            <span>Save Draft</span>
+          </button>
+          <button class="btn-primary-action" onclick="handlePublishLive()">
+            <span>🚀</span>
+            <span>Publish to Live</span>
+          </button>
+        </div>
+      </footer>
+
+    </main>
+
+  </div>
+
+  <!-- VERSION HISTORY DRAWER -->
+  <div id="version-drawer-backdrop" onclick="closeVersionHistory()"></div>
+  <aside id="version-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title">Version History & Audit Trail</div>
+      <button class="btn-icon-toggle" onclick="closeVersionHistory()">✕</button>
+    </div>
+    <div class="drawer-body" id="version-history-list">
+      <!-- Populated via JS -->
+    </div>
+  </aside>
+
+  <!-- PRICING PLAN MODAL -->
+  <div class="modal-overlay" id="pricing-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title" id="plan-modal-title">Edit Pricing Plan</div>
+        <button class="btn-icon-toggle" onclick="closePlanModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="modal-plan-id">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Tier Identifier</label>
+            <input type="text" class="form-input" id="modal-plan-tier" placeholder="e.g. PRO">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Plan Name</label>
+            <input type="text" class="form-input" id="modal-plan-name" placeholder="e.g. Full Certification">
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Monthly Price</label>
+            <input type="text" class="form-input" id="modal-plan-price-m" placeholder="e.g. $49">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Yearly Price</label>
+            <input type="text" class="form-input" id="modal-plan-price-y" placeholder="e.g. $39/mo billed yearly">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Audience</label>
+          <select class="form-select" id="modal-plan-audience">
+            <option value="students">Students</option>
+            <option value="institutions">Institutions</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Plan Features (One per line)</label>
+          <textarea class="form-textarea" id="modal-plan-features" placeholder="Instant CEFR report&#10;Blockchain certificate&#10;Acoustic diagnostics"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="modal-plan-status">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary-sm" onclick="closePlanModal()">Cancel</button>
+        <button class="btn-primary-action" onclick="savePlanModal()">Save Plan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOG POST MODAL -->
+  <div class="modal-overlay" id="blog-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title" id="blog-modal-title">Create / Edit Blog Post</div>
+        <button class="btn-icon-toggle" onclick="closeBlogModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="modal-blog-id">
+        <div class="form-group">
+          <label class="form-label">Article Title</label>
+          <input type="text" class="form-input" id="modal-blog-title" placeholder="Article Headline...">
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Slug</label>
+            <input type="text" class="form-input" id="modal-blog-slug" placeholder="article-headline-slug">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="modal-blog-category">
+              <option value="Student Progress">Student Progress</option>
+              <option value="AI Proctoring">AI Proctoring</option>
+              <option value="Speaking Assessment">Speaking Assessment</option>
+              <option value="Adaptive Assessment">Adaptive Assessment</option>
+              <option value="English Assessment">English Assessment</option>
+              <option value="AI Assessment">AI Assessment</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Author Name</label>
+            <input type="text" class="form-input" id="modal-blog-author" placeholder="e.g. Dr. Aris Thorne">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Read Time</label>
+            <input type="text" class="form-input" id="modal-blog-readtime" placeholder="e.g. 5 min read">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Excerpt / Summary</label>
+          <textarea class="form-textarea" id="modal-blog-excerpt" style="min-height:70px;" placeholder="Brief summary of the article..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="modal-blog-status">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary-sm" onclick="closeBlogModal()">Cancel</button>
+        <button class="btn-primary-action" onclick="saveBlogModal()">Save Article</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CMS VIDEO PREVIEW MODAL -->
+  <div class="modal-overlay" id="cms-video-preview-modal">
+    <div class="modal-dialog" style="width: 720px; max-width: 95%;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="brand-badge" style="background:rgba(13,110,253,0.15); color:#38bdf8; border-color:rgba(13,110,253,0.3);">4K Video</span>
+          <span class="modal-title" id="cms-video-modal-title">Student Experience — Video Overview</span>
+        </div>
+        <button class="btn-icon-toggle" onclick="closeCmsVideoModal()">✕</button>
+      </div>
+      <div class="modal-body" style="padding:0; background:#000;">
+        <div style="position:relative; padding-top:56.25%; width:100%; background:#090d16; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:radial-gradient(circle at center, rgba(13,110,253,0.2) 0%, #030712 80%);">
+            <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, #0d6efd, #06b6d4); display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff; box-shadow:0 0 30px rgba(13,110,253,0.6);">
+              ▶
+            </div>
+            <div style="text-align:center; padding:0 20px;">
+              <div style="font-size:16px; font-weight:700; color:#fff;">AZE Adaptive Testing — Platform Video Overview</div>
+              <div style="font-size:12px; color:#94a3b8; margin-top:4px;">Demonstrating AI speech assessment, proctoring & instant CEFR certificates</div>
+              <div style="display:inline-flex; align-items:center; gap:6px; margin-top:10px; padding:4px 12px; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); font-size:11px; color:#38bdf8; font-family:var(--font-mono);">
+                <span>Active Source:</span>
+                <span id="cms-modal-source-label">https://dev.azetest.ai/assets/videos/aze-overview.mp4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:12px 20px; display:flex; align-items:center; justify-content:space-between; background:var(--card-header);">
+        <div style="display:flex; align-items:center; gap:12px; font-size:11.5px; color:var(--muted-text);">
+          <span>⏱ Duration: <strong id="cms-modal-duration-label" style="color:var(--foreground);">1:32</strong></span>
+          <span>&bull;</span>
+          <span>Adaptive Bitrate (1080p FHD)</span>
+          <span>&bull;</span>
+          <span>Encrypted Audio (AAC Stereo)</span>
+        </div>
+        <button class="btn-secondary-sm" onclick="closeCmsVideoModal()">Close Player</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="modal-dialog" style="width:420px;">
+      <div class="modal-header">
+        <div class="modal-title" style="color:var(--danger);">Confirm Record Deletion</div>
+        <button class="btn-icon-toggle" onclick="closeDeleteModal()">✕</button>
+      </div>
+      <div class="modal-body" style="padding:24px 20px;">
+        <p style="font-size:13px; color:var(--muted-text); line-height:1.5;" id="delete-confirm-text">
+          Are you sure you want to permanently delete this item? This action will remove the record from live endpoints.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary-sm" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn-primary-action" style="background:var(--danger);" onclick="executeDeleteRecord()">Delete Record</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container"></div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    const CmsStore = {
+      activeModule: 'students',
+      activeSection: 'hero',
+      pricingAudience: 'students',
+      legalSlug: 'privacy',
+      theme: 'dark',
+      sidebarCollapsed: false,
+      livePreviewOpen: false,
+      previewDevice: 'desktop',
+
+      sections: {
+        students: {
+          hero: {
+            title: 'Hero Banner',
+            status: 'published',
+            heading: 'Next-Generation English Testing with Engineered AI',
+            subheading: 'Measure Your English, Not Your Test-Taking Skills',
+            primaryBtn: { label: 'Free Practice Test', action: '/practice-test' },
+            secondaryBtn: { label: 'Purchase Test', action: '/checkout' },
+            badges: [
+              { icon: '⏱️', text: 'Test online, no appointment' },
+              { icon: '⚡', text: 'Results in 5 minutes' },
+              { icon: '🛡️', text: 'Share certificate forever' }
+            ]
+          },
+          numbers: {
+            title: 'Key Numbers & Stats',
+            status: 'published',
+            stats: [
+              { value: '150+', label: 'Skills Analyzed' },
+              { value: '5min', label: 'To Get Results' },
+              { value: '$5', label: 'Starting From' },
+              { value: '450K+', label: 'Tests Completed' }
+            ]
+          },
+          videoOverview: {
+            title: 'Product Video Slider',
+            status: 'published',
+            kicker: 'See AZE in action',
+            heading: 'Understand your English level in minutes',
+            description: 'Watch short product overviews to see how the test works, what your score report includes, and how AI speech scoring and verified certificates work.',
+            heroTriggerLabel: 'Watch Product Overview',
+            activeSlideIndex: 0,
+            videos: [
+              {
+                id: 1,
+                title: 'AZE Product Overview & Test Walkthrough',
+                captionHeading: 'AZE product overview',
+                captionDesc: 'Learn how the assessment, score report and certificate work.',
+                duration: 'Approx. 90 seconds',
+                videoUrl: 'https://dev.azetest.ai/assets/videos/aze-overview.mp4',
+                miniCardLabel: 'YOUR PERSONAL ENGLISH REPORT',
+                miniCardHeading: 'More than a score. A clear next step.',
+                theme: 'purple'
+              },
+              {
+                id: 2,
+                title: 'AI Speech & Acoustic Fluency Scoring',
+                captionHeading: 'AI Speech & Acoustic Analysis',
+                captionDesc: 'Real-time phoneme pronunciation and acoustic waveform fluency evaluation.',
+                duration: 'Approx. 65 seconds',
+                videoUrl: 'https://dev.azetest.ai/assets/videos/aze-speech-demo.mp4',
+                miniCardLabel: 'ACOUSTIC PHONETIC ENGINE',
+                miniCardHeading: 'Phoneme precision. True CEFR fluency.',
+                theme: 'cyan'
+              },
+              {
+                id: 3,
+                title: 'Instant Blockchain Verification & Sharing',
+                captionHeading: 'Instant Blockchain Verification',
+                captionDesc: 'Cryptographic certificates that universities and employers can authenticate in seconds.',
+                duration: 'Approx. 75 seconds',
+                videoUrl: 'https://dev.azetest.ai/assets/videos/aze-blockchain-demo.mp4',
+                miniCardLabel: 'TAMPER-PROOF LEDGER',
+                miniCardHeading: 'Permanently signed. Verified worldwide.',
+                theme: 'emerald'
+              }
+            ],
+            get videoDuration() { return (this.videos[this.activeSlideIndex] || this.videos[0]).duration; },
+            get videoUrl() { return (this.videos[this.activeSlideIndex] || this.videos[0]).videoUrl; },
+            get miniCardLabel() { return (this.videos[this.activeSlideIndex] || this.videos[0]).miniCardLabel; },
+            get miniCardHeading() { return (this.videos[this.activeSlideIndex] || this.videos[0]).miniCardHeading; }
+          },
+          technology: {
+            title: 'Technology Overview',
+            status: 'published',
+            eyebrow: 'The Technology',
+            heading: 'The Future of Language Assessment',
+            body: 'Built by language education experts, linguists, assessment researchers and machine learning specialists. Trained on over 10 years of real learner data across all proficiency levels so you can trust your results.'
+          },
+          skills: {
+            title: 'Test Skills & Experience',
+            status: 'published',
+            eyebrow: 'The Test Experience',
+            heading: "What You'll Be Tested On",
+            skillsList: [
+              { name: 'Speaking', duration: '15 mins', weight: '25%' },
+              { name: 'Listening', duration: '12 mins', weight: '20%' },
+              { name: 'Reading', duration: '10 mins', weight: '20%' },
+              { name: 'Writing', duration: '15 mins', weight: '25%' },
+              { name: 'Language Awareness', duration: '8 mins', weight: '10%' }
+            ]
+          },
+          platformFeatures: {
+            title: 'Platform Features',
+            status: 'published',
+            heading: 'Engineered for Candidate Success',
+            features: [
+              'Zero waiting queues or test center bookings',
+              'AI rater models calibrated against CEFR standards',
+              'Instant phoneme-level acoustic waveform feedback'
+            ]
+          },
+          blockchain: {
+            title: 'Blockchain Verification',
+            status: 'published',
+            heading: "Certificates That Can't Be Faked",
+            body: 'Every certificate is permanently recorded on blockchain for instant cryptographic verification.'
+          },
+          advisory: {
+            title: 'Advisory Board',
+            status: 'published',
+            heading: 'Validated by Global Assessment Experts',
+            body: 'Our testing methodologies are supervised by senior academic researchers from top UK & US universities.'
+          },
+          comparison: {
+            title: 'Why AZE Comparison',
+            status: 'published',
+            heading: 'How AZE Compares to Legacy Testing',
+            azePoints: ['Instant results in 5 mins', '$5 to $49 starting price', 'No center appointment needed'],
+            legacyPoints: ['2 to 14 days waiting time', '$220+ standard cost', 'In-person center appointments']
+          },
+          howItWorks: {
+            title: 'How It Works (Steps)',
+            status: 'published',
+            steps: [
+              { num: '01', title: 'Register & System Check', desc: 'Verify microphone, audio and webcam in 60 seconds.' },
+              { num: '02', title: 'Take 45-Min Assessment', desc: 'Interactive adaptive questions across all 5 skills.' },
+              { num: '03', title: 'Receive Certified Score', desc: 'CEFR benchmark and cryptographic certificate in 5 minutes.' }
+            ]
+          },
+          pricing: {
+            title: 'Pricing Preview',
+            status: 'published',
+            heading: 'Choose Your Path to Certification',
+            subheading: 'Flexible pricing designed for ambitious candidates'
+          },
+          blog: {
+            title: 'Blog Teaser Listing',
+            status: 'published',
+            heading: 'Latest Assessment Insights & Research',
+            postLimit: 3
+          },
+          faqs: {
+            title: 'Frequently Asked Questions',
+            status: 'published',
+            items: [
+              { q: 'Is the AZE certificate accepted globally?', a: 'Yes, AZE certificates are aligned to CEFR levels and cryptographically signed on the blockchain for institutional verification.' },
+              { q: 'How long does the test take?', a: 'The comprehensive test takes 45 minutes to complete with all five skill sections.' }
+            ]
+          },
+          finalCta: {
+            title: 'Final Call to Action',
+            status: 'published',
+            heading: 'Ready to Certify Your English Proficiency?',
+            ctaText: 'Start Your Free Practice Assessment'
+          },
+          aboutUs: {
+            title: 'About Us',
+            status: 'published',
+            heading: 'Democratizing Global Language Certification',
+            body: 'AZE was created to eliminate high test costs, booking delays, and subjective human examiner bias.'
+          },
+          footer: {
+            title: 'Footer Section',
+            status: 'published',
+            copyright: '© 2026 AZE Assessment Platform. All rights reserved.',
+            links: 'Privacy Policy | Terms of Service | Candidate Support'
+          }
+        },
+
+        institutions: {
+          hero: {
+            title: 'Hero Banner',
+            status: 'published',
+            heading: 'AI-Powered English Assessment for Global Universities & Enterprise',
+            subheading: 'Batch evaluate 100,000+ candidates with 99.2% examiner accuracy',
+            primaryBtn: { label: 'Book Institutional Demo', action: '/enterprise/demo' },
+            secondaryBtn: { label: 'Explore Platform Tools', action: '/enterprise/tools' },
+            badges: [
+              { icon: '🏛️', text: 'Trusted by 120+ Universities' },
+              { icon: '⚡', text: 'Instant API & LMS Integration' },
+              { icon: '🔒', text: 'SOC2 & Anti-Cheat Verified' }
+            ]
+          },
+          numbers: {
+            title: 'Institutional Numbers',
+            status: 'published',
+            stats: [
+              { value: '99.2%', label: 'Examiner Correlation' },
+              { value: '10M+', label: 'Assessments Graded' },
+              { value: '120+', label: 'Partner Institutions' },
+              { value: '94%', label: 'Admin Time Saved' }
+            ]
+          },
+          technology: {
+            title: 'Technology & ML',
+            status: 'published',
+            eyebrow: 'Institutional Architecture',
+            heading: 'High-Throughput Language Intelligence',
+            body: 'Enterprise-grade speech assessment models running with sub-second inference latencies.'
+          },
+          tools: {
+            title: 'Platform Tools',
+            status: 'published',
+            toolsList: [
+              { name: 'Bulk Candidate Invites', desc: 'CSV upload and automated magic link delivery.' },
+              { name: 'CEFR Cohort Matrix', desc: 'Departmental benchmarking across A1 to C2.' },
+              { name: 'Proctoring Diagnostics', desc: 'Multimodal AI gaze and audio anomaly flags.' }
+            ]
+          },
+          platformFeatures: {
+            title: 'Enterprise Features',
+            status: 'published',
+            heading: 'Built for Campus & Corporate Scale',
+            features: [
+              'Custom rubric calibration for specific departmental cut-offs',
+              'Single Sign-On (SAML / Okta / Azure AD) support',
+              'Automated Webhook delivery of CEFR sub-scores'
+            ]
+          },
+          blockchain: {
+            title: 'Blockchain Verification',
+            status: 'published',
+            heading: 'Zero Certificate Fraud for Admissions',
+            body: 'Admissions officers verify applicant scores in 1-click via the public verification ledger.'
+          },
+          advisory: {
+            title: 'Advisory Board',
+            status: 'published',
+            heading: 'Governed by Academic Assessment Standards',
+            body: 'Advisory panel includes former IELTS and TOEFL chief assessment consultants.'
+          },
+          comparison: {
+            title: 'Benchmark Comparison',
+            status: 'published',
+            heading: 'Enterprise Cost & Throughput Comparison',
+            azePoints: ['85% lower per-student cost', 'Results in 5 mins', 'Seamless LMS webhook'],
+            legacyPoints: ['$220 standard cost', '1 to 2 weeks turnaround', 'Manual score uploads']
+          },
+          howItWorks: {
+            title: 'Rollout Steps',
+            status: 'published',
+            steps: [
+              { num: '01', title: 'Admin Setup & SSO', desc: 'Configure university department roles in 15 minutes.' },
+              { num: '02', title: 'Batch Student Invites', desc: 'Upload cohort CSV or trigger assessment API.' },
+              { num: '03', title: 'Export CEFR Analytics', desc: 'Review departmental pass rates and individual waveforms.' }
+            ]
+          },
+          pricing: {
+            title: 'Pricing Preview',
+            status: 'published',
+            heading: 'Institutional Volume Licensing',
+            subheading: 'Cost-effective assessment packages with dedicated account management'
+          },
+          faqs: {
+            title: 'Enterprise FAQs',
+            status: 'published',
+            items: [
+              { q: 'Can we integrate with Canvas or Moodle?', a: 'Yes, AZE provides native LTI 1.3 integrations for Canvas, Blackboard, and Moodle.' },
+              { q: 'Is bulk pricing available for university admissions?', a: 'Yes, custom tiered pricing is available for cohorts exceeding 1,000 candidates.' }
+            ]
+          },
+          finalCta: {
+            title: 'Institutional CTA',
+            status: 'published',
+            heading: 'Modernize Your Institution Language Benchmarking',
+            ctaText: 'Schedule an Executive Briefing'
+          },
+          aboutUs: {
+            title: 'About Us',
+            status: 'published',
+            heading: 'Enterprise Language Testing Innovation',
+            body: 'Empowering institutions with reliable, instant language qualification metrics.'
+          },
+          footer: {
+            title: 'Footer Section',
+            status: 'published',
+            copyright: '© 2026 AZE Assessment Platform. Enterprise Division.',
+            links: 'Enterprise SLA | Security & SOC2 | Contact Partnerships'
+          }
+        }
+      },
+
+      pricingPlans: [
+        { id: 'p1', audience: 'students', tier: 'FREE', name: 'Try Aze', priceM: 'Free', priceY: 'Free', features: 3, isFeatured: false, status: 'published' },
+        { id: 'p2', audience: 'students', tier: 'STANDARD', name: 'Basic Assessment', priceM: '$29', priceY: '$24/mo', features: 5, isFeatured: false, status: 'published' },
+        { id: 'p3', audience: 'students', tier: 'PRO', name: 'Full Certification', priceM: '$49', priceY: '$39/mo', features: 8, isFeatured: true, status: 'published' },
+        { id: 'p4', audience: 'institutions', tier: 'PILOT', name: 'Pilot Package', priceM: '$499', priceY: '$499/mo', features: 4, isFeatured: false, status: 'published' },
+        { id: 'p5', audience: 'institutions', tier: 'GROWTH', name: 'Campus Tier', priceM: '$1,890', priceY: '$1,590/mo', features: 7, isFeatured: true, status: 'published' },
+        { id: 'p6', audience: 'institutions', tier: 'ENTERPRISE', name: 'Global Enterprise', priceM: 'Custom', priceY: 'Custom', features: 12, isFeatured: false, status: 'draft' }
+      ],
+
+      blogPosts: [
+        { id: 'b1', title: 'How English Assessment Data Can Help Students Improve', slug: 'how-english-assessment-data-can-help-students-improve', category: 'Student Progress', author: 'AZE Assessment Team', readTime: '5 min read', status: 'published' },
+        { id: 'b2', title: 'AI Proctoring: Building Trust in Online English Testing', slug: 'ai-proctoring-building-trust-in-online-english-testing', category: 'AI Proctoring', author: 'Marcus Vance', readTime: '6 min read', status: 'published' },
+        { id: 'b3', title: 'Why Speaking Assessment Needs More Than Transcription', slug: 'why-speaking-assessment-needs-more-than-transcription', category: 'Speaking Assessment', author: 'Dr. Aris Thorne', readTime: '5 min read', status: 'published' },
+        { id: 'b4', title: 'How Adaptive English Testing Finds Your True CEFR Level', slug: 'how-adaptive-english-testing-finds-your-true-cefr-level', category: 'Adaptive Assessment', author: 'Elena Rostova', readTime: '5 min read', status: 'published' },
+        { id: 'b5', title: 'The Five Skills of English Proficiency: What Should You Measure?', slug: 'the-five-skills-of-english-proficiency-what-should-you-measure', category: 'English Assessment', author: 'David Chen', readTime: '5 min read', status: 'published' },
+        { id: 'b6', title: 'How AI Is Transforming English Language Assessment', slug: 'how-ai-is-transforming-english-language-assessment', category: 'AI Assessment', author: 'Tejas Patel', readTime: '5 min read', status: 'published' }
+      ],
+
+      legalDocs: {
+        privacy: {
+          title: 'Privacy Policy',
+          updated: 'October 2026',
+          version: 'v2.4',
+          sections: [
+            { h: '1. Information We Collect', p: 'We collect account details, candidate microphone recordings, and test responses necessary to compute CEFR language scores.' },
+            { h: '2. Cryptographic Storage & Blockchain Verification', p: 'Candidate certificates are hashed using SHA-256 and stored on an immutable verification ledger.' },
+            { h: '3. Data Security & SOC2 Compliance', p: 'All audio streams are encrypted in transit via TLS 1.3 and at rest with AES-256.' }
+          ]
+        },
+        support: {
+          title: 'Candidate Support & SLA',
+          updated: 'September 2026',
+          version: 'v1.8',
+          sections: [
+            { h: '1. 24/7 Candidate Support', p: 'Live assistance is available for browser microphone permissions, network reconnection, and candidate ID validation.' },
+            { h: '2. Test Re-take Policy', p: 'Candidates experiencing verified technical failures are entitled to an immediate re-test credit without charge.' }
+          ]
+        },
+        terms: {
+          title: 'Terms of Service',
+          updated: 'August 2026',
+          version: 'v2.1',
+          sections: [
+            { h: '1. Candidate Academic Integrity', p: 'Impersonation, unapproved auxiliary software, or pre-recorded audio prompts constitute academic fraud.' },
+            { h: '2. Institutional Licensing', p: 'Universities and corporate partners are granted non-transferable seats for employee or candidate evaluations.' }
+          ]
+        }
+      },
+
+      versionHistory: [
+        { ver: 'v2.2', author: 'Tejas Patel', time: 'Just now', diff: 'Updated hero badge highlights & secondary CTA label', current: true },
+        { ver: 'v2.1', author: 'Elena Rostova', time: '2 days ago', diff: 'Published live: Revised hero heading copy', current: false },
+        { ver: 'v2.0', author: 'David Chen', time: '1 week ago', diff: 'Major Release: Integrated 5-min test result claim', current: false },
+        { ver: 'v1.0', author: 'System Seed', time: 'Initial', diff: 'Initial seeded baseline content', current: false }
+      ]
+    };
+
+    window.navigateModule = function(moduleKey, sectionKey) {
+      CmsStore.activeModule = moduleKey;
+      if (sectionKey) CmsStore.activeSection = sectionKey;
+
+      document.querySelectorAll('.nav-parent-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById('btn-group-' + moduleKey);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.getElementById('module-section-editor').style.display = (moduleKey === 'students' || moduleKey === 'institutions') ? 'block' : 'none';
+      document.getElementById('module-pricing-manager').style.display = (moduleKey === 'pricing') ? 'block' : 'none';
+      document.getElementById('module-blog-manager').style.display = (moduleKey === 'blog') ? 'block' : 'none';
+      document.getElementById('module-legal-manager').style.display = (moduleKey === 'legal') ? 'block' : 'none';
+      
+      const bottomToolbar = document.getElementById('bottom-toolbar');
+      if (bottomToolbar) {
+        bottomToolbar.style.display = (moduleKey === 'students' || moduleKey === 'institutions' || moduleKey === 'legal') ? 'flex' : 'none';
+      }
+
+      const breadcrumbEl = document.getElementById('breadcrumb-current');
+      if (moduleKey === 'students' || moduleKey === 'institutions') {
+        const secObj = CmsStore.sections[moduleKey][CmsStore.activeSection] || {};
+        breadcrumbEl.textContent = (moduleKey === 'students' ? 'Students' : 'Institutions') + ' > ' + (secObj.title || 'Section');
+        renderHorizontalPills();
+        renderSectionEditor();
+      } else if (moduleKey === 'pricing') {
+        breadcrumbEl.textContent = 'Pricing Plans Manager';
+        renderPricingTable();
+      } else if (moduleKey === 'blog') {
+        breadcrumbEl.textContent = 'Blog & News Posts';
+        renderBlogTable();
+      } else if (moduleKey === 'legal') {
+        breadcrumbEl.textContent = 'Legal Pages Manager';
+        renderLegalEditor();
+      }
+
+      updateSidebarActiveItem();
+      updateReactivePreview();
+    };
+
+    function updateSidebarActiveItem() {
+      document.querySelectorAll('.sub-nav-item').forEach(el => {
+        el.classList.remove('active');
+        const m = CmsStore.activeModule;
+        const s = CmsStore.activeSection;
+        if (el.closest('#submenu-' + m) && el.getAttribute('data-sec') === s) {
+          el.classList.add('active');
+        }
+      });
+    }
+
+    window.toggleNavGroup = function(groupKey) {
+      const btn = document.getElementById('btn-group-' + groupKey);
+      const submenu = document.getElementById('submenu-' + groupKey);
+      if (!submenu) return;
+      
+      const isOpen = submenu.style.display !== 'none';
+      submenu.style.display = isOpen ? 'none' : 'flex';
+      if (btn) {
+        if (isOpen) btn.classList.remove('open');
+        else btn.classList.add('open');
+      }
+    };
+
+    function renderHorizontalPills() {
+      const container = document.getElementById('horizontal-sec-pills');
+      if (!container) return;
+
+      const m = CmsStore.activeModule;
+      if (m !== 'students' && m !== 'institutions') {
+        container.style.display = 'none';
+        return;
+      }
+
+      container.style.display = 'flex';
+      container.innerHTML = '';
+
+      const sectionKeys = Object.keys(CmsStore.sections[m]);
+      sectionKeys.forEach(secKey => {
+        const secObj = CmsStore.sections[m][secKey];
+        const pill = document.createElement('div');
+        pill.className = 'sec-tab-pill' + (secKey === CmsStore.activeSection ? ' active' : '');
+        pill.textContent = secObj.title;
+        pill.onclick = () => {
+          CmsStore.activeSection = secKey;
+          navigateModule(m, secKey);
+        };
+        container.appendChild(pill);
+      });
+    }
+
+    function renderSectionEditor() {
+      const m = CmsStore.activeModule;
+      const s = CmsStore.activeSection;
+      const secObj = CmsStore.sections[m][s];
+      if (!secObj) return;
+
+      document.getElementById('sec-editor-title').textContent = secObj.title + ' Editor';
+      const badgeEl = document.getElementById('sec-status-badge');
+      const badgeText = document.getElementById('sec-status-text');
+
+      if (secObj.status === 'published') {
+        badgeEl.className = 'status-badge published';
+        badgeText.textContent = 'Published Live';
+      } else {
+        badgeEl.className = 'status-badge draft';
+        badgeText.textContent = 'Draft Saved';
+      }
+
+      const fieldsContainer = document.getElementById('sec-editor-fields');
+      fieldsContainer.innerHTML = '';
+
+      if (s === 'hero') {
+        fieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">
+              <span>Hero Heading (H1)</span>
+              <span class="form-char-count"><span id="char-heading">${secObj.heading.length}</span> / 120</span>
+            </label>
+            <input type="text" class="form-input" id="input-hero-heading" value="${secObj.heading}" oninput="onHeroInputChange('heading', this.value)">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <span>Hero Subtext / Value Proposition</span>
+              <span class="form-char-count"><span id="char-subtext">${secObj.subheading.length}</span> / 240</span>
+            </label>
+            <textarea class="form-textarea" id="input-hero-subtext" oninput="onHeroInputChange('subheading', this.value)">${secObj.subheading}</textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Primary CTA Label</label>
+              <input type="text" class="form-input" id="input-cta-primary-lbl" value="${secObj.primaryBtn.label}" oninput="onHeroInputChange('primaryLabel', this.value)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Primary CTA Route</label>
+              <input type="text" class="form-input" id="input-cta-primary-act" value="${secObj.primaryBtn.action}">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Secondary CTA Label</label>
+              <input type="text" class="form-input" id="input-cta-secondary-lbl" value="${secObj.secondaryBtn.label}" oninput="onHeroInputChange('secondaryLabel', this.value)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Secondary CTA Route</label>
+              <input type="text" class="form-input" id="input-cta-secondary-act" value="${secObj.secondaryBtn.action}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <span>Hero Badges & Highlights (Max 5)</span>
+              <span style="font-size:11px; color:var(--primary); cursor:pointer; font-weight:600;" onclick="addHeroBadge()">+ Add Badge</span>
+            </label>
+            <div class="repeater-box" id="hero-badges-repeater">
+            </div>
+          </div>
+        `;
+        renderHeroBadgesRepeater();
+      } else if (s === 'numbers') {
+        let statsHtml = '<div class="form-grid-2">';
+        secObj.stats.forEach((st, idx) => {
+          statsHtml += `
+            <div class="repeater-box">
+              <div class="form-group">
+                <label class="form-label">Metric ${idx + 1} Value</label>
+                <input type="text" class="form-input" value="${st.value}" oninput="onStatChange(${idx}, 'value', this.value)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Metric ${idx + 1} Label</label>
+                <input type="text" class="form-input" value="${st.label}" oninput="onStatChange(${idx}, 'label', this.value)">
+              </div>
+            </div>
+          `;
+        });
+        statsHtml += '</div>';
+        fieldsContainer.innerHTML = statsHtml;
+      } else if (s === 'videoOverview') {
+        if (!secObj.videos || !Array.isArray(secObj.videos)) {
+          secObj.videos = [
+            {
+              id: 1,
+              title: 'AZE Product Overview & Test Walkthrough',
+              captionHeading: 'AZE product overview',
+              captionDesc: 'Learn how the assessment, score report and certificate work.',
+              duration: secObj.videoDuration || 'Approx. 90 seconds',
+              videoUrl: secObj.videoUrl || 'https://dev.azetest.ai/assets/videos/aze-overview.mp4',
+              miniCardLabel: secObj.miniCardLabel || 'YOUR PERSONAL ENGLISH REPORT',
+              miniCardHeading: secObj.miniCardHeading || 'More than a score. A clear next step.',
+              theme: 'purple'
+            }
+          ];
+          secObj.activeSlideIndex = 0;
+        }
+        if (secObj.activeSlideIndex === undefined || secObj.activeSlideIndex >= secObj.videos.length) {
+          secObj.activeSlideIndex = 0;
+        }
+        const activeIdx = secObj.activeSlideIndex;
+        const curSlide = secObj.videos[activeIdx] || secObj.videos[0];
+
+        // Slide switcher tabs
+        let slideTabsHtml = secObj.videos.map((vid, idx) => `
+          <button type="button" class="cms-video-slide-pill ${idx === activeIdx ? 'active' : ''}" onclick="selectVideoSlide(${idx})">
+            <span class="pill-num">${idx + 1}</span>
+            <span>${vid.captionHeading || vid.title || ('Video ' + (idx + 1))}</span>
+          </button>
+        `).join('');
+
+        if (secObj.videos.length < 5) {
+          slideTabsHtml += `
+            <button type="button" class="btn-ghost-sm" onclick="addVideoSlide()" style="padding:6px 12px; font-size:12px; gap:4px;">
+              <span>+ Add Video Slide</span>
+            </button>
+          `;
+        }
+
+        fieldsContainer.innerHTML = `
+          <!-- Section Level Headers -->
+          <div style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--primary); margin-bottom:10px;">
+            1. Section Header & Placements
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Section Eyebrow / Kicker</label>
+              <input type="text" class="form-input" id="input-video-kicker" value="${secObj.kicker || ''}" oninput="onGenericChange('kicker', this.value)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hero Button Trigger Label</label>
+              <input type="text" class="form-input" id="input-hero-trigger" value="${secObj.heroTriggerLabel || 'Watch Product Overview'}" oninput="onGenericChange('heroTriggerLabel', this.value)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <span>Section Heading (H2)</span>
+              <span class="form-char-count"><span id="char-video-heading">${(secObj.heading || '').length}</span> / 120</span>
+            </label>
+            <input type="text" class="form-input" id="input-video-heading" value="${secObj.heading || ''}" oninput="onVideoInputChange('heading', this.value)">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <span>Section Description / Overview</span>
+              <span class="form-char-count"><span id="char-video-desc">${(secObj.description || '').length}</span> / 260</span>
+            </label>
+            <textarea class="form-textarea" id="input-video-desc" oninput="onVideoInputChange('description', this.value)">${secObj.description || ''}</textarea>
+          </div>
+
+          <div style="height:1px; background:var(--border-color); margin:20px 0;"></div>
+
+          <!-- Video Slider Tabs & Reordering -->
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+            <div style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--primary);">
+              2. Video Slider Items (${secObj.videos.length} Slides Configured)
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button type="button" class="btn-ghost-sm" onclick="moveVideoSlide(${activeIdx}, -1)" ${activeIdx === 0 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''} title="Move Slide Left">
+                ◀ Move Left
+              </button>
+              <button type="button" class="btn-ghost-sm" onclick="moveVideoSlide(${activeIdx}, 1)" ${activeIdx === secObj.videos.length - 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''} title="Move Slide Right">
+                Move Right ▶
+              </button>
+              ${secObj.videos.length > 1 ? `
+                <button type="button" class="btn-ghost-sm" onclick="removeVideoSlide(${activeIdx})" style="color:var(--danger); border-color:rgba(239,68,68,0.3);" title="Remove this slide">
+                  🗑️ Delete
+                </button>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="cms-video-slides-bar">
+            ${slideTabsHtml}
+          </div>
+
+          <!-- Current Slide Fields Card -->
+          <div style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:12px; padding:18px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+              <div style="font-size:13px; font-weight:700; color:var(--foreground);">
+                Editing Slide ${activeIdx + 1}: <span style="color:var(--primary);">${curSlide.captionHeading || curSlide.title}</span>
+              </div>
+              <span class="status-badge live" style="font-size:10.5px;">Slide ${activeIdx + 1} of ${secObj.videos.length}</span>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Video Modal Title (Dialog / Header)</label>
+                <input type="text" class="form-input" value="${curSlide.title || ''}" oninput="onVideoSlideFieldChange('title', this.value)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Video Duration Badge</label>
+                <input type="text" class="form-input" value="${curSlide.duration || ''}" oninput="onVideoSlideFieldChange('duration', this.value)" placeholder="e.g. Approx. 90 seconds">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Video Source / Stream URL</label>
+              <input type="text" class="form-input" value="${curSlide.videoUrl || ''}" oninput="onVideoSlideFieldChange('videoUrl', this.value)" placeholder="https://...">
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Slide Caption Title</label>
+                <input type="text" class="form-input" value="${curSlide.captionHeading || ''}" oninput="onVideoSlideFieldChange('captionHeading', this.value)" placeholder="e.g. AZE product overview">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Theme Gradient Preset</label>
+                <select class="form-input" onchange="onVideoSlideFieldChange('theme', this.value)">
+                  <option value="purple" ${curSlide.theme === 'purple' ? 'selected' : ''}>Purple Brand Gradient</option>
+                  <option value="cyan" ${curSlide.theme === 'cyan' ? 'selected' : ''}>Cyan Acoustic Gradient</option>
+                  <option value="emerald" ${curSlide.theme === 'emerald' ? 'selected' : ''}>Emerald Blockchain Gradient</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Slide Caption Description</label>
+              <input type="text" class="form-input" value="${curSlide.captionDesc || ''}" oninput="onVideoSlideFieldChange('captionDesc', this.value)" placeholder="e.g. Learn how the assessment, score report and certificate work.">
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Floating Mini Card Kicker</label>
+                <input type="text" class="form-input" value="${curSlide.miniCardLabel || ''}" oninput="onVideoSlideFieldChange('miniCardLabel', this.value)" placeholder="e.g. YOUR PERSONAL ENGLISH REPORT">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Floating Mini Card Heading</label>
+                <input type="text" class="form-input" value="${curSlide.miniCardHeading || ''}" oninput="onVideoSlideFieldChange('miniCardHeading', this.value)" placeholder="e.g. More than a score. A clear next step.">
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:14px 18px; border-radius:10px; background:rgba(13,110,253,0.06); border:1px solid rgba(13,110,253,0.2); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+            <div>
+              <div style="font-weight:600; font-size:13px; color:var(--foreground);">Test Active Video Slide Modal</div>
+              <div style="font-size:11px; color:var(--muted-text); margin-top:2px;">Launch the live player modal preview for Slide ${activeIdx + 1} (${curSlide.title || 'Untitled'}).</div>
+            </div>
+            <button type="button" class="btn-primary-action" onclick="openCmsVideoModal(${activeIdx})" style="padding:6px 14px; font-size:12px;">
+              <span>▶</span>
+              <span>Test Slide Modal</span>
+            </button>
+          </div>
+        `;
+      } else {
+        fieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">Section Eyebrow / Tag</label>
+            <input type="text" class="form-input" value="${secObj.eyebrow || ''}" oninput="onGenericChange('eyebrow', this.value)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Section Heading</label>
+            <input type="text" class="form-input" value="${secObj.heading || ''}" oninput="onGenericChange('heading', this.value)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Section Content / Description</label>
+            <textarea class="form-textarea" oninput="onGenericChange('body', this.value)">${secObj.body || secObj.desc || secObj.subheading || ''}</textarea>
+          </div>
+        `;
+      }
+    }
+
+    function renderHeroBadgesRepeater() {
+      const repeater = document.getElementById('hero-badges-repeater');
+      if (!repeater) return;
+      const m = CmsStore.activeModule;
+      const badges = CmsStore.sections[m].hero.badges;
+      repeater.innerHTML = '';
+
+      badges.forEach((b, idx) => {
+        const item = document.createElement('div');
+        item.className = 'repeater-item';
+        item.innerHTML = `
+          <button class="repeater-icon-btn" onclick="cycleBadgeIcon(${idx})">${b.icon}</button>
+          <input type="text" class="repeater-input" value="${b.text}" oninput="updateBadgeText(${idx}, this.value)">
+          <button class="btn-trash" onclick="removeHeroBadge(${idx})" title="Delete badge">✕</button>
+        `;
+        repeater.appendChild(item);
+      });
+    }
+
+    window.addHeroBadge = function() {
+      const m = CmsStore.activeModule;
+      const badges = CmsStore.sections[m].hero.badges;
+      if (badges.length >= 5) {
+        showToast('Maximum 5 Hero Badges allowed.');
+        return;
+      }
+      badges.push({ icon: '✨', text: 'New platform feature highlight' });
+      renderHeroBadgesRepeater();
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.removeHeroBadge = function(idx) {
+      const m = CmsStore.activeModule;
+      const badges = CmsStore.sections[m].hero.badges;
+      if (badges.length <= 1) {
+        showToast('At least one badge is required.');
+        return;
+      }
+      badges.splice(idx, 1);
+      renderHeroBadgesRepeater();
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.cycleBadgeIcon = function(idx) {
+      const icons = ['⚡', '⏱️', '🛡️', '✨', '🎓', '🔒', '🏛️'];
+      const m = CmsStore.activeModule;
+      const current = CmsStore.sections[m].hero.badges[idx].icon;
+      const nextIdx = (icons.indexOf(current) + 1) % icons.length;
+      CmsStore.sections[m].hero.badges[idx].icon = icons[nextIdx];
+      renderHeroBadgesRepeater();
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.updateBadgeText = function(idx, val) {
+      const m = CmsStore.activeModule;
+      CmsStore.sections[m].hero.badges[idx].text = val;
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.onHeroInputChange = function(field, val) {
+      const m = CmsStore.activeModule;
+      const hero = CmsStore.sections[m].hero;
+      if (field === 'heading') {
+        hero.heading = val;
+        const charEl = document.getElementById('char-heading');
+        if (charEl) charEl.textContent = val.length;
+      } else if (field === 'subheading') {
+        hero.subheading = val;
+        const charEl = document.getElementById('char-subtext');
+        if (charEl) charEl.textContent = val.length;
+      } else if (field === 'primaryLabel') {
+        hero.primaryBtn.label = val;
+      } else if (field === 'secondaryLabel') {
+        hero.secondaryBtn.label = val;
+      }
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.onVideoInputChange = function(field, val) {
+      const m = CmsStore.activeModule;
+      const s = CmsStore.activeSection;
+      CmsStore.sections[m][s][field] = val;
+      if (field === 'heading') {
+        const el = document.getElementById('char-video-heading');
+        if (el) el.textContent = val.length;
+      } else if (field === 'description') {
+        const el = document.getElementById('char-video-desc');
+        if (el) el.textContent = val.length;
+      }
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.selectVideoSlide = function(idx) {
+      const sec = CmsStore.sections.students.videoOverview;
+      if (sec && sec.videos && sec.videos[idx]) {
+        sec.activeSlideIndex = idx;
+        window.simActiveSlide = idx;
+        renderSectionEditor();
+        updateReactivePreview();
+      }
+    };
+
+    window.onVideoSlideFieldChange = function(field, val) {
+      const sec = CmsStore.sections.students.videoOverview;
+      if (sec && sec.videos && sec.videos[sec.activeSlideIndex]) {
+        sec.videos[sec.activeSlideIndex][field] = val;
+        updateReactivePreview();
+        markUnsaved();
+      }
+    };
+
+    window.addVideoSlide = function() {
+      const sec = CmsStore.sections.students.videoOverview;
+      if (!sec.videos) sec.videos = [];
+      const newIdx = sec.videos.length + 1;
+      const themes = ['purple', 'cyan', 'emerald'];
+      sec.videos.push({
+        id: Date.now(),
+        title: `Interactive Feature Walkthrough ${newIdx}`,
+        captionHeading: `Feature Highlight ${newIdx}`,
+        captionDesc: 'Demonstrating candidate test features, speech analysis, and instant scoring.',
+        duration: 'Approx. 60 seconds',
+        videoUrl: `https://dev.azetest.ai/assets/videos/aze-feature-${newIdx}.mp4`,
+        miniCardLabel: 'FEATURE SPOTLIGHT',
+        miniCardHeading: 'Fast, accurate, and fully proctored.',
+        theme: themes[(newIdx - 1) % 3]
+      });
+      sec.activeSlideIndex = sec.videos.length - 1;
+      window.simActiveSlide = sec.activeSlideIndex;
+      renderSectionEditor();
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.removeVideoSlide = function(idx) {
+      const sec = CmsStore.sections.students.videoOverview;
+      if (!sec.videos || sec.videos.length <= 1) {
+        alert('At least one video slide is required.');
+        return;
+      }
+      sec.videos.splice(idx, 1);
+      sec.activeSlideIndex = Math.max(0, Math.min(sec.activeSlideIndex, sec.videos.length - 1));
+      window.simActiveSlide = sec.activeSlideIndex;
+      renderSectionEditor();
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.moveVideoSlide = function(idx, dir) {
+      const sec = CmsStore.sections.students.videoOverview;
+      const targetIdx = idx + dir;
+      if (targetIdx < 0 || targetIdx >= sec.videos.length) return;
+      const temp = sec.videos[idx];
+      sec.videos[idx] = sec.videos[targetIdx];
+      sec.videos[targetIdx] = temp;
+      sec.activeSlideIndex = targetIdx;
+      window.simActiveSlide = targetIdx;
+      renderSectionEditor();
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.onStatChange = function(idx, field, val) {
+      const m = CmsStore.activeModule;
+      CmsStore.sections[m].numbers.stats[idx][field] = val;
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    window.onGenericChange = function(field, val) {
+      const m = CmsStore.activeModule;
+      const s = CmsStore.activeSection;
+      CmsStore.sections[m][s][field] = val;
+      updateReactivePreview();
+      markUnsaved();
+    };
+
+    function markUnsaved() {
+      const statusEl = document.getElementById('footer-save-status');
+      if (statusEl) statusEl.textContent = '● Unsaved changes detected';
+      const badgeEl = document.getElementById('sec-status-badge');
+      const badgeText = document.getElementById('sec-status-text');
+      if (badgeEl && badgeText) {
+        badgeEl.className = 'status-badge draft';
+        badgeText.textContent = 'Draft Saved';
+      }
+    }
+
+    function updateReactivePreview() {
+      const m = CmsStore.activeModule;
+      const activeData = CmsStore.sections[m] ? CmsStore.sections[m] : CmsStore.sections.students;
+      const hero = activeData.hero;
+
+      const headEl = document.getElementById('sim-hero-heading');
+      const subEl = document.getElementById('sim-hero-subtext');
+      if (headEl) headEl.textContent = hero.heading;
+      if (subEl) subEl.textContent = hero.subheading;
+
+      const cta1 = document.getElementById('sim-cta-primary');
+      const cta2 = document.getElementById('sim-cta-secondary');
+      if (cta1) cta1.textContent = hero.primaryBtn.label;
+      if (cta2) {
+        const videoTrigger = (activeData.videoOverview && activeData.videoOverview.heroTriggerLabel) ? activeData.videoOverview.heroTriggerLabel : hero.secondaryBtn.label;
+        cta2.textContent = videoTrigger;
+        cta2.onclick = () => openCmsVideoModal();
+      }
+
+      const badgesContainer = document.getElementById('sim-hero-badges');
+      if (badgesContainer) {
+        badgesContainer.innerHTML = '';
+        hero.badges.forEach(b => {
+          const pill = document.createElement('div');
+          pill.className = 'sim-badge-pill';
+          pill.innerHTML = `<span>${b.icon}</span> <span>${b.text}</span>`;
+          badgesContainer.appendChild(pill);
+        });
+      }
+
+      const stats = activeData.numbers ? activeData.numbers.stats : [];
+      if (stats.length >= 4) {
+        for (let i = 0; i < 4; i++) {
+          const valEl = document.getElementById(`sim-stat-${i}-val`);
+          const lblEl = document.getElementById(`sim-stat-${i}-lbl`);
+          if (valEl) valEl.textContent = stats[i].value;
+          if (lblEl) lblEl.textContent = stats[i].label;
+        }
+      }
+
+      // Reactive update for Video Overview in Live Preview
+      const vidSection = document.getElementById('sim-video-section');
+      const vidKicker = document.getElementById('sim-video-kicker');
+      const vidHead = document.getElementById('sim-video-heading');
+      const vidDesc = document.getElementById('sim-video-desc');
+      const vidDur = document.getElementById('sim-video-duration');
+      const miniKicker = document.getElementById('sim-mini-kicker');
+      const miniText = document.getElementById('sim-mini-text');
+      const slideBadge = document.getElementById('sim-slide-badge');
+      const vidTitle = document.getElementById('sim-video-card-title');
+      const vidPoster = document.getElementById('sim-video-poster');
+      const capHead = document.getElementById('sim-caption-head');
+      const capDesc = document.getElementById('sim-caption-desc');
+      const paginationEl = document.getElementById('sim-video-pagination');
+
+      if (activeData.videoOverview) {
+        const vidSec = activeData.videoOverview;
+        if (vidSection) vidSection.style.display = 'block';
+        if (vidKicker) vidKicker.textContent = vidSec.kicker || 'See AZE in action';
+        if (vidHead) vidHead.textContent = vidSec.heading || 'Understand your English level in minutes';
+        if (vidDesc) vidDesc.textContent = vidSec.description || 'Watch short product overviews to see how the test works...';
+
+        const slides = (vidSec.videos && vidSec.videos.length) ? vidSec.videos : [
+          {
+            title: vidSec.heading || 'AZE Product Overview',
+            captionHeading: 'AZE product overview',
+            captionDesc: 'Learn how the assessment, score report and certificate work.',
+            duration: vidSec.videoDuration || 'Approx. 90 seconds',
+            miniCardLabel: vidSec.miniCardLabel || 'YOUR PERSONAL ENGLISH REPORT',
+            miniCardHeading: vidSec.miniCardHeading || 'More than a score. A clear next step.',
+            theme: 'purple'
+          }
+        ];
+
+        const curIdx = ((window.simActiveSlide % slides.length) + slides.length) % slides.length;
+        window.simActiveSlide = curIdx;
+        const curSlide = slides[curIdx];
+
+        if (slideBadge) slideBadge.textContent = `0${curIdx + 1} / 0${slides.length}`;
+        if (vidDur) vidDur.textContent = curSlide.duration || 'Approx. 90 seconds';
+        if (vidTitle) vidTitle.textContent = curSlide.title || 'AZE Product Overview';
+        if (miniKicker) miniKicker.textContent = curSlide.miniCardLabel || 'Instant Verification';
+        if (miniText) miniText.textContent = curSlide.miniCardHeading || 'See score reports & cryptographic CEFR badges.';
+        if (capHead) capHead.textContent = curSlide.captionHeading || curSlide.title;
+        if (capDesc) capDesc.textContent = curSlide.captionDesc || '';
+
+        if (vidPoster) {
+          if (curSlide.theme === 'cyan') {
+            vidPoster.style.background = 'radial-gradient(ellipse at 50% 45%, rgba(6, 182, 212, .32), transparent 45%), linear-gradient(135deg, #08253a 0%, #06101e 80%)';
+          } else if (curSlide.theme === 'emerald') {
+            vidPoster.style.background = 'radial-gradient(ellipse at 50% 45%, rgba(16, 185, 129, .28), transparent 45%), linear-gradient(135deg, #062a22 0%, #031411 80%)';
+          } else {
+            vidPoster.style.background = 'radial-gradient(ellipse at 50% 45%, rgba(139, 92, 246, .28), transparent 45%), linear-gradient(135deg, #1e1145 0%, #0c0824 80%)';
+          }
+        }
+
+        if (paginationEl) {
+          paginationEl.innerHTML = slides.map((s, idx) => `
+            <div class="sim-video-pagination-tab ${idx === curIdx ? 'active' : ''}" onclick="switchSimVideoSlide(${idx})">
+              <span class="sim-tab-dot"></span>
+              <span>0${idx + 1} ${(s.captionHeading || s.title || '').split(' ')[0]}</span>
+            </div>
+          `).join('');
+        }
+      } else if (vidSection) {
+        vidSection.style.display = 'none';
+      }
+
+      const eyebrowEl = document.getElementById('sim-sec-eyebrow');
+      const headingEl = document.getElementById('sim-sec-heading');
+      const bodyEl = document.getElementById('sim-sec-body');
+      const tech = activeData.technology || {};
+      if (eyebrowEl) eyebrowEl.textContent = tech.eyebrow || 'The Technology';
+      if (headingEl) headingEl.textContent = tech.heading || 'The Future of Language Assessment';
+      if (bodyEl) bodyEl.textContent = tech.body || 'Built by language education experts, linguists, and AI researchers.';
+
+      // Render Blog articles in preview
+      renderSimBlog();
+    }
+
+    let currentSimBlogCat = 'all';
+    window.filterSimBlog = function(cat) {
+      currentSimBlogCat = cat;
+      renderSimBlog();
+    };
+
+    function renderSimBlog() {
+      const pillsContainer = document.getElementById('sim-blog-pills');
+      const gridContainer = document.getElementById('sim-blog-grid');
+      if (!pillsContainer || !gridContainer) return;
+
+      const categories = ['all', 'Student Progress', 'AI Proctoring', 'Speaking Assessment', 'Adaptive Assessment', 'English Assessment', 'AI Assessment'];
+      
+      pillsContainer.innerHTML = categories.map(cat => `
+        <div class="sim-blog-pill ${currentSimBlogCat === cat ? 'active' : ''}" onclick="filterSimBlog('${cat}')">
+          ${cat === 'all' ? 'All Topics' : cat}
+        </div>
+      `).join('');
+
+      const filtered = CmsStore.blogPosts.filter(b => currentSimBlogCat === 'all' || b.category === currentSimBlogCat);
+      const iconMap = {
+        'Student Progress': '📊',
+        'AI Proctoring': '🛡️',
+        'Speaking Assessment': '🎙️',
+        'Adaptive Assessment': '⚡',
+        'English Assessment': '🌐',
+        'AI Assessment': '🤖'
+      };
+
+      gridContainer.innerHTML = filtered.slice(0, 4).map(b => `
+        <div class="sim-blog-card">
+          <div class="sim-blog-banner">
+            <span>${iconMap[b.category] || '📝'}</span>
+          </div>
+          <div class="sim-blog-content">
+            <div>
+              <span class="brand-badge" style="font-size:9px; padding:1px 6px; background:rgba(6,182,212,0.12); color:#38bdf8; border-color:rgba(6,182,212,0.3);">${b.category}</span>
+              <div class="sim-blog-title">${b.title}</div>
+            </div>
+            <div class="sim-blog-meta">
+              <span>${b.readTime}</span>
+              <span style="color:#38bdf8; font-weight:600; cursor:pointer;" onclick="navigateModule('blog')">Read →</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.simActiveSlide = 0;
+    window.switchSimVideoSlide = function(targetIdx) {
+      const activeData = CmsStore.sections[CmsStore.activeModule] || CmsStore.sections.students;
+      const vidSec = activeData.videoOverview;
+      if (!vidSec || !vidSec.videos || !vidSec.videos.length) return;
+
+      const count = vidSec.videos.length;
+      window.simActiveSlide = ((targetIdx % count) + count) % count;
+      updateReactivePreview();
+
+      if (CmsStore.activeSection === 'videoOverview') {
+        vidSec.activeSlideIndex = window.simActiveSlide;
+        renderSectionEditor();
+      }
+    };
+
+    window.openCmsVideoModal = function(idx) {
+      const m = CmsStore.activeModule;
+      const videoData = (CmsStore.sections[m] && CmsStore.sections[m].videoOverview) ? CmsStore.sections[m].videoOverview : CmsStore.sections.students.videoOverview;
+      const modal = document.getElementById('cms-video-preview-modal');
+      if (!modal) return;
+
+      const slideIdx = (typeof idx === 'number') ? idx : (window.simActiveSlide || 0);
+      const curSlide = (videoData && videoData.videos && videoData.videos[slideIdx]) ? videoData.videos[slideIdx] : (videoData || {});
+
+      const titleEl = document.getElementById('cms-video-modal-title');
+      const srcEl = document.getElementById('cms-modal-source-label');
+      const durEl = document.getElementById('cms-modal-duration-label');
+      if (titleEl) titleEl.textContent = curSlide.title || curSlide.heading || 'Student Experience — Video Overview';
+      if (srcEl) srcEl.textContent = curSlide.videoUrl || 'https://dev.azetest.ai/assets/videos/aze-overview.mp4';
+      if (durEl) durEl.textContent = curSlide.duration || curSlide.videoDuration || 'Approx. 90 seconds';
+      modal.classList.add('active');
+    };
+
+    window.closeCmsVideoModal = function() {
+      const modal = document.getElementById('cms-video-preview-modal');
+      if (modal) modal.classList.remove('active');
+    };
+
+    window.handleSaveDraft = function() {
+      const m = CmsStore.activeModule;
+      const s = CmsStore.activeSection;
+      if (CmsStore.sections[m] && CmsStore.sections[m][s]) {
+        CmsStore.sections[m][s].status = 'draft';
+      }
+      const badgeEl = document.getElementById('sec-status-badge');
+      const badgeText = document.getElementById('sec-status-text');
+      if (badgeEl && badgeText) {
+        badgeEl.className = 'status-badge draft';
+        badgeText.textContent = 'Draft Saved';
+      }
+      document.getElementById('footer-save-status').textContent = '● Draft saved to database';
+      showToast(`Saved draft for ${CmsStore.sections[m][s].title}!`);
+    };
+
+    window.handlePublishLive = function() {
+      const m = CmsStore.activeModule;
+      const s = CmsStore.activeSection;
+      if (CmsStore.sections[m] && CmsStore.sections[m][s]) {
+        CmsStore.sections[m][s].status = 'published';
+      }
+      const badgeEl = document.getElementById('sec-status-badge');
+      const badgeText = document.getElementById('sec-status-text');
+      if (badgeEl && badgeText) {
+        badgeEl.className = 'status-badge published';
+        badgeText.textContent = 'Published Live';
+      }
+      document.getElementById('footer-save-status').textContent = 'All changes published to azetest.ai';
+      
+      CmsStore.versionHistory.unshift({
+        ver: 'v2.' + (CmsStore.versionHistory.length + 1),
+        author: 'Tejas Patel',
+        time: 'Just now',
+        diff: `Published live: ${CmsStore.sections[m][s].title} updates`,
+        current: true
+      });
+      CmsStore.versionHistory[1].current = false;
+
+      showToast(`🚀 ${CmsStore.sections[m][s].title} published live to azetest.ai!`);
+    };
+
+    window.discardEditorChanges = function() {
+      renderSectionEditor();
+      updateReactivePreview();
+      document.getElementById('footer-save-status').textContent = 'Changes discarded';
+      showToast('Discarded unsaved modifications.');
+    };
+
+    window.switchPricingAudience = function(audience) {
+      CmsStore.pricingAudience = audience;
+      document.getElementById('btn-audience-students').classList.toggle('active', audience === 'students');
+      document.getElementById('btn-audience-institutions').classList.toggle('active', audience === 'institutions');
+      renderPricingTable();
+    };
+
+    function renderPricingTable() {
+      const tbody = document.getElementById('pricing-table-body');
+      if (!tbody) return;
+      const search = (document.getElementById('pricing-search') ? document.getElementById('pricing-search').value : '').toLowerCase();
+      tbody.innerHTML = '';
+
+      const filtered = CmsStore.pricingPlans.filter(p => {
+        const matchesAudience = p.audience === CmsStore.pricingAudience;
+        const matchesSearch = !search || p.name.toLowerCase().includes(search) || p.tier.toLowerCase().includes(search);
+        return matchesAudience && matchesSearch;
+      });
+
+      filtered.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="tier-pill">${p.tier}</span></td>
+          <td style="font-weight:600;">${p.name}</td>
+          <td>${p.priceM}</td>
+          <td style="color:var(--dim-text);">${p.priceY}</td>
+          <td><span class="nav-count-badge">${p.features} items</span></td>
+          <td>${p.isFeatured ? '<span class="status-badge published" style="display:inline-flex;">Featured</span>' : '<span style="color:var(--dim-text); font-size:11px;">Standard</span>'}</td>
+          <td>
+            <span class="status-badge ${p.status === 'published' ? 'published' : 'draft'}">
+              ${p.status === 'published' ? 'Published' : 'Draft'}
+            </span>
+          </td>
+          <td style="text-align:right;">
+            <div class="actions-flex" style="justify-content:flex-end;">
+              <button class="btn-action-icon" onclick="editPlan('${p.id}')" title="Edit plan">✎</button>
+              <button class="btn-action-icon" style="color:var(--danger);" onclick="confirmDeletePlan('${p.id}')" title="Delete plan">🗑</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.openPlanModal = function(planId) {
+      const modal = document.getElementById('pricing-modal');
+      const titleEl = document.getElementById('plan-modal-title');
+      const idEl = document.getElementById('modal-plan-id');
+      const tierEl = document.getElementById('modal-plan-tier');
+      const nameEl = document.getElementById('modal-plan-name');
+      const priceMEl = document.getElementById('modal-plan-price-m');
+      const priceYEl = document.getElementById('modal-plan-price-y');
+      const audEl = document.getElementById('modal-plan-audience');
+      const featEl = document.getElementById('modal-plan-features');
+      const statEl = document.getElementById('modal-plan-status');
+
+      if (planId) {
+        const p = CmsStore.pricingPlans.find(x => x.id === planId);
+        if (!p) return;
+        titleEl.textContent = 'Edit Pricing Plan';
+        idEl.value = p.id;
+        tierEl.value = p.tier;
+        nameEl.value = p.name;
+        priceMEl.value = p.priceM;
+        priceYEl.value = p.priceY;
+        audEl.value = p.audience;
+        featEl.value = 'Instant CEFR report\nBlockchain certificate\nFull speech rater metrics';
+        statEl.value = p.status;
+      } else {
+        titleEl.textContent = 'Add New Pricing Plan';
+        idEl.value = '';
+        tierEl.value = '';
+        nameEl.value = '';
+        priceMEl.value = '$';
+        priceYEl.value = '$';
+        audEl.value = CmsStore.pricingAudience;
+        featEl.value = 'Instant CEFR report\nBlockchain certificate';
+        statEl.value = 'published';
+      }
+      modal.classList.add('active');
+    };
+
+    window.closePlanModal = function() {
+      document.getElementById('pricing-modal').classList.remove('active');
+    };
+
+    window.savePlanModal = function() {
+      const id = document.getElementById('modal-plan-id').value;
+      const tier = document.getElementById('modal-plan-tier').value.trim() || 'PRO';
+      const name = document.getElementById('modal-plan-name').value.trim() || 'Custom Plan';
+      const priceM = document.getElementById('modal-plan-price-m').value.trim() || '$49';
+      const priceY = document.getElementById('modal-plan-price-y').value.trim() || '$39/mo';
+      const audience = document.getElementById('modal-plan-audience').value;
+      const status = document.getElementById('modal-plan-status').value;
+
+      if (id) {
+        const p = CmsStore.pricingPlans.find(x => x.id === id);
+        if (p) {
+          p.tier = tier;
+          p.name = name;
+          p.priceM = priceM;
+          p.priceY = priceY;
+          p.audience = audience;
+          p.status = status;
+          showToast(`Updated pricing plan "${name}"!`);
+        }
+      } else {
+        CmsStore.pricingPlans.push({
+          id: 'p' + (CmsStore.pricingPlans.length + 1),
+          tier, name, priceM, priceY, audience, status,
+          features: 5, isFeatured: false
+        });
+        showToast(`Created new plan "${name}"!`);
+      }
+      closePlanModal();
+      renderPricingTable();
+    };
+
+    let itemToDelete = null;
+    window.confirmDeletePlan = function(planId) {
+      itemToDelete = { type: 'plan', id: planId };
+      const p = CmsStore.pricingPlans.find(x => x.id === planId);
+      document.getElementById('delete-confirm-text').textContent = `Are you sure you want to permanently delete pricing plan "${p ? p.name : ''}"?`;
+      document.getElementById('delete-modal').classList.add('active');
+    };
+
+    window.editPlan = function(planId) {
+      openPlanModal(planId);
+    };
+
+    function renderBlogTable() {
+      const tbody = document.getElementById('blog-table-body');
+      if (!tbody) return;
+      const search = (document.getElementById('blog-search') ? document.getElementById('blog-search').value : '').toLowerCase();
+      const cat = document.getElementById('blog-cat-filter') ? document.getElementById('blog-cat-filter').value : 'all';
+      tbody.innerHTML = '';
+
+      const filtered = CmsStore.blogPosts.filter(b => {
+        const matchesCat = (cat === 'all' || b.category === cat);
+        const matchesSearch = !search || b.title.toLowerCase().includes(search) || b.author.toLowerCase().includes(search);
+        return matchesCat && matchesSearch;
+      });
+
+      filtered.forEach(b => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div style="font-weight:600; color:var(--foreground);">${b.title}</div>
+            <div style="font-size:11px; color:var(--dim-text); font-family:var(--font-mono); margin-top:2px;">/blog/${b.slug}</div>
+          </td>
+          <td><span class="brand-badge" style="background:rgba(139,92,246,0.12); color:#c084fc; border-color:rgba(139,92,246,0.3);">${b.category}</span></td>
+          <td style="color:var(--muted-text);">${b.author}</td>
+          <td style="color:var(--dim-text);">${b.readTime}</td>
+          <td>
+            <span class="status-badge ${b.status === 'published' ? 'published' : 'draft'}">
+              ${b.status === 'published' ? 'Published' : 'Draft'}
+            </span>
+          </td>
+          <td style="text-align:right;">
+            <div class="actions-flex" style="justify-content:flex-end;">
+              <button class="btn-action-icon" onclick="editBlogPost('${b.id}')" title="Edit post">✎</button>
+              <button class="btn-action-icon" style="color:var(--danger);" onclick="confirmDeleteBlog('${b.id}')" title="Delete post">🗑</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.openBlogModal = function(blogId) {
+      const modal = document.getElementById('blog-modal');
+      const titleEl = document.getElementById('blog-modal-title');
+      const idEl = document.getElementById('modal-blog-id');
+      const headlineEl = document.getElementById('modal-blog-title');
+      const slugEl = document.getElementById('modal-blog-slug');
+      const catEl = document.getElementById('modal-blog-category');
+      const authorEl = document.getElementById('modal-blog-author');
+      const readEl = document.getElementById('modal-blog-readtime');
+      const excerptEl = document.getElementById('modal-blog-excerpt');
+      const statEl = document.getElementById('modal-blog-status');
+
+      if (blogId) {
+        const b = CmsStore.blogPosts.find(x => x.id === blogId);
+        if (!b) return;
+        titleEl.textContent = 'Edit Blog Post';
+        idEl.value = b.id;
+        headlineEl.value = b.title;
+        slugEl.value = b.slug;
+        catEl.value = b.category;
+        authorEl.value = b.author;
+        readEl.value = b.readTime;
+        excerptEl.value = 'In-depth comparative analysis exploring how neural acoustic evaluation outperforms legacy human testing.';
+        statEl.value = b.status;
+      } else {
+        titleEl.textContent = 'Create New Blog Post';
+        idEl.value = '';
+        headlineEl.value = '';
+        slugEl.value = '';
+        catEl.value = 'AI & Speech';
+        authorEl.value = 'Tejas Patel';
+        readEl.value = '5 min read';
+        excerptEl.value = '';
+        statEl.value = 'published';
+      }
+      modal.classList.add('active');
+    };
+
+    window.closeBlogModal = function() {
+      document.getElementById('blog-modal').classList.remove('active');
+    };
+
+    window.saveBlogModal = function() {
+      const id = document.getElementById('modal-blog-id').value;
+      const title = document.getElementById('modal-blog-title').value.trim() || 'New Article';
+      const slug = document.getElementById('modal-blog-slug').value.trim() || 'new-article';
+      const category = document.getElementById('modal-blog-category').value;
+      const author = document.getElementById('modal-blog-author').value.trim() || 'AZE Team';
+      const readTime = document.getElementById('modal-blog-readtime').value.trim() || '4 min read';
+      const status = document.getElementById('modal-blog-status').value;
+
+      if (id) {
+        const b = CmsStore.blogPosts.find(x => x.id === id);
+        if (b) {
+          b.title = title;
+          b.slug = slug;
+          b.category = category;
+          b.author = author;
+          b.readTime = readTime;
+          b.status = status;
+          showToast(`Updated post "${title}"!`);
+        }
+      } else {
+        CmsStore.blogPosts.push({
+          id: 'b' + (CmsStore.blogPosts.length + 1),
+          title, slug, category, author, readTime, status
+        });
+        showToast(`Created new article "${title}"!`);
+      }
+      closeBlogModal();
+      renderBlogTable();
+      updateReactivePreview();
+    };
+
+    window.editBlogPost = function(blogId) {
+      openBlogModal(blogId);
+    };
+
+    window.confirmDeleteBlog = function(blogId) {
+      itemToDelete = { type: 'blog', id: blogId };
+      const b = CmsStore.blogPosts.find(x => x.id === blogId);
+      document.getElementById('delete-confirm-text').textContent = `Are you sure you want to permanently delete article "${b ? b.title : ''}"?`;
+      document.getElementById('delete-modal').classList.add('active');
+    };
+
+    window.closeDeleteModal = function() {
+      document.getElementById('delete-modal').classList.remove('active');
+      itemToDelete = null;
+    };
+
+    window.executeDeleteRecord = function() {
+      if (!itemToDelete) return;
+      if (itemToDelete.type === 'plan') {
+        CmsStore.pricingPlans = CmsStore.pricingPlans.filter(x => x.id !== itemToDelete.id);
+        renderPricingTable();
+        showToast('Pricing plan deleted successfully.');
+      } else if (itemToDelete.type === 'blog') {
+        CmsStore.blogPosts = CmsStore.blogPosts.filter(x => x.id !== itemToDelete.id);
+        renderBlogTable();
+        updateReactivePreview();
+        showToast('Blog article deleted successfully.');
+      }
+      closeDeleteModal();
+    };
+
+    window.switchLegalDoc = function(slug) {
+      CmsStore.legalSlug = slug;
+      document.getElementById('btn-legal-privacy').classList.toggle('active', slug === 'privacy');
+      document.getElementById('btn-legal-support').classList.toggle('active', slug === 'support');
+      document.getElementById('btn-legal-terms').classList.toggle('active', slug === 'terms');
+      renderLegalEditor();
+    };
+
+    function renderLegalEditor() {
+      const container = document.getElementById('legal-doc-fields');
+      if (!container) return;
+      const doc = CmsStore.legalDocs[CmsStore.legalSlug];
+      if (!doc) return;
+
+      let html = `
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Document Title</label>
+            <input type="text" class="form-input" value="${doc.title}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Revision Date</label>
+            <input type="text" class="form-input" value="${doc.updated}">
+          </div>
+        </div>
+      `;
+
+      doc.sections.forEach((sec, idx) => {
+        html += `
+          <div class="repeater-box">
+            <div class="form-group">
+              <label class="form-label">Section ${idx + 1} Heading</label>
+              <input type="text" class="form-input" value="${sec.h}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section Legal Text (Markdown / HTML)</label>
+              <textarea class="form-textarea" style="min-height:75px;">${sec.p}</textarea>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    window.openVersionHistory = function() {
+      document.getElementById('version-drawer-backdrop').style.display = 'block';
+      const drawer = document.getElementById('version-drawer');
+      drawer.classList.add('open');
+
+      const listEl = document.getElementById('version-history-list');
+      listEl.innerHTML = '';
+
+      CmsStore.versionHistory.forEach((v, idx) => {
+        const card = document.createElement('div');
+        card.className = 'version-card' + (v.current ? ' current' : '');
+        card.innerHTML = `
+          <div class="version-top-meta">
+            <span class="version-tag">${v.ver}</span>
+            <span class="version-time">${v.time}</span>
+          </div>
+          <div style="font-size:12px; font-weight:600; color:var(--foreground);">Author: ${v.author}</div>
+          <div class="version-diff-note">${v.diff}</div>
+          <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+            ${v.current ? '<span class="status-badge published" style="font-size:10px;">Active Version</span>' : `<button class="btn-secondary-sm" style="font-size:11px; padding:3px 8px;" onclick="restoreVersion(${idx})">Restore Version</button>`}
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    };
+
+    window.closeVersionHistory = function() {
+      document.getElementById('version-drawer-backdrop').style.display = 'none';
+      document.getElementById('version-drawer').classList.remove('open');
+    };
+
+    window.restoreVersion = function(idx) {
+      const v = CmsStore.versionHistory[idx];
+      closeVersionHistory();
+      showToast(`Restored snapshot ${v.ver} to editor.`);
+      document.getElementById('footer-save-status').textContent = `● Restored from ${v.ver}`;
+    };
+
+    window.toggleLivePreview = function() {
+      const pane = document.getElementById('live-preview-pane');
+      const btn = document.getElementById('btn-toggle-preview');
+      CmsStore.livePreviewOpen = !CmsStore.livePreviewOpen;
+
+      pane.classList.toggle('active', CmsStore.livePreviewOpen);
+      btn.classList.toggle('active', CmsStore.livePreviewOpen);
+
+      if (CmsStore.livePreviewOpen) {
+        updateReactivePreview();
+      }
+    };
+
+    window.setPreviewDevice = function(mode) {
+      CmsStore.previewDevice = mode;
+      document.getElementById('btn-view-desktop').classList.toggle('active', mode === 'desktop');
+      document.getElementById('btn-view-mobile').classList.toggle('active', mode === 'mobile');
+      const simPage = document.getElementById('sim-landing-page');
+      if (simPage) {
+        simPage.classList.toggle('mobile-mode', mode === 'mobile');
+      }
+    };
+
+    window.refreshPreview = function() {
+      updateReactivePreview();
+      showToast('Live preview refreshed.');
+    };
+
+    window.toggleTheme = function() {
+      const htmlEl = document.documentElement;
+      const current = htmlEl.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', next);
+      CmsStore.theme = next;
+      showToast(`Switched to ${next} theme.`);
+    };
+
+    window.toggleSidebar = function() {
+      const sidebar = document.getElementById('sidebar');
+      CmsStore.sidebarCollapsed = !CmsStore.sidebarCollapsed;
+      sidebar.classList.toggle('collapsed', CmsStore.sidebarCollapsed);
+    };
+
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.innerHTML = `<span>✨</span><span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.25s ease';
+        setTimeout(() => toast.remove(), 250);
+      }, 2600);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePlanModal();
+        closeBlogModal();
+        closeDeleteModal();
+        closeVersionHistory();
+        closeCmsVideoModal();
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        handleSaveDraft();
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const hash = window.location.hash.replace('#', '');
+      
+      const themeParam = urlParams.get('theme');
+      if (themeParam === 'light' || themeParam === 'dark') {
+        document.documentElement.setAttribute('data-theme', themeParam);
+        CmsStore.theme = themeParam;
+      }
+      
+      const viewParam = urlParams.get('view') || hash;
+      if (viewParam === 'pricing') {
+        navigateModule('pricing');
+      } else if (viewParam === 'blog') {
+        navigateModule('blog');
+      } else if (viewParam === 'legal') {
+        navigateModule('legal');
+      } else if (viewParam === 'institutions') {
+        const sec = urlParams.get('section') || 'hero';
+        navigateModule('institutions', sec);
+      } else {
+        const sec = urlParams.get('section') || 'hero';
+        navigateModule('students', sec);
+      }
+
+      if (urlParams.get('preview') === 'true' || urlParams.get('preview') === '1') {
+        toggleLivePreview();
+      }
+    });
+  </script>
+</body>
+</html>

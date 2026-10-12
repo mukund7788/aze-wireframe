@@ -117,6 +117,7 @@
       <li><strong>Personal Email Spam:</strong> When signup is open without restrictions, anyone can sign up using personal emails like Gmail or Yahoo. This creates fake and spam accounts, making it hard to identify real business clients.</li>
       <li><strong>Empty Account Confusion:</strong> When a new client logs into an empty workspace, they cannot see how reports, candidate scores, and speech analysis look in a live setup.</li>
       <li><strong>Data Pollution:</strong> Adding dummy test data directly into a client's real account mixes fake records with real students later on, creating a messy database.</li>
+      <li><strong>Lack of Onboarding Guidance &amp; First-Touch Friction:</strong> When first-time corporate evaluators and HR managers sign in, they often experience "blank-slate paralysis" without knowing how tests are allocated, where student invites live, or what populated analytics look like. Without an intuitive guided walkthrough, prospective clients drop off before sending their first test.</li>
     </ul>
 
     <h2>The Proposed Solution</h2>
@@ -124,13 +125,14 @@
       <li><strong>Require Business Emails:</strong> Only allow sign-ups using official company work emails (block Gmail, Yahoo, etc.). The system will also automatically detect the domain and fill in the company name.</li>
       <li><strong>Real Client Account with Free Trial:</strong> Every new client gets a real, clean account starting at zero. The account comes with a free trial allowance of up to 15 students and a total of 15 free tests per client account (e.g., 1 test per student, or distributed among them up to 15 tests total).</li>
       <li><strong>Separate Demo Portal Popup:</strong> A "Demo Portal" button in the sidebar opens a full-screen popup showing a populated sample account with 34,941 sample candidates, charts, and reports. Clients can explore real-looking data provided by the backend without adding any fake data to their actual account.</li>
+      <li><strong>Interactive Onboarding &amp; Platform Tour Guide:</strong> An intuitive step-by-step visual tour guide (modeled after the AZE student portal onboarding experience) with focused spotlight rings, numbered step badges, and easy next/back navigation. It activates automatically when entering the clean account and when launching the Demo Portal showcase, highlighting key actions (Available Tests widget, student seat quotas, live scorecards, test packages, and showcase datasets).</li>
       <li><strong>Quick &amp; Safe Return:</strong> Closing the demo popup via the close button (×), "Back to My Account", or the ESC key returns the client directly to their clean real account, ready to invite their real students.</li>
       <li><strong>Business Value &amp; Sales Growth:</strong> Prospective customers can review the platform, understand the flow, and see how the client portal works. Customers can create up to 15 student users and assign tests (up to 15 total per client account) immediately. This will help our AZE system attract new clients and increase sales.</li>
     </ul>
 
     <h2>Systems Impacted</h2>
     <ul>
-      <li><strong>Client Web Portal (<a href="https://azetest.ai/client/login">https://azetest.ai/client/login</a>):</strong> Signup page with business email validation, clean client dashboard with 15-test trial limit, and the full-screen demo popup.</li>
+      <li><strong>Client Web Portal (<a href="https://azetest.ai/client/login">https://azetest.ai/client/login</a>):</strong> Signup page with business email validation, clean client dashboard with 15-test trial limit, interactive onboarding tour guide, and the full-screen demo popup.</li>
       <li><strong>AZE Super Admin Portal (<a href="https://azetest.ai/admin/dashboard">https://azetest.ai/admin/dashboard</a>):</strong> Content Management tab for creating demo test templates, and controls for managing trial test and student limits.</li>
       <li><strong>Backend Assessment Service:</strong> Automated account creation, business domain verification, 15-test allocation per account, and student invitation APIs.</li>
     </ul>
@@ -156,7 +158,7 @@
       <li>Ability for users to easily switch between the Login and Sign Up screens on the same page.</li>
     </ul>
 
-    <h3>2. Real Client Account</h3>
+    <h3>2. Real Client Account (Clean Workspace)</h3>
     <ul>
       <li>Ability for users to see a clean dashboard showing zero students, zero completed tests, and 15 available trial tests.</li>
       <li>Ability for users to see how many of their 15 student seats they have used (e.g., 0 of 15 used).</li>
@@ -176,9 +178,34 @@
       <li>Ability to close the demo popup anytime using the "×" button, "Back to My Account", or the ESC key without affecting real account data.</li>
     </ul>
 
+    <h3>4. Interactive Platform Tour Guide &amp; Onboarding</h3>
+    <ul>
+      <li><strong>Clean Account Tour:</strong> Provide a guided 6-step onboarding tour for first-time clients in their clean account:
+        <ul>
+          <li><em>Step 1 (Welcome):</em> Overview of the self-service trial with 15 free tests.</li>
+          <li><em>Step 2 (15 Free Trial Tests):</em> Spotlight focus on the Available Tests quota widget (15 balance).</li>
+          <li><em>Step 3 (Students &amp; Invites):</em> Spotlight focus on the sidebar Students item with the 0/15 seat counter and invitation workflow.</li>
+          <li><em>Step 4 (Real-time Results &amp; Scorecards):</em> Overview of instant CEFR diagnostic reporting once students finish tests.</li>
+          <li><em>Step 5 (Scale with Test Packages):</em> Spotlight focus on the Buy Tests tab for enterprise scaling.</li>
+          <li><em>Step 6 (Demo Portal Showcase):</em> Spotlight focus on the Demo Portal tab with an instant "✨ Open Demo Portal" action.</li>
+        </ul>
+      </li>
+      <li><strong>Demo Portal Showcase Tour:</strong> Provide a guided 5-step tour when opening the Demo Portal modal:
+        <ul>
+          <li><em>Step 1 (Welcome to Demo Showcase):</em> Overview of populated sample environment with 34,941 candidate records.</li>
+          <li><em>Step 2 (Executive Assessment KPIs):</em> Spotlight focus on enterprise KPI cards (Active Students, Completed Tests, Balance, Average Score).</li>
+          <li><em>Step 3 (CEFR Cohort Distributions):</em> Spotlight focus on monthly test volume dual-bar chart and CEFR level breakdown donut chart.</li>
+          <li><em>Step 4 (AI Speech &amp; Diagnostic Reports):</em> Spotlight focus on the Results tab for phoneme-level pronunciation and audio analysis.</li>
+          <li><em>Step 5 (Isolated Sandbox &amp; Safe Return):</em> Spotlight focus on the "Back to My Account" button ensuring users know their real account is clean and unaffected.</li>
+        </ul>
+      </li>
+      <li><strong>User Controls &amp; Re-triggering:</strong> Ability to relaunch the tour at any time via header buttons ("💡 Platform Tour" / "💡 Demo Tour") or banner CTAs ("Take 30-Sec Tour").</li>
+      <li><strong>Keyboard &amp; Navigation Controls:</strong> Arrow Left/Right to navigate steps, ESC key to dismiss, and interactive dot indicators to jump between steps.</li>
+    </ul>
+
     <div class="part-header">Part B: Super Admin Portal (https://azetest.ai/admin/dashboard)</div>
 
-    <h3>4. Demo Template Creation &amp; Trial Limits</h3>
+    <h3>5. Demo Template Creation &amp; Trial Limits</h3>
     <ul>
       <li>Under Content Management, ability for Super Admins to create Demo Test Templates dedicated specifically for client portal free trials.</li>
       <li>Ability for Super Admins to assign these demo test templates to the client portal for trial users.</li>

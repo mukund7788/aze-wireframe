@@ -2,7 +2,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Live_Hub-GitHub_Pages-0D6EFD?style=for-the-badge&logo=github)](https://mukund7788.github.io/aze-wireframe/)
 [![Design System](https://img.shields.io/badge/Design_System-Zignuts_AZE-061D42?style=for-the-badge)](https://zignuts.com)
-[![Prototypes](https://img.shields.io/badge/Prototypes-7_Modules-10B981?style=for-the-badge)]()
+[![Prototypes](https://img.shields.io/badge/Prototypes-10_Modules-10B981?style=for-the-badge)]()
 
 Central catalog and live interactive prototype hub for the **AZE AI Voice Assessment & Automated CEFR Scoring Platform**.
 
@@ -12,10 +12,10 @@ Central catalog and live interactive prototype hub for the **AZE AI Voice Assess
 
 ## 🚀 Overview
 
-The **AZE Wireframe Hub** organizes all interactive UX prototypes, feature simulators, and product specifications into three core portal sections: **Admin Portal**, **Client Portal**, and **Student Portal**.
+The **AZE Wireframe Hub** organizes all interactive UX prototypes, feature simulators, and product specifications into four core sections: **Landing Page**, **Admin Portal**, **Client Portal**, and **Student Portal**.
 
 ### Key Capabilities
-* **Three Platform Portals:** Seamlessly switch between Admin Portal, Client Portal, and Student Portal wireframes.
+* **Four Platform Sections:** Seamlessly switch between Landing Page, Admin Portal, Client Portal, and Student Portal wireframes.
 * **Instant Standalone Access:** Open any wireframe directly in a standalone browser tab with one click (`↗ Open Standalone`).
 * **Real-Time Search & Collapsible Navigation:** Collapsible sidebar panel (`Ctrl+B`) and accordion sections with instant keyword filtering.
 
@@ -23,9 +23,12 @@ The **AZE Wireframe Hub** organizes all interactive UX prototypes, feature simul
 
 ## 📦 Wireframe Catalog
 
-| Portal Section | Module Hash | Wireframe File | Description |
+| Section | Module Hash | Wireframe File | Description |
 | :--- | :--- | :--- | :--- |
 | **Overview** | `#wireframe_info` | Built-in Hub Guide | Platform background, wireframing methodology, and architecture guide. |
+| **Landing Page** | `#landing_page` | [`aze-website- final.html`](aze-website-%20final.html) | **Landing Page New Design** — Official high-fidelity landing page wireframe featuring an interactive 3-video product slider, CEFR proficiency benchmarking, live blog integration with category filters, and verified certificate credentials. |
+| **Landing Page** | `#cms_portal` | [`cms_studio_wireframe.html`](cms_studio_wireframe.html) | **CMS Portal** — Visual content management suite with multi-video slider editor (reorder, add, delete, customize per slide), split-screen reactive preview, tiered pricing manager, and blog publication. |
+| **Admin Portal** | `#cms_studio` | [`cms_studio_wireframe.html`](cms_studio_wireframe.html) | Visual content management suite for Students & Institutions landing pages (29 sections), tiered Pricing Plans manager, Blog & News publication, and Legal policies editor with split-screen reactive preview. |
 | **Admin Portal** | `#cost_dashboard` | [`third_party_cost_dashboard_wireframe.html`](third_party_cost_dashboard_wireframe.html) | Third-party AI cost and anomaly monitoring dashboard for OpenAI, AWS Bedrock, and SpeechAce USD billing with spike detection and student attribution. |
 | **Admin Portal** | `#cost_estimator` | [`cost_estimator_wireframe.html`](cost_estimator_wireframe.html) | Budget simulation tool calculating token consumption, audio processing duration, model pricing tiers, and projected per-assessment costs. |
 | **Admin Portal** | `#question_clusters` | [`question_fields_cluster_wireframe.html`](question_fields_cluster_wireframe.html) | Assessment question authoring interface for multi-prompt voice items, rubric scoring weights, and recording constraints. |
