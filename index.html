@@ -1150,7 +1150,7 @@
         <div class="nav-group-title" role="button" tabindex="0" title="Click to collapse / expand">
           <span class="nav-group-name">Admin Portal</span>
           <div class="nav-group-meta">
-            <span class="nav-group-count">5</span>
+            <span class="nav-group-count">6</span>
             <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
@@ -1161,6 +1161,12 @@
             <a href="#promo_codes" class="nav-link" data-key="promo_codes">
               <span class="nav-label">Promo Codes Management</span>
               <span class="nav-pill nav-pill-new">New</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#promo_codes_brd" class="nav-link" data-key="promo_codes_brd">
+              <span class="nav-label">Promo Codes & Packages BRD</span>
+              <span class="nav-pill nav-pill-new">BRD</span>
             </a>
           </li>
           <li class="nav-item">
@@ -1505,6 +1511,28 @@
                   </div>
                 </div>
 
+                <!-- 4b. Promo Codes & Packages BRD (Admin Portal) -->
+                <div class="module-card" onclick="window.location.hash='#promo_codes_brd'">
+                  <div class="card-top">
+                    <div class="card-icon-wrap">📄</div>
+                    <span class="card-category">Admin Portal • BRD</span>
+                  </div>
+                  <h3 class="card-title">Promo Codes & Packages BRD (v2.0)</h3>
+                  <p class="card-desc">
+                    Official Business Requirement Document detailing dual tabs (Test & Package Promos), discount pricing models (% / $ / 100% Free), student checkout redemption with smart package mismatch pop-up redirect, and dual-tier redemption limits.
+                  </p>
+                  <div class="card-tags">
+                    <span class="card-tag">BRD Document</span>
+                    <span class="card-tag">Dual-Tab Admin</span>
+                    <span class="card-tag">Smart Mismatch</span>
+                    <span class="card-tag">Dark/Light Mode</span>
+                  </div>
+                  <div class="card-footer">
+                    <span class="card-launch-btn">Read BRD Document →</span>
+                    <a href="AZE_Promo_Code_Management_BRD.html" target="_blank" class="card-standalone-link" onclick="event.stopPropagation()">↗ Standalone</a>
+                  </div>
+                </div>
+
                 <!-- 5. Self-Service Demo (Client Portal) -->
                 <div class="module-card" onclick="window.location.hash='#self_service_demo'">
                   <div class="card-top">
@@ -1687,6 +1715,12 @@
         category: 'Admin Portal',
         desc: 'Enterprise promo code creation, test allocations, campaign validity windows, candidate redemptions audit drawer, and embedded Student Flow Validation Simulator.',
         file: 'promo_codes_wireframe.html'
+      },
+      'promo_codes_brd': {
+        title: 'Promo Codes & Packages Management BRD (v2.0)',
+        category: 'Admin Portal',
+        desc: 'Official business requirements document for Test & Package Promo Codes, Buy Tests checkout discount/waiver flows, smart package mismatch redirection, and dual-tier redemption limits.',
+        file: 'AZE_Promo_Code_Management_BRD.html'
       },
       'cms_studio': {
         title: 'AZE Admin Portal — CMS Studio',

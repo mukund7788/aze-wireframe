@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>AZE Assessment Platform — Promo Code & Package Management BRD v2.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-main: 'Poppins', Arial, sans-serif;
+      --primary: #0D6EFD;
+      --primary-hover: #0b5ed7;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── LIGHT THEME (Google Docs Document Style) ── */
+    [data-theme="light"] {
+      --bg-page: #F4F7FC;
+      --bg-card: #FFFFFF;
+      --border-card: #D0D5DD;
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+      --text-main: #141439;
+      --text-title: #061D42;
+      --text-sub: #565656;
+      --text-meta: #676767;
+      --border-divider: #E2E8F0;
+      --border-subtle: #F1F5F9;
+      --part-header-bg: #DBEEFF;
+      --part-header-color: #0D6EFD;
+      --part-header-border: #0D6EFD;
+      --badge-primary-bg: #DBEEFF;
+      --badge-primary-color: #0D6EFD;
+      --badge-success-bg: #DCFCE7;
+      --badge-success-color: #16A34A;
+      --callout-bg: #F0F9FF;
+      --callout-border: #0284C7;
+      --callout-title: #0369A1;
+      --toggle-bg: #FFFFFF;
+      --toggle-border: #CBD5E1;
+      --toggle-text: #061D42;
+      --toggle-hover-bg: #F1F5F9;
+    }
+
+    /* ── DARK THEME (AZE Official Dark System) ── */
+    [data-theme="dark"] {
+      --bg-page: #080B18;
+      --bg-card: #0D1424;
+      --border-card: rgba(255, 255, 255, 0.1);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
+      --text-main: #CBD5E1;
+      --text-title: #F8FAFC;
+      --text-sub: #94A3B8;
+      --text-meta: #64748B;
+      --border-divider: rgba(255, 255, 255, 0.08);
+      --border-subtle: rgba(255, 255, 255, 0.05);
+      --part-header-bg: rgba(13, 110, 253, 0.16);
+      --part-header-color: #60A5FA;
+      --part-header-border: #3B82F6;
+      --badge-primary-bg: rgba(13, 110, 253, 0.2);
+      --badge-primary-color: #93C5FD;
+      --badge-success-bg: rgba(34, 197, 94, 0.18);
+      --badge-success-color: #4ADE80;
+      --callout-bg: rgba(6, 182, 212, 0.1);
+      --callout-border: #06B6D4;
+      --callout-title: #38BDF8;
+      --toggle-bg: #161F36;
+      --toggle-border: rgba(255, 255, 255, 0.18);
+      --toggle-text: #F8FAFC;
+      --toggle-hover-bg: #1E293B;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-main);
+      font-size: 11pt;
+      line-height: 1.65;
+      color: var(--text-main);
+      background-color: var(--bg-page);
+      margin: 0;
+      padding: 40px 20px;
+      transition: var(--transition);
+    }
+
+    /* Floating Theme Controls Bar */
+    .theme-bar {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      border-radius: 9999px;
+      color: var(--toggle-text);
+      font-family: var(--font-main);
+      font-size: 9.5pt;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      transition: var(--transition);
+      backdrop-filter: blur(8px);
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--toggle-hover-bg);
+      transform: translateY(-1px);
+    }
+
+    .doc-page {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      padding: 60px 70px;
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-card);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .cover-meta {
+      border-bottom: 2px solid var(--border-divider);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    .company-tag {
+      font-size: 10pt;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    h1 {
+      font-size: 24pt;
+      font-weight: 700;
+      color: var(--text-title);
+      margin: 6px 0 2px 0;
+    }
+
+    .doc-type {
+      font-size: 13pt;
+      font-weight: 500;
+      color: var(--text-sub);
+      margin-bottom: 16px;
+    }
+
+    .meta-line {
+      font-size: 9.5pt;
+      color: var(--text-meta);
+      margin: 3px 0;
+    }
+
+    h2 {
+      font-size: 16pt;
+      font-weight: 700;
+      color: var(--text-title);
+      margin-top: 36px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-divider);
+      padding-bottom: 6px;
+    }
+
+    .part-header {
+      font-size: 13.5pt;
+      font-weight: 700;
+      color: var(--part-header-color);
+      margin-top: 32px;
+      margin-bottom: 14px;
+      background-color: var(--part-header-bg);
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      border-left: 5px solid var(--part-header-border);
+      transition: var(--transition);
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-weight: 600;
+      color: var(--text-title);
+      margin-top: 22px;
+      margin-bottom: 8px;
+    }
+
+    ul {
+      margin: 8px 0 16px 20px;
+      padding: 0;
+    }
+
+    li {
+      font-size: 10.5pt;
+      color: var(--text-main);
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 8.5pt;
+      font-weight: 600;
+      border-radius: 4px;
+      margin-left: 6px;
+    }
+
+    .badge-primary {
+      background: var(--badge-primary-bg);
+      color: var(--badge-primary-color);
+    }
+
+    .badge-success {
+      background: var(--badge-success-bg);
+      color: var(--badge-success-color);
+    }
+
+    .callout-box {
+      background: var(--callout-bg);
+      border-left: 4px solid var(--callout-border);
+      padding: 14px 18px;
+      border-radius: 4px;
+      margin: 16px 0;
+      font-size: 10pt;
+      transition: var(--transition);
+    }
+
+    .callout-title {
+      font-weight: 700;
+      color: var(--callout-title);
+      margin-bottom: 4px;
+    }
+
+    .footer-box {
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-divider);
+      font-size: 9pt;
+      color: var(--text-meta);
+    }
+
+    @media (max-width: 768px) {
+      .doc-page {
+        padding: 30px 20px;
+      }
+      .theme-bar {
+        top: 12px;
+        right: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Theme Switcher Button -->
+  <div class="theme-bar">
+    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle between Dark and Light mode">
+      <span id="themeToggleIcon">☀️</span>
+      <span id="themeToggleText">Light Mode</span>
+    </button>
+  </div>
+
+  <div class="doc-page">
+    <div class="cover-meta">
+      <div class="company-tag">Zignuts Technolab Private Limited</div>
+      <h1>AZE Assessment Platform</h1>
+      <div class="doc-type">Promo Code &amp; Package Management (Admin &amp; Student Portals) — Business Requirement Document</div>
+      <div class="meta-line"><strong>Version:</strong> 2.0 &bull; <strong>Date:</strong> 13/10/2026</div>
+      <div class="meta-line"><strong>Prepared For:</strong> AZE Platform Team</div>
+      <div class="meta-line"><strong>Prepared By:</strong> Zignuts Technolab Private Limited (India)</div>
+    </div>
+
+    <h2>Current Business Problem</h2>
+    <ul>
+      <li><strong>No Promo Code System Previously:</strong> Previously, the AZE platform had no system for promotional codes or discount coupons at all. Academic institutions, marketing campaigns, and trial evaluators had no automated way to receive discounted or promotional test access. Everything required manual account creation by tech teams or forced users to pay full retail price.</li>
+      <li><strong>Lack of Self-Service Test Package Discounting:</strong> In the Student Portal's "Buy Tests" module, students purchasing test packages have no way to apply promotional discounts or claim scholarship waivers at checkout. Even when students receive institutional discount codes, they cannot apply them self-serve.</li>
+      <li><strong>Friction and Confusion from Package Mismatch:</strong> When a student enters a valid promo code designated for a specific package while checking out a different package, standard platforms merely display an unhelpful "Invalid Code" error. Without an interactive pop-up guiding them to the correct package, students get frustrated, assume the code is broken, and abandon the checkout.</li>
+      <li><strong>Manual Operational Overhead:</strong> Sales, academic coordinators, and operations staff spend excessive hours manually adjusting balances, setting up one-off test allocations, and resolving user complaints regarding promo code application.</li>
+    </ul>
+
+    <h2>The Proposed Solution</h2>
+    <ul>
+      <li><strong>Complete End-to-End Promo Code System:</strong> Introduce a robust, automated promotional code engine across Super Admin, Student Portal, and Client Portal.</li>
+      <li><strong>Dual-Tab Promo Code Architecture in Admin Portal:</strong>
+        <ul>
+          <li><strong>Tab 1 — Test Promo Codes:</strong> Allows admins to create promo codes linked directly to one or more individual tests (100% test access) for direct student dashboard redemption.</li>
+          <li><strong>Tab 2 — Package Promo Codes:</strong> Allows admins to create promo codes linked to specific test packages in the "Buy Tests" catalog, with configurable discount rules (Percentage Discount, Fixed Amount Reduction, or 100% Free Package Waiver).</li>
+        </ul>
+      </li>
+      <li><strong>Smart Package Mismatch Pop-Up with One-Click Redirection:</strong>
+        <ul>
+          <li>Embed an intuitive promo code input inside the Order Summary on the Student Checkout page (<code>/student/package/:id</code>).</li>
+          <li>If a student enters a code valid for a <em>different</em> package, the system automatically detects the target package and displays an interactive <strong>Pop-Up Modal</strong> informing the student that the code belongs to that package, featuring a direct button <strong>"Redirect to Correct Package &rarr;"</strong> that navigates the user to the correct package checkout with the promo code ready to apply.</li>
+          <li>If a 100% Free Package promo code is applied, the checkout automatically sets the total to $0.00, changes the CTA to <strong>"Claim Free Package"</strong>, bypasses the payment gateway, and redirects the student to the Active Tests tab ready to begin.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>Systems Impacted</h2>
+    <ul>
+      <li><strong>AZE Super Admin Portal (<code>https://azetest.ai/admin/dashboard</code>):</strong> Pricing &amp; Plans &rarr; Promo Codes module with 2 dedicated tabs (<code>Test Promo Codes</code> and <code>Package Promo Codes</code>), creation modal with configurable discount models (Percentage, Fixed, 100% Free), and Client Account quota override controls (number of tests &amp; student account creation limits).</li>
+      <li><strong>Student Web Portal (<code>https://azetest.ai/student</code>):</strong> Student Dashboard ("Redeem Promo Code" card) and Buy Tests Checkout screen (<code>/student/package/:id</code>) with promo code validation, dynamic pricing calculation, 100% free bypass, and smart package mismatch redirection pop-up.</li>
+      <li><strong>Student Mobile Applications (Android &amp; iOS):</strong> Native Dashboard "Redeem Promo Code" cards and Mobile Buy Tests checkout sheets with uppercase formatting, haptic feedback, and Active Tests redirection.</li>
+    </ul>
+
+    <h2>Assumptions &amp; Dependencies</h2>
+    <ul>
+      <li>Test templates and test packages must already exist in the system catalog before being associated with promo codes.</li>
+      <li>A Package Promo Code can be mapped to one specific package or multiple eligible packages.</li>
+      <li>When a 100% Free Package promo code is applied, the transaction completes without invoking external payment processors (e.g., Stripe).</li>
+      <li>Student redemption limits are tracked per authenticated student account ID; client redemption limits are tracked per client organization ID.</li>
+      <li>Promo code strings are case-insensitive and whitespace-trimmed across all interfaces.</li>
+    </ul>
+
+    <h2>Business Requirements</h2>
+
+    <div class="part-header">Part A: Super Admin Portal (https://azetest.ai/admin/dashboard)</div>
+
+    <h3>1. Module Structure &amp; Dual-Tab Interface</h3>
+    <ul>
+      <li>Ability for administrators to access the Promo Codes module under <strong>Pricing and Plans &rarr; Promo Codes</strong>.</li>
+      <li>Ability for administrators to seamlessly switch between two dedicated tabs:
+        <ul>
+          <li><strong>Tab 1: Test Promo Codes</strong> <span class="badge badge-primary">Direct Tests</span> (Direct test assignment and instant dashboard redemption).</li>
+          <li><strong>Tab 2: Package Promo Codes</strong> <span class="badge badge-success">Packages</span> (Package linkage with configurable discount and pricing rules).</li>
+        </ul>
+      </li>
+      <li>Ability for administrators to view executive summary KPI cards at the top of each tab: Total Active Codes, Total Redemptions Claimed, Scheduled Campaigns, and Expired / Inactive Codes.</li>
+      <li>Ability to filter, search by code or test/package title, and toggle table density (Compact, Cozy, Comfortable) independently on both tabs.</li>
+    </ul>
+
+    <h3>2. Test Promo Code Creation (Tab 1 — Test Promo Codes)</h3>
+    <ul>
+      <li>Ability for administrators to enter a custom promo code string or click <strong>"Generate Random Code"</strong> to auto-generate a unique 8-character code.</li>
+      <li>Ability for administrators to select one or multiple tests from the available test catalog.</li>
+      <li>Ability for administrators to define campaign validity by configuring <strong>Valid From</strong> and <strong>Valid Until</strong> date and time.</li>
+      <li>Ability for administrators to set the <strong>Redemption Limit per User</strong> defining how many times an individual user can redeem the code (numeric stepper, default: 1).</li>
+      <li>Ability for administrators to set the <strong>Total Redemption Limit per Promo Code</strong> defining the maximum number of times the promo code can be redeemed in total across all users (numeric stepper, default: 1).</li>
+      <li>Ability for the system to automatically determine and display the promo code status (<code>Scheduled</code>, <code>Active</code>, <code>Expired</code>, <code>Inactive</code>) based on the current timestamp.</li>
+    </ul>
+
+    <h3>3. Package Promo Code Creation &amp; Pricing Rules (Tab 2 — Package Promo Codes)</h3>
+    <ul>
+      <li>Ability for administrators to enter a custom promo code or generate one randomly.</li>
+      <li>Ability for administrators to assign one or multiple <strong>Test Packages</strong> from the package catalog (e.g., "Student Test Package", "4-Skill Comprehensive Package").</li>
+      <li>Ability for administrators to configure the <strong>Benefit / Discount Type</strong>:
+        <ul>
+          <li><strong>100% Free / Full Waiver:</strong> Waives 100% of the package cost, allowing students to claim the entire package for $0.00.</li>
+          <li><strong>Percentage Discount (%):</strong> Deducts a configurable percentage (1% to 100%) from the package retail price (e.g., 20% off, 50% off).</li>
+          <li><strong>Fixed Amount Discount ($):</strong> Deducts a flat currency amount from the total package price (e.g., $10.00 off).</li>
+        </ul>
+      </li>
+      <li>Ability for administrators to configure validity start and end dates (<code>Valid From</code>, <code>Valid Until</code>).</li>
+      <li>Ability for administrators to set the <strong>Redemption Limit per User</strong> defining how many times an individual user can redeem the code (numeric stepper, default: 1).</li>
+      <li>Ability for administrators to set the <strong>Total Redemption Limit per Promo Code</strong> defining the maximum number of times the promo code can be redeemed in total across all users (numeric stepper, default: 1).</li>
+      <li>Ability for administrators to toggle campaign status between Active and Inactive at any time.</li>
+    </ul>
+
+    <div class="part-header">Part B: Student Portal (Web Portal &amp; iOS / Android Mobile Apps)</div>
+
+    <h3>4. Student Dashboard Direct Redemption</h3>
+    <ul>
+      <li>Ability for students to view a dedicated <strong>"Redeem Promo Code"</strong> card on their Dashboard placed directly below the "Get More Tests / Buy Tests" section.</li>
+      <li>Ability for students to enter an alphanumeric code with automatic uppercase conversion and whitespace trimming.</li>
+      <li>Ability for the system to validate the promo code upon clicking "Redeem":
+        <ul>
+          <li>If the code is a <strong>Test Promo Code</strong> or <strong>100% Free Package Code</strong>: The system provisions the tests immediately, displays a celebration confirmation, and automatically redirects the student to <code>https://dev.azetest.ai/student/my-test</code> on the <strong>Active Test</strong> tab.</li>
+          <li>If the code is a <strong>Package Discount Code</strong> (partial discount): The system displays an informative message informing the student that the code provides a discount for [Package Name], with an instant button to navigate to that package's checkout page with the code pre-applied.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>5. Buy Tests &amp; Checkout Module Integration</h3>
+    <ul>
+      <li>Ability for students to browse test packages under <strong>Buy Tests</strong> and select a package to reach the Checkout screen (<code>/student/package/:id</code>).</li>
+      <li>Ability for students to view an <strong>"Apply Promo Code"</strong> section within the Order Summary panel on the Checkout screen.</li>
+      <li>Ability for students to enter a promo code and click <strong>"Apply"</strong>.</li>
+      <li><strong>Dynamic Price Recalculation:</strong>
+        <ul>
+          <li>When a valid percentage or fixed discount code is applied, the Order Summary immediately updates to show: Original Package Price, Applied Promo Code &amp; Discount Amount (e.g., -$10.00), and Final Amount Payable.</li>
+        </ul>
+      </li>
+      <li><strong>100% Free Package Claim Workflow:</strong>
+        <ul>
+          <li>When a 100% Free promo code is applied, the Total updates to <strong>$0.00</strong>.</li>
+          <li>The primary action button dynamically transforms from "Proceed to Payment" to <strong>"Claim Free Package"</strong> (or "Redeem Package").</li>
+          <li>Clicking "Claim Free Package" completes the transaction without opening payment gateways, provisions all package tests to the student, and redirects to <code>https://dev.azetest.ai/student/my-test</code> (Active Test tab).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>6. Smart Package Mismatch Pop-Up &amp; Redirection Button</h3>
+    <div class="callout-box">
+      <div class="callout-title">💡 Interactive Redirection Pop-Up</div>
+      When a user inputs a promo code that belongs to an alternative package, the system avoids dead-end error messages and triggers an interactive pop-up modal with an instant redirection button directly to the correct package checkout.
+    </div>
+    <ul>
+      <li>Ability for the system to detect when a student enters a valid promo code that belongs to a <strong>different package</strong> than the one currently selected in checkout.</li>
+      <li>Ability for the system to display an interactive <strong>Pop-Up Modal</strong>:
+        <ul>
+          <li><strong>Modal Title:</strong> "Package Mismatch — Promo Code Available"</li>
+          <li><strong>Modal Description:</strong> Clear notice explaining: <em>"This promo code is valid for [Correct Package Name], not the current package."</em></li>
+          <li><strong>Primary Action Button:</strong> <strong><code>[Redirect to Correct Package &rarr;]</code></strong> (or <code>[Switch to {Correct Package Name}]</code>).</li>
+          <li><strong>Secondary Action Button:</strong> <code>[Stay on Current Package]</code>.</li>
+        </ul>
+      </li>
+      <li>Ability for the student to click the redirection button and be navigated immediately to the checkout screen of the correct package (<code>/student/package/:target-id</code>), with the promo code already pre-populated in the promo code field and ready for instant redemption.</li>
+    </ul>
+
+    <h3>7. User-Friendly Error States</h3>
+    <ul>
+      <li>Ability for the system to prevent double submission during redemption processing by showing a loading spinner and disabling the action button.</li>
+      <li>Ability to display clear, friendly error messages for invalid scenarios:
+        <ul>
+          <li><em>Code Expired:</em> "This promo code expired on [Date]."</li>
+          <li><em>Code Not Active Yet:</em> "This promo code is scheduled to become active on [Date]."</li>
+          <li><em>User Limit Exceeded:</em> "You have already reached your maximum redemption limit for this promo code."</li>
+          <li><em>Global Limit Exceeded:</em> "This promo code has reached its maximum total redemption limit across all users."</li>
+          <li><em>Invalid Code:</em> "Invalid promo code. Please check the spelling and try again."</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="footer-box">
+      <strong>Contact:</strong> hello@zignuts.com &bull; www.zignuts.com<br>
+      A-409, Siddhraj Zori, Near Sargasan Cross Road, S. G. Road, Gandhinagar, 382421, Gujarat, India.
+    </div>
+  </div>
+
+  <script>
+    // ── DARK & LIGHT THEME CONTROLLER ──
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('aze_brd_theme', theme);
+      localStorage.setItem('aze_hub_theme', theme);
+
+      if (theme === 'dark') {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      } else {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      }
+    }
+
+    // Initialize from localStorage or inherit from parent Hub
+    const initialTheme = localStorage.getItem('aze_brd_theme') || localStorage.getItem('aze_hub_theme') || 'dark';
+    applyTheme(initialTheme);
+
+    // Toggle button handler
+    themeToggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Listen for storage events across tabs/iframes
+    window.addEventListener('storage', (e) => {
+      if ((e.key === 'aze_hub_theme' || e.key === 'aze_brd_theme') && e.newValue) {
+        applyTheme(e.newValue);
+      }
+    });
+
+    // Listen for postMessage from parent window if embedded
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'SET_THEME' && e.data.theme) {
+        applyTheme(e.data.theme);
+      }
+    });
+  </script>
+</body>
+</html>

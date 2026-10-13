@@ -1,83 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <title>AZE Assessment Platform — Web App BRD v1.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
+    <style>
+    :root {
+      --font-main: 'Poppins', Arial, sans-serif;
+      --primary: #0D6EFD;
+      --primary-hover: #0b5ed7;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── LIGHT THEME ── */
+    [data-theme="light"] {
+      --bg-page: #F4F7FC;
+      --bg-card: #FFFFFF;
+      --border-card: #D0D5DD;
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+      --text-main: #141439;
+      --text-title: #061D42;
+      --text-sub: #565656;
+      --text-meta: #676767;
+      --border-divider: #E2E8F0;
+      --part-header-bg: #DBEEFF;
+      --part-header-color: #0D6EFD;
+      --part-header-border: #0D6EFD;
+      --toggle-bg: #FFFFFF;
+      --toggle-border: #CBD5E1;
+      --toggle-text: #061D42;
+      --toggle-hover-bg: #F1F5F9;
+    }
+
+    /* ── DARK THEME ── */
+    [data-theme="dark"] {
+      --bg-page: #080B18;
+      --bg-card: #0D1424;
+      --border-card: rgba(255, 255, 255, 0.1);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
+      --text-main: #CBD5E1;
+      --text-title: #F8FAFC;
+      --text-sub: #94A3B8;
+      --text-meta: #64748B;
+      --border-divider: rgba(255, 255, 255, 0.08);
+      --part-header-bg: rgba(13, 110, 253, 0.16);
+      --part-header-color: #60A5FA;
+      --part-header-border: #3B82F6;
+      --toggle-bg: #161F36;
+      --toggle-border: rgba(255, 255, 255, 0.18);
+      --toggle-text: #F8FAFC;
+      --toggle-hover-bg: #1E293B;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: 'Poppins', Arial, sans-serif;
+      font-family: var(--font-main);
       font-size: 11pt;
-      line-height: 1.6;
-      color: #141439;
-      background-color: #F8FAFC;
+      line-height: 1.65;
+      color: var(--text-main);
+      background-color: var(--bg-page);
       margin: 0;
       padding: 40px 20px;
+      transition: var(--transition);
     }
+
+    .theme-bar {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      border-radius: 9999px;
+      color: var(--toggle-text);
+      font-family: var(--font-main);
+      font-size: 9.5pt;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      transition: var(--transition);
+      backdrop-filter: blur(8px);
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--toggle-hover-bg);
+      transform: translateY(-1px);
+    }
+
     .doc-page {
       max-width: 820px;
       margin: 0 auto;
-      background: #FFFFFF;
+      background: var(--bg-card);
       padding: 60px 70px;
-      border: 1px solid #D0D5DD;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-card);
       border-radius: 6px;
+      transition: var(--transition);
     }
     .cover-meta {
-      border-bottom: 2px solid #061D42;
+      border-bottom: 2px solid var(--border-divider);
       padding-bottom: 24px;
       margin-bottom: 32px;
     }
     .company-tag {
       font-size: 10pt;
       font-weight: 600;
-      color: #0D6EFD;
+      color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 1px;
     }
     h1 {
       font-size: 24pt;
       font-weight: 700;
-      color: #061D42;
+      color: var(--text-title);
       margin: 6px 0 2px 0;
     }
     .doc-type {
       font-size: 13pt;
       font-weight: 500;
-      color: #565656;
+      color: var(--text-sub);
       margin-bottom: 16px;
     }
     .meta-line {
       font-size: 9.5pt;
-      color: #676767;
+      color: var(--text-meta);
       margin: 3px 0;
     }
     h2 {
       font-size: 16pt;
       font-weight: 700;
-      color: #061D42;
+      color: var(--text-title);
       margin-top: 36px;
       margin-bottom: 12px;
-      border-bottom: 1px solid #E2E8F0;
+      border-bottom: 1px solid var(--border-divider);
       padding-bottom: 6px;
     }
     .part-header {
       font-size: 14pt;
       font-weight: 700;
-      color: #0D6EFD;
+      color: var(--part-header-color);
       margin-top: 28px;
       margin-bottom: 12px;
-      background-color: #DBEEFF;
+      background-color: var(--part-header-bg);
       padding: 8px 14px;
       border-radius: 4px;
-      border-left: 4px solid #0D6EFD;
+      border-left: 4px solid var(--part-header-border);
+      transition: var(--transition);
     }
     h3 {
       font-size: 12.5pt;
       font-weight: 600;
-      color: #061D42;
+      color: var(--text-title);
       margin-top: 20px;
       margin-bottom: 8px;
     }
@@ -87,20 +175,31 @@
     }
     li {
       font-size: 10.5pt;
-      color: #242424;
+      color: var(--text-main);
       line-height: 1.6;
       margin-bottom: 8px;
     }
     .footer-box {
       margin-top: 60px;
       padding-top: 20px;
-      border-top: 1px solid #E2E8F0;
+      border-top: 1px solid var(--border-divider);
       font-size: 9pt;
-      color: #676767;
+      color: var(--text-meta);
+    }
+    @media (max-width: 768px) {
+      .doc-page { padding: 30px 20px; }
+      .theme-bar { top: 12px; right: 12px; }
     }
   </style>
 </head>
 <body>
+  <!-- Floating Theme Switcher Button -->
+  <div class="theme-bar">
+    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle between Dark and Light mode">
+      <span id="themeToggleIcon">☀️</span>
+      <span id="themeToggleText">Light Mode</span>
+    </button>
+  </div>
   <div class="doc-page">
     <div class="cover-meta">
       <div class="company-tag">Zignuts Technolab Private Limited</div>
@@ -205,14 +304,28 @@
 
     <div class="part-header">Part B: Super Admin Portal (https://azetest.ai/admin/dashboard)</div>
 
-    <h3>5. Demo Template Creation &amp; Trial Limits</h3>
+    <h3>5. Demo Template Creation, Quota Configuration &amp; Corporate Promo Codes</h3>
     <ul>
-      <li>Under Content Management, ability for Super Admins to create Demo Test Templates dedicated specifically for client portal free trials.</li>
-      <li>Ability for Super Admins to assign these demo test templates to the client portal for trial users.</li>
-      <li>Ability for Super Admins to increase or decrease the per-client test allocation (default 15) or per-test user count.</li>
-      <li>Ability for admins to set or change the default free trial limits (15 students and 15 tests each).</li>
-      <li>Ability for admins to see a list of all new trial signups and track their activity.</li>
-      <li>Ability for the system to keep a basic log of who signed up and who invited students for record-keeping.</li>
+      <li><strong>Demo Test Template Management:</strong> Under Content Management, ability for Super Admins to create Demo Test Templates dedicated specifically for client portal free trials, and assign these demo templates to the client portal for trial users.</li>
+      <li><strong>Client Account Quota Configuration (Admin Overrides):</strong> Under Client Account Management, ability for Super Administrators to configure and increase quotas for any corporate client workspace beyond the default 15:
+        <ul>
+          <li><strong>Number of Assigned Tests:</strong> Ability to manually increase the test allocation beyond the default 15 tests (e.g., set to 30, 50, 100 tests).</li>
+          <li><strong>Student User Creation Limit:</strong> Ability to manually increase the allowed student accounts beyond the default 15 seats (e.g., set to 25, 50, 100 users).</li>
+        </ul>
+      </li>
+      <li><strong>Corporate Promo Code Creation &amp; Top-Ups:</strong> Ability for Super Administrators to create <strong>Client Corporate Promo Codes</strong> specifically redeemable by client organizations in their Client Portal (under Buy Tests) to:
+        <ul>
+          <li>Top up their assigned test pool (e.g., +15 tests, +50 tests).</li>
+          <li>Increase student user account limits.</li>
+          <li>Apply corporate package discounts when purchasing commercial packs.</li>
+        </ul>
+      </li>
+      <li><strong>Redemption Logs &amp; Activity Tracking:</strong>
+        <ul>
+          <li>Ability to view detailed redemption logs showing client organization name, redemption timestamp, promo code used, and credit units added.</li>
+          <li>Ability for admins to see a list of all new trial signups, track invitation activity, and monitor quota utilization in real time.</li>
+        </ul>
+      </li>
     </ul>
 
     <div class="footer-box">
@@ -220,5 +333,43 @@
       A-409, Siddhraj Zori, Near Sargasan Cross Road, S. G. Road, Gandhinagar, 382421, Gujarat, India.
     </div>
   </div>
+  <script>
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('aze_brd_theme', theme);
+      localStorage.setItem('aze_hub_theme', theme);
+      if (theme === 'dark') {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      } else {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      }
+    }
+
+    const initialTheme = localStorage.getItem('aze_brd_theme') || localStorage.getItem('aze_hub_theme') || 'dark';
+    applyTheme(initialTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    window.addEventListener('storage', (e) => {
+      if ((e.key === 'aze_hub_theme' || e.key === 'aze_brd_theme') && e.newValue) {
+        applyTheme(e.newValue);
+      }
+    });
+
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'SET_THEME' && e.data.theme) {
+        applyTheme(e.data.theme);
+      }
+    });
+  </script>
 </body>
 </html>
