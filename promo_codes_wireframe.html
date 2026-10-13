@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AZE Admin Portal — Promo Code Management</title>
+  
+  <!-- Typography: Poppins (Primary) & JetBrains Mono (Codes / Quantities) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Nunito:wght@400;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            azeCanvas: '#070b19',
+            azeSurface: '#0d1428',
+            azeCard: '#0f172a',
+            azeBorder: '#1e293b',
+            azeBorderHover: '#334155',
+            azeTableHeader: '#172033',
+            azeCyan: {
+              DEFAULT: '#06b6d4',
+              hover: '#0891b2',
+              light: '#22d3ee',
+              glow: '#00d2ff',
+              surface: 'rgba(6, 182, 212, 0.1)'
+            }
+          },
+          fontFamily: {
+            sans: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+            body: ['Nunito', 'Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg-canvas: #070b19;
+      --bg-surface: #0d1428;
+      --border-subtle: #1e293b;
+      --border-hover: #334155;
+      --table-header: #172033;
+      --brand-gradient: linear-gradient(90deg, #7622F2 0%, #B700EA 100%);
+      --cyan-gradient: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: #f8fafc;
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070b19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+
+    /* Brand Gradient Logo */
+    .brand-gradient-text {
+      background: var(--brand-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Pulse Glow */
+    .glow-cyan {
+      box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.35);
+    }
+
+    /* Sidebar collapse transition */
+    #admin-sidebar {
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sidebar-collapsed #admin-sidebar {
+      width: 4.5rem;
+    }
+    .sidebar-collapsed .sidebar-text,
+    .sidebar-collapsed .sidebar-chevron,
+    .sidebar-collapsed .sidebar-badge {
+      display: none !important;
+    }
+    .sidebar-collapsed .sidebar-group-header {
+      display: none !important;
+    }
+    .sidebar-collapsed .sidebar-subitem {
+      padding-left: 0.75rem !important;
+      justify-content: center !important;
+    }
+
+    /* Custom status badge classes */
+    .status-badge-active {
+      background-color: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #34d399;
+    }
+    .status-badge-scheduled {
+      background-color: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+    }
+    .status-badge-expired {
+      background-color: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+    .status-badge-inactive {
+      background-color: rgba(148, 163, 184, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: #94a3b8;
+    }
+
+    /* Table row density modes */
+    .density-compact td { padding-top: 0.5rem; padding-bottom: 0.5rem; font-size: 0.8125rem; }
+    .density-cozy td { padding-top: 0.875rem; padding-bottom: 0.875rem; font-size: 0.875rem; }
+    .density-comfortable td { padding-top: 1.25rem; padding-bottom: 1.25rem; font-size: 0.9375rem; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#070b19] text-slate-100 antialiased selection:bg-cyan-500 selection:text-white">
+
+  <!-- TOP GLOBAL NAVIGATION BAR -->
+  <header class="h-14 border-b border-[#1e293b] bg-[#070b19] sticky top-0 z-40 flex items-center justify-between px-4 sm:px-6">
+    <!-- Left: Logo & Sidebar Toggle -->
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl font-black tracking-wider brand-gradient-text">AZE</span>
+      </div>
+      <button onclick="toggleSidebar()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors focus:outline-none" title="Toggle Sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2"/>
+          <path d="M9 3v18" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Center/Right: Global Search, Quick Links & Profile -->
+    <div class="flex items-center gap-3 sm:gap-4">
+      <!-- Search Input with Keyboard Shortcut -->
+      <div class="relative hidden md:block w-72">
+        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/>
+        </svg>
+        <input 
+          type="text" 
+          placeholder="Search modules..." 
+          class="w-full bg-[#0d1428] border border-[#1e293b] hover:border-slate-700 rounded-lg pl-9 pr-14 py-1.5 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:border-cyan-500 transition-all font-sans"
+        >
+        <kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono text-slate-400 bg-slate-800/90 px-1.5 py-0.5 rounded border border-slate-700">Ctrl+K</kbd>
+      </div>
+
+      <!-- Notification Bell -->
+      <button class="relative p-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition-colors" title="Notifications">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-cyan-400 ring-2 ring-[#070b19]"></span>
+      </button>
+
+      <!-- Theme Toggle -->
+      <button onclick="toggleDarkMode()" class="p-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition-colors" title="Toggle Theme">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5" stroke-width="2"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-width="2"/>
+        </svg>
+      </button>
+
+      <!-- User Profile Chip -->
+      <div class="flex items-center gap-2.5 pl-2 border-l border-[#1e293b]">
+        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-xs text-white shadow-sm ring-1 ring-cyan-400/40">
+          M
+        </div>
+        <div class="hidden sm:block text-left">
+          <div class="text-xs font-semibold text-slate-100 leading-none">Mukundp</div>
+          <div class="text-[10px] text-slate-400 font-medium mt-0.5">Admin</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- APP LAYOUT (SIDEBAR + CONTENT WRAPPER) -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- LEFT SIDEBAR NAVIGATION -->
+    <aside id="admin-sidebar" class="w-60 bg-[#070b19] border-r border-[#1e293b] flex flex-col justify-between flex-shrink-0 select-none overflow-y-auto">
+      <div class="py-3 space-y-1">
+        
+        <!-- Standard Top Menu Items -->
+        <a href="javascript:void(0)" class="flex items-center gap-3 px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" stroke-width="2"/><rect x="14" y="3" width="7" height="7" stroke-width="2"/><rect x="14" y="14" width="7" height="7" stroke-width="2"/><rect x="3" y="14" width="7" height="7" stroke-width="2"/></svg>
+          <span class="sidebar-text">Dashboard</span>
+        </a>
+
+        <a href="javascript:void(0)" class="flex items-center gap-3 px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 2v7.31M14 9.3V1.99M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0" stroke-width="2"/></svg>
+          <span class="sidebar-text">Testing</span>
+        </a>
+
+        <a href="javascript:void(0)" class="flex items-center gap-3 px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" stroke-width="2"/></svg>
+          <span class="sidebar-text">Arabic Testing</span>
+        </a>
+
+        <a href="javascript:void(0)" class="flex items-center gap-3 px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke-width="2"/><path d="m19 9-5 5-4-4-3 3" stroke-width="2"/></svg>
+          <span class="sidebar-text">Analytics</span>
+        </a>
+
+        <!-- Collapsible: Content Management -->
+        <a href="javascript:void(0)" class="flex items-center justify-between px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" stroke-width="2"/></svg>
+            <span class="sidebar-text">Content Management</span>
+          </div>
+          <svg class="w-3.5 h-3.5 sidebar-chevron text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" stroke-width="2"/></svg>
+        </a>
+
+        <a href="javascript:void(0)" class="flex items-center gap-3 px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-width="2"/></svg>
+          <span class="sidebar-text">Monitoring</span>
+        </a>
+
+        <!-- Collapsible: User Management -->
+        <a href="javascript:void(0)" class="flex items-center justify-between px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke-width="2"/><path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke-width="2"/><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke-width="2"/></svg>
+            <span class="sidebar-text">User Management</span>
+          </div>
+          <svg class="w-3.5 h-3.5 sidebar-chevron text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" stroke-width="2"/></svg>
+        </a>
+
+        <!-- Collapsible: Business Management -->
+        <a href="javascript:void(0)" class="flex items-center justify-between px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="7" rx="2" stroke-width="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" stroke-width="2"/></svg>
+            <span class="sidebar-text">Business Management</span>
+          </div>
+          <svg class="w-3.5 h-3.5 sidebar-chevron text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" stroke-width="2"/></svg>
+        </a>
+
+        <!-- EXPANDED SECTION: PRICING AND PLANS -->
+        <div class="pt-1">
+          <div class="flex items-center justify-between px-4 py-2 text-xs font-semibold text-cyan-400 bg-cyan-500/5 rounded-lg mx-2 cursor-pointer">
+            <div class="flex items-center gap-3">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke-width="2"/><line x1="7" y1="7" x2="7.01" y2="7" stroke-width="2"/></svg>
+              <span class="sidebar-text">Pricing and plans</span>
+            </div>
+            <svg class="w-3.5 h-3.5 sidebar-chevron text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" stroke-width="2"/></svg>
+          </div>
+
+          <!-- Submenu items -->
+          <div class="pl-7 pr-2 py-1 space-y-0.5 border-l border-cyan-500/20 ml-5 my-1">
+            <a href="javascript:void(0)" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-md transition-colors sidebar-subitem">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" stroke-width="2"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" stroke-width="2"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z" stroke-width="2"/></svg>
+              <span class="sidebar-text">Subscriptions</span>
+            </a>
+            <a href="javascript:void(0)" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-md transition-colors sidebar-subitem">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><polyline points="12 6 12 12 14 14" stroke-width="2"/></svg>
+              <span class="sidebar-text">Transaction History</span>
+            </a>
+            <a href="javascript:void(0)" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-md transition-colors sidebar-subitem">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2" stroke-width="2"/><line x1="8" y1="6" x2="16" y2="6" stroke-width="2"/><line x1="16" y1="14" x2="16" y2="18" stroke-width="2"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01" stroke-width="2"/></svg>
+              <span class="sidebar-text">Cost Estimator</span>
+            </a>
+            <!-- ACTIVE PROMO CODES ITEM -->
+            <a href="javascript:void(0)" class="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-cyan-300 bg-cyan-500/15 border border-cyan-500/30 rounded-md shadow-sm transition-all sidebar-subitem">
+              <div class="flex items-center gap-2.5">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" stroke-width="2"/><path d="M13 5v2M13 17v2M13 11v2" stroke-width="2"/></svg>
+                <span class="sidebar-text">Promo Codes</span>
+              </div>
+              <span class="sidebar-badge text-[9px] font-bold font-mono px-1.5 py-0.2 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">NEW</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Remaining Collapsible Sections -->
+        <a href="javascript:void(0)" class="flex items-center justify-between px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke-width="2"/></svg>
+            <span class="sidebar-text">Assessment Operations</span>
+          </div>
+          <svg class="w-3.5 h-3.5 sidebar-chevron text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" stroke-width="2"/></svg>
+        </a>
+
+        <a href="javascript:void(0)" class="flex items-center justify-between px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" stroke-width="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="2"/></svg>
+            <span class="sidebar-text">System & Security</span>
+          </div>
+          <svg class="w-3.5 h-3.5 sidebar-chevron text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" stroke-width="2"/></svg>
+        </a>
+
+        <a href="javascript:void(0)" class="flex items-center gap-3 px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg mx-2 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 20h9" stroke-width="2"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" stroke-width="2"/></svg>
+          <span class="sidebar-text">Audit & Monitoring</span>
+        </a>
+      </div>
+
+      <!-- Logout at bottom -->
+      <div class="p-3 border-t border-[#1e293b]">
+        <button class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors">
+          <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke-width="2"/><polyline points="16 17 21 12 16 7" stroke-width="2"/><line x1="21" y1="12" x2="9" y2="12" stroke-width="2"/></svg>
+          <span class="sidebar-text">Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN SCROLLABLE CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-6">
+
+      <!-- BREADCRUMB & PAGE HEADER -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1e293b] pb-5">
+        <div>
+          <!-- Breadcrumb -->
+          <nav class="flex items-center gap-2 text-xs text-slate-400 mb-1.5 font-medium">
+            <span>Admin Portal</span>
+            <span>/</span>
+            <span>Pricing and plans</span>
+            <span>/</span>
+            <span class="text-cyan-400 font-semibold">Promo Codes</span>
+          </nav>
+          <!-- Title & Subtitle -->
+          <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+            <span>Promo Code Management</span>
+            <span class="text-xs font-normal font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">v2.4 Module</span>
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1 font-body">
+            Create, allocate tests, configure validity windows, and enforce per-user redemption limits.
+          </p>
+        </div>
+
+        <!-- Primary CTA Button -->
+        <div class="flex items-center gap-3">
+          <button 
+            onclick="openCreateModal()" 
+            class="px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-2 active:scale-95 glow-cyan"
+          >
+            <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Create Promo Code</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4-COLUMN EXECUTIVE KPI SUMMARY CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- KPI 1: Active Promo Codes -->
+        <div class="bg-[#0d1428] border border-[#1e293b] hover:border-emerald-500/40 rounded-xl p-4 transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Active Promo Codes</span>
+            <span class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke-width="2"/><polyline points="22 4 12 14.01 9 11.01" stroke-width="2"/></svg>
+            </span>
+          </div>
+          <div class="mt-2.5 flex items-baseline gap-2">
+            <span id="kpi-active" class="text-2xl font-bold font-mono text-white tracking-tight">18</span>
+            <span class="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">Live</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1 font-body">Currently valid &amp; redeemable</p>
+        </div>
+
+        <!-- KPI 2: Total Redemptions -->
+        <div class="bg-[#0d1428] border border-[#1e293b] hover:border-cyan-500/40 rounded-xl p-4 transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Total Redemptions</span>
+            <span class="w-8 h-8 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke-width="2"/><polyline points="16 11 18 13 22 9" stroke-width="2"/></svg>
+            </span>
+          </div>
+          <div class="mt-2.5 flex items-baseline gap-2">
+            <span id="kpi-redemptions" class="text-2xl font-bold font-mono text-white tracking-tight">1,429</span>
+            <span class="text-[10px] font-semibold text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">+14% MoM</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1 font-body">Allocated tests claimed</p>
+        </div>
+
+        <!-- KPI 3: Scheduled Campaigns -->
+        <div class="bg-[#0d1428] border border-[#1e293b] hover:border-amber-500/40 rounded-xl p-4 transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Scheduled Campaigns</span>
+            <span class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke-width="2"/></svg>
+            </span>
+          </div>
+          <div class="mt-2.5 flex items-baseline gap-2">
+            <span id="kpi-scheduled" class="text-2xl font-bold font-mono text-white tracking-tight">5</span>
+            <span class="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">Upcoming</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1 font-body">Starts in future date/time</p>
+        </div>
+
+        <!-- KPI 4: Expired / Inactive -->
+        <div class="bg-[#0d1428] border border-[#1e293b] hover:border-slate-500/40 rounded-xl p-4 transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Expired / Inactive</span>
+            <span class="w-8 h-8 rounded-lg bg-slate-500/15 border border-slate-500/30 flex items-center justify-center text-slate-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" stroke-width="2"/></svg>
+            </span>
+          </div>
+          <div class="mt-2.5 flex items-baseline gap-2">
+            <span id="kpi-expired" class="text-2xl font-bold font-mono text-slate-300 tracking-tight">42</span>
+            <span class="text-[10px] font-semibold text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">Archived</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1 font-body">Past validity or paused</p>
+        </div>
+
+      </div>
+
+      <!-- FILTER, SEARCH & VIEW CONTROLS ROW (Matches Transaction History Screenshot) -->
+      <div class="bg-[#0d1428] border border-[#1e293b] rounded-xl p-3 sm:p-4 space-y-3">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          
+          <!-- Filters Left Group -->
+          <div class="flex flex-wrap items-center gap-2.5 flex-1">
+            
+            <!-- Search Input -->
+            <div class="relative min-w-[240px] flex-1 max-w-sm">
+              <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/>
+              </svg>
+              <input 
+                id="search-input"
+                type="text" 
+                placeholder="Search by promo code or test name..." 
+                oninput="handleSearch(this.value)"
+                class="w-full bg-[#070b19] border border-[#1e293b] hover:border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:border-cyan-500 transition-colors font-sans"
+              >
+            </div>
+
+            <!-- Status Dropdown Filter -->
+            <select 
+              id="status-filter"
+              onchange="handleStatusFilter(this.value)"
+              class="bg-[#070b19] border border-[#1e293b] hover:border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-cyan-500 transition-colors font-sans cursor-pointer"
+            >
+              <option value="ALL">All Status</option>
+              <option value="ACTIVE">Active (18)</option>
+              <option value="SCHEDULED">Scheduled (5)</option>
+              <option value="EXPIRED">Expired (35)</option>
+              <option value="INACTIVE">Inactive (7)</option>
+            </select>
+
+            <!-- Allocated Test Dropdown Filter -->
+            <select 
+              id="test-filter"
+              onchange="handleTestFilter(this.value)"
+              class="bg-[#070b19] border border-[#1e293b] hover:border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-cyan-500 transition-colors font-sans cursor-pointer"
+            >
+              <option value="ALL">All Tests</option>
+              <option value="General English">General English (4 Skills)</option>
+              <option value="Academic English">Academic CEFR Proficiency</option>
+              <option value="Acoustic Speaking">Speaking Diagnostic</option>
+              <option value="Executive Business">Executive Business English</option>
+            </select>
+
+            <!-- Clear Filters Button -->
+            <button 
+              onclick="resetFilters()"
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-cyan-400 hover:bg-slate-800/40 transition-colors"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" stroke-width="2"/><path d="M3 3v5h5" stroke-width="2"/></svg>
+              <span>Clear Filters</span>
+            </button>
+          </div>
+
+          <!-- Controls Right Group: Density & Export -->
+          <div class="flex items-center gap-2.5 self-end lg:self-center">
+            
+            <!-- Density Mode Switcher (Matching Transaction History) -->
+            <div class="flex items-center bg-[#070b19] p-1 rounded-lg border border-[#1e293b] text-xs">
+              <span class="text-[10px] font-semibold text-slate-400 px-2 uppercase font-sans">Density:</span>
+              <button onclick="setDensity('compact')" id="btn-density-compact" class="px-2 py-0.5 rounded text-[11px] font-medium text-slate-400 hover:text-white transition-colors">Compact</button>
+              <button onclick="setDensity('cozy')" id="btn-density-cozy" class="px-2 py-0.5 rounded text-[11px] font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition-colors">Cozy</button>
+              <button onclick="setDensity('comfortable')" id="btn-density-comfortable" class="px-2 py-0.5 rounded text-[11px] font-medium text-slate-400 hover:text-white transition-colors">Comfortable</button>
+            </div>
+
+            <!-- Export CSV Button -->
+            <button 
+              onclick="exportTableToCSV()"
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#070b19] border border-[#1e293b] hover:border-slate-700 text-slate-300 hover:text-white text-xs font-medium transition-colors"
+              title="Export Promo Codes Data to CSV"
+            >
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke-width="2"/><polyline points="7 10 12 15 17 10" stroke-width="2"/><line x1="12" y1="15" x2="12" y2="3" stroke-width="2"/></svg>
+              <span class="hidden sm:inline">Export CSV</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MAIN PROMO CODES DATA TABLE -->
+      <div class="bg-[#0d1428] border border-[#1e293b] rounded-xl overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table id="promo-table" class="w-full text-left border-collapse density-cozy">
+            <thead>
+              <tr class="bg-[#172033] border-b border-[#1e293b] text-[11px] font-semibold text-slate-300 uppercase tracking-wider font-sans select-none">
+                <th class="py-3 px-4">Promo Code <span class="text-slate-500 font-mono">=</span></th>
+                <th class="py-3 px-4">Allocated Tests <span class="text-slate-500 font-mono">=</span></th>
+                <th class="py-3 px-4">Validity Window <span class="text-slate-500 font-mono">=</span></th>
+                <th class="py-3 px-4 text-center">Limit / User <span class="text-slate-500 font-mono">=</span></th>
+                <th class="py-3 px-4">Redemptions Claimed <span class="text-slate-500 font-mono">=</span></th>
+                <th class="py-3 px-4 text-center">Status <span class="text-slate-500 font-mono">=</span></th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="promo-table-body" class="divide-y divide-[#1e293b] text-slate-200">
+              <!-- Dynamically Populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TABLE PAGINATION FOOTER (Exact Match to Transaction History) -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 bg-[#0d1428] border-t border-[#1e293b] text-xs text-slate-400">
+          <div>
+            Showing <span id="pag-start" class="font-bold text-slate-200">1</span> to <span id="pag-end" class="font-bold text-slate-200">10</span> of <span id="pag-total" class="font-bold text-slate-200">65</span> entries
+          </div>
+
+          <div class="flex items-center gap-4">
+            <!-- Rows Per Page -->
+            <div class="flex items-center gap-1.5">
+              <span>Rows per page:</span>
+              <select id="rows-per-page" onchange="changeRowsPerPage(this.value)" class="bg-[#070b19] border border-[#1e293b] rounded px-2 py-1 text-slate-300 focus:outline-none">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+
+            <!-- Page Buttons -->
+            <div class="flex items-center gap-1 font-mono">
+              <button onclick="changePage('first')" class="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none" title="First Page">&lt;&lt;</button>
+              <button onclick="changePage('prev')" class="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none" title="Previous Page">&lt;</button>
+              
+              <button class="w-6 h-6 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-bold">1</button>
+              <button class="w-6 h-6 rounded text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-medium">2</button>
+              <button class="w-6 h-6 rounded text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-medium">3</button>
+              <span class="text-slate-600 px-1">...</span>
+              <button class="w-6 h-6 rounded text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-medium">7</button>
+
+              <button onclick="changePage('next')" class="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none" title="Next Page">&gt;</button>
+              <button onclick="changePage('last')" class="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none" title="Last Page">&gt;&gt;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER NOTE (Matches dev.azetest.ai) -->
+      <footer class="pt-4 pb-12 text-center text-xs text-slate-500 font-sans border-t border-[#1e293b]/60">
+        Powered by azetest.ai © 2026
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: CREATE / EDIT PROMO CODE DIALOG (NO QR CODES PER SPECIFICATION) -->
+  <!-- ========================================================================= -->
+  <div id="create-modal-overlay" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0d1428] border border-[#1e293b] rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-2xl relative">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between p-5 sm:p-6 border-b border-[#1e293b]">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="p-1.5 rounded-lg bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" stroke-width="2"/><path d="M13 5v2M13 17v2M13 11v2" stroke-width="2"/></svg>
+            </span>
+            <h2 id="modal-title" class="text-lg font-bold text-white tracking-tight">Create New Promo Code</h2>
+          </div>
+          <p class="text-xs text-slate-400 mt-1 font-body">Configure promotional test access, validity timeframes, and redemption limits.</p>
+        </div>
+        <button onclick="closeCreateModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke-width="2"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body Form -->
+      <form id="promo-code-form" onsubmit="handleSavePromoCode(event)" class="p-5 sm:p-6 space-y-5">
+        <input type="hidden" id="form-edit-id" value="">
+
+        <!-- 1. Promo Code String & Generator -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-300">
+              Promo Code String <span class="text-rose-400">*</span>
+            </label>
+            <button 
+              type="button" 
+              onclick="generateRandomCode()" 
+              class="text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition-colors"
+            >
+              <span>✨ Generate Random Code</span>
+            </button>
+          </div>
+          <div class="relative">
+            <input 
+              id="form-code" 
+              type="text" 
+              placeholder="e.g. AZE-FALL2026" 
+              required
+              class="w-full bg-[#070b19] border border-[#1e293b] hover:border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono font-bold text-cyan-300 tracking-wider placeholder-slate-500 uppercase focus:outline-none focus:border-cyan-500 transition-colors"
+            >
+          </div>
+          <p class="text-[11px] text-slate-400 font-body">Alphanumeric identifier students will enter at checkout to unlock tests.</p>
+        </div>
+
+        <!-- 2. Test Selection (Multi-Select with Chips) -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-semibold text-slate-300">
+            Allocated Tests (Multi-Select) <span class="text-rose-400">*</span>
+          </label>
+          
+          <!-- Selected Test Chips Container -->
+          <div id="selected-tests-container" class="flex flex-wrap gap-1.5 min-h-[32px] p-2 bg-[#070b19] border border-[#1e293b] rounded-lg">
+            <!-- Test badges injected by JS -->
+          </div>
+
+          <!-- Test Checkbox Options -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 pt-2 border-t border-slate-800/80">
+            <label class="flex items-start gap-2.5 p-2 rounded-lg bg-slate-900/40 hover:bg-slate-900 border border-slate-800 cursor-pointer transition-colors">
+              <input type="checkbox" name="allocated_tests" value="General English Placement (4 Skills)" onchange="updateSelectedTestChips()" checked class="mt-0.5 rounded border-slate-700 text-cyan-500 focus:ring-0">
+              <div class="text-xs">
+                <div class="font-semibold text-slate-200">General English Placement (4 Skills)</div>
+                <div class="text-[10px] text-slate-400">Reading, Listening, Writing, Speaking</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-2.5 p-2 rounded-lg bg-slate-900/40 hover:bg-slate-900 border border-slate-800 cursor-pointer transition-colors">
+              <input type="checkbox" name="allocated_tests" value="Academic English Proficiency Test" onchange="updateSelectedTestChips()" class="mt-0.5 rounded border-slate-700 text-cyan-500 focus:ring-0">
+              <div class="text-xs">
+                <div class="font-semibold text-slate-200">Academic English Proficiency Test</div>
+                <div class="text-[10px] text-slate-400">Full university CEFR standard</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-2.5 p-2 rounded-lg bg-slate-900/40 hover:bg-slate-900 border border-slate-800 cursor-pointer transition-colors">
+              <input type="checkbox" name="allocated_tests" value="Acoustic Speaking & Pronunciation Diagnostic" onchange="updateSelectedTestChips()" class="mt-0.5 rounded border-slate-700 text-cyan-500 focus:ring-0">
+              <div class="text-xs">
+                <div class="font-semibold text-slate-200">Acoustic Speaking Diagnostic</div>
+                <div class="text-[10px] text-slate-400">Phoneme accuracy &amp; speech rate</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-2.5 p-2 rounded-lg bg-slate-900/40 hover:bg-slate-900 border border-slate-800 cursor-pointer transition-colors">
+              <input type="checkbox" name="allocated_tests" value="Executive Business English Test" onchange="updateSelectedTestChips()" class="mt-0.5 rounded border-slate-700 text-cyan-500 focus:ring-0">
+              <div class="text-xs">
+                <div class="font-semibold text-slate-200">Executive Business English</div>
+                <div class="text-[10px] text-slate-400">Corporate communication benchmark</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 3. Validity Period (Two Date-Time Pickers) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-300">
+              Valid From <span class="text-rose-400">*</span>
+            </label>
+            <input 
+              id="form-valid-from" 
+              type="datetime-local" 
+              required
+              oninput="recalculateStatusPreview()"
+              class="w-full bg-[#070b19] border border-[#1e293b] hover:border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500 transition-colors"
+            >
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-300">
+              Valid Until (Expiry) <span class="text-rose-400">*</span>
+            </label>
+            <input 
+              id="form-valid-until" 
+              type="datetime-local" 
+              required
+              oninput="recalculateStatusPreview()"
+              class="w-full bg-[#070b19] border border-[#1e293b] hover:border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500 transition-colors"
+            >
+          </div>
+        </div>
+
+        <!-- 4. Redemption Limit per User & Status Preview -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+          
+          <!-- Stepper: Redemption Limit -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-300">
+              Redemption Limit per User <span class="text-rose-400">*</span>
+            </label>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="adjustLimit(-1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-sm">-</button>
+              <input 
+                id="form-limit" 
+                type="number" 
+                min="1" 
+                max="50" 
+                value="1" 
+                required 
+                class="w-20 bg-[#070b19] border border-[#1e293b] text-center rounded-lg py-1.5 text-xs font-mono font-bold text-white focus:outline-none focus:border-cyan-500"
+              >
+              <button type="button" onclick="adjustLimit(1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-sm">+</button>
+              <span class="text-xs text-slate-400">test(s) per student</span>
+            </div>
+            <p class="text-[10px] text-slate-400">Maximum times a single student account can redeem.</p>
+          </div>
+
+          <!-- Auto-Calculated Status Preview -->
+          <div class="space-y-1.5 bg-[#070b19] p-3 rounded-lg border border-[#1e293b]">
+            <span class="text-[11px] font-semibold text-slate-400">Campaign Status (Calculated):</span>
+            <div class="mt-1 flex items-center gap-2">
+              <span id="preview-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold status-badge-active">ACTIVE</span>
+              <span id="preview-status-desc" class="text-[11px] text-slate-300 font-mono">Starts immediately</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explicit Business Notice -->
+        <div class="bg-cyan-950/20 border border-cyan-500/20 rounded-lg p-3 text-[11px] text-cyan-300 flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="8" x2="12.01" y2="8" stroke-width="2"/></svg>
+          <span>Promo codes directly issue full diagnostic test vouchers to authenticated candidates with strict zero-abuse tracking.</span>
+        </div>
+
+        <!-- Modal Actions Footer -->
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-[#1e293b]">
+          <button 
+            type="button" 
+            onclick="closeCreateModal()" 
+            class="px-4 py-2 rounded-lg border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-xs shadow-md shadow-cyan-500/20 transition-all flex items-center gap-2"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke-width="2"/><polyline points="17 21 17 13 7 13 7 21" stroke-width="2"/><polyline points="7 3 7 8 15 8" stroke-width="2"/></svg>
+            <span id="btn-submit-text">Save &amp; Activate Promo Code</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE-OVER DRAWER: PROMO CODE REDEMPTION LOGS & AUDIT DETAILS -->
+  <!-- ========================================================================= -->
+  <div id="details-drawer-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-end hidden">
+    <div id="details-drawer" class="w-full max-w-xl bg-[#0d1428] border-l border-[#1e293b] h-full overflow-y-auto flex flex-col shadow-2xl transform translate-x-full transition-transform duration-300">
+      
+      <!-- Drawer Header -->
+      <div class="p-5 border-b border-[#1e293b] flex items-center justify-between sticky top-0 bg-[#0d1428] z-10">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span id="drawer-code" class="text-base font-bold font-mono text-cyan-300 bg-slate-900 px-2.5 py-1 rounded border border-cyan-500/40">AZE-FALL2026</span>
+            <span id="drawer-status-badge" class="px-2 py-0.5 rounded-full text-xs font-semibold status-badge-active">ACTIVE</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Audit Trail &amp; Student Redemption Logs</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="copyDrawerCode()" class="p-1.5 rounded-lg border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white text-xs" title="Copy Promo Code">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" stroke-width="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" stroke-width="2"/></svg>
+          </button>
+          <button onclick="closeDetailsDrawer()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke-width="2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Drawer Content -->
+      <div class="p-5 space-y-6 flex-1">
+        
+        <!-- Quick Meta Cards -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-[#070b19] p-3 rounded-lg border border-[#1e293b]">
+            <span class="text-[10px] font-semibold text-slate-400 uppercase">Total Redeemed</span>
+            <div id="drawer-total-redeemed" class="text-lg font-bold font-mono text-white mt-1">342 claims</div>
+          </div>
+          <div class="bg-[#070b19] p-3 rounded-lg border border-[#1e293b]">
+            <span class="text-[10px] font-semibold text-slate-400 uppercase">Limit per Student</span>
+            <div id="drawer-limit" class="text-lg font-bold font-mono text-white mt-1">1 test</div>
+          </div>
+          <div class="bg-[#070b19] p-3 rounded-lg border border-[#1e293b]">
+            <span class="text-[10px] font-semibold text-slate-400 uppercase">Valid From</span>
+            <div id="drawer-valid-from" class="text-xs font-mono text-slate-300 mt-1">2026-10-10 00:00:00</div>
+          </div>
+          <div class="bg-[#070b19] p-3 rounded-lg border border-[#1e293b]">
+            <span class="text-[10px] font-semibold text-slate-400 uppercase">Valid Until</span>
+            <div id="drawer-valid-until" class="text-xs font-mono text-slate-300 mt-1">2026-10-31 23:59:59</div>
+          </div>
+        </div>
+
+        <!-- Allocated Tests Strip -->
+        <div class="space-y-1.5">
+          <span class="text-xs font-semibold text-slate-300">Allocated Assessments</span>
+          <div id="drawer-tests-list" class="flex flex-wrap gap-1.5 pt-1">
+            <!-- Badges -->
+          </div>
+        </div>
+
+        <!-- Redemption Log Records -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300">Recent Candidate Redemptions</h3>
+            <button onclick="exportDrawerLogsCSV()" class="text-[11px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-semibold">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke-width="2"/><polyline points="7 10 12 15 17 10" stroke-width="2"/><line x1="12" y1="15" x2="12" y2="3" stroke-width="2"/></svg>
+              <span>Export CSV</span>
+            </button>
+          </div>
+
+          <div class="bg-[#070b19] border border-[#1e293b] rounded-lg overflow-hidden">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#172033] border-b border-[#1e293b] text-[10px] text-slate-400 uppercase font-semibold">
+                <tr>
+                  <th class="p-2.5">Candidate</th>
+                  <th class="p-2.5">Test</th>
+                  <th class="p-2.5">Claimed At</th>
+                  <th class="p-2.5">Status</th>
+                </tr>
+              </thead>
+              <tbody id="drawer-logs-body" class="divide-y divide-slate-800/80 font-body">
+                <!-- Log entries injected by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="p-4 border-t border-[#1e293b] bg-[#070b19] flex items-center justify-between">
+        <span class="text-[11px] text-slate-400">SOC2 Type II Audit Log ID: <span class="font-mono text-cyan-400">PRM-9831-LOG</span></span>
+        <button onclick="closeDetailsDrawer()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-white rounded-lg">Done</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- FLOATING / COLLAPSIBLE STUDENT REDEMPTION VALIDATION SIMULATOR PANEL -->
+  <!-- ========================================================================= -->
+  <div id="simulator-widget" class="fixed bottom-4 right-4 z-40 max-w-md w-full bg-[#0d1428] border border-cyan-500/40 rounded-xl shadow-2xl overflow-hidden transition-all duration-300">
+    
+    <!-- Simulator Bar Header -->
+    <div onclick="toggleSimulator()" class="p-3 bg-gradient-to-r from-slate-900 to-[#101b33] border-b border-[#1e293b] flex items-center justify-between cursor-pointer select-none">
+      <div class="flex items-center gap-2">
+        <span class="p-1 rounded bg-cyan-500/20 text-cyan-300 text-xs">🧪</span>
+        <span class="text-xs font-bold text-white tracking-wide">Student Flow Validation Simulator</span>
+        <span class="text-[10px] font-mono bg-cyan-400/20 text-cyan-300 px-1.5 py-0.2 rounded border border-cyan-400/30">QA Tool</span>
+      </div>
+      <button id="sim-toggle-btn" class="text-slate-400 hover:text-white p-1">
+        <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" stroke-width="2"/></svg>
+      </button>
+    </div>
+
+    <!-- Simulator Interactive Body -->
+    <div id="sim-body" class="p-4 space-y-3 bg-[#0d1428]">
+      <p class="text-[11px] text-slate-400 font-body">
+        Verify checkout validation logic without switching client portals or modifying database records.
+      </p>
+
+      <!-- Input: Promo Code -->
+      <div class="space-y-1">
+        <label class="text-[11px] font-semibold text-slate-300">Enter Promo Code to Test:</label>
+        <div class="flex gap-2">
+          <input 
+            id="sim-code-input" 
+            type="text" 
+            value="AZE-FALL2026" 
+            placeholder="e.g. AZE-FALL2026"
+            class="flex-1 bg-[#070b19] border border-[#1e293b] rounded px-2.5 py-1.5 text-xs font-mono font-bold text-cyan-300 uppercase focus:outline-none focus:border-cyan-500"
+          >
+          <button 
+            onclick="quickPickActiveCode()" 
+            class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] text-slate-300 rounded font-medium"
+            title="Pick first active code"
+          >
+            Pick Active
+          </button>
+        </div>
+      </div>
+
+      <!-- Select Mock Student -->
+      <div class="space-y-1">
+        <label class="text-[11px] font-semibold text-slate-300">Select Mock Student Candidate:</label>
+        <select id="sim-student-select" class="w-full bg-[#070b19] border border-[#1e293b] rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 font-sans">
+          <option value="stu_a">Alexander Wright (a.wright@corp.com) — [0 prior claims]</option>
+          <option value="stu_b">Sarah Jenkins (s.jenkins@talent.com) — [Limit reached: 1/1 claimed]</option>
+          <option value="stu_c">David Chen (d.chen@edu.org) — [1 prior claim: 1/2 allowed]</option>
+        </select>
+      </div>
+
+      <!-- Action Button -->
+      <button 
+        onclick="runRedemptionSimulation()" 
+        class="w-full py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-xs rounded-lg shadow transition-all flex items-center justify-center gap-1.5"
+      >
+        <span>Test Redeem Code</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" stroke-width="2"/></svg>
+      </button>
+
+      <!-- Feedback Banner Area -->
+      <div id="sim-result-box" class="hidden p-3 rounded-lg text-xs font-mono space-y-1 border">
+        <!-- Result text injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. Initial State & Realistic Mock Data
+    // -------------------------------------------------------------------------
+    const INITIAL_PROMO_CODES = [
+      {
+        id: "PRM-1001",
+        code: "AZE-FALL2026",
+        tests: ["General English Placement (4 Skills)"],
+        validFrom: "2026-10-10 00:00:00",
+        validUntil: "2026-10-31 23:59:59",
+        limitPerUser: 1,
+        redemptions: 342,
+        maxTarget: 500,
+        status: "ACTIVE"
+      },
+      {
+        id: "PRM-1002",
+        code: "AZE-GLOBAL-UNI",
+        tests: ["Academic English Proficiency Test", "General English Placement (4 Skills)"],
+        validFrom: "2026-10-01 08:00:00",
+        validUntil: "2026-11-15 23:59:59",
+        limitPerUser: 2,
+        redemptions: 518,
+        maxTarget: 1000,
+        status: "ACTIVE"
+      },
+      {
+        id: "PRM-1003",
+        code: "AZE-SPEAK-EVAL",
+        tests: ["Acoustic Speaking & Pronunciation Diagnostic"],
+        validFrom: "2026-10-12 00:00:00",
+        validUntil: "2026-10-25 18:00:00",
+        limitPerUser: 1,
+        redemptions: 184,
+        maxTarget: 300,
+        status: "ACTIVE"
+      },
+      {
+        id: "PRM-1004",
+        code: "AZE-EXEC-Q4",
+        tests: ["Executive Business English Test"],
+        validFrom: "2026-10-15 09:00:00",
+        validUntil: "2026-11-30 23:59:59",
+        limitPerUser: 1,
+        redemptions: 0,
+        maxTarget: 250,
+        status: "SCHEDULED"
+      },
+      {
+        id: "PRM-1005",
+        code: "AZE-WINTER-INTAKE",
+        tests: ["General English Placement (4 Skills)", "Academic English Proficiency Test"],
+        validFrom: "2026-11-01 00:00:00",
+        validUntil: "2026-12-15 23:59:59",
+        limitPerUser: 1,
+        redemptions: 0,
+        maxTarget: 400,
+        status: "SCHEDULED"
+      },
+      {
+        id: "PRM-1006",
+        code: "AZE-SUMMER-26",
+        tests: ["General English Placement (4 Skills)"],
+        validFrom: "2026-07-01 00:00:00",
+        validUntil: "2026-09-30 23:59:59",
+        limitPerUser: 1,
+        redemptions: 285,
+        maxTarget: 300,
+        status: "EXPIRED"
+      },
+      {
+        id: "PRM-1007",
+        code: "AZE-BACK2SCHOOL",
+        tests: ["Academic English Proficiency Test"],
+        validFrom: "2026-08-15 00:00:00",
+        validUntil: "2026-10-05 23:59:59",
+        limitPerUser: 1,
+        redemptions: 100,
+        maxTarget: 100,
+        status: "EXPIRED"
+      },
+      {
+        id: "PRM-1008",
+        code: "AZE-PILOT-CORP",
+        tests: ["Executive Business English Test"],
+        validFrom: "2026-09-01 00:00:00",
+        validUntil: "2026-10-31 23:59:59",
+        limitPerUser: 2,
+        redemptions: 0,
+        maxTarget: 150,
+        status: "INACTIVE"
+      },
+      {
+        id: "PRM-1009",
+        code: "AZE-SCHOLAR-26",
+        tests: ["General English Placement (4 Skills)"],
+        validFrom: "2026-10-08 00:00:00",
+        validUntil: "2026-10-22 23:59:59",
+        limitPerUser: 1,
+        redemptions: 64,
+        maxTarget: 200,
+        status: "ACTIVE"
+      },
+      {
+        id: "PRM-1010",
+        code: "AZE-TECH-TRIAL",
+        tests: ["Acoustic Speaking & Pronunciation Diagnostic"],
+        validFrom: "2026-09-15 00:00:00",
+        validUntil: "2026-10-01 00:00:00",
+        limitPerUser: 1,
+        redemptions: 120,
+        maxTarget: 120,
+        status: "EXPIRED"
+      }
+    ];
+
+    // Mock Candidate Redemption Log Data for Drawer
+    const MOCK_REDEMPTIONS = {
+      "PRM-1001": [
+        { name: "Alexander Wright", email: "a.wright@corp.com", test: "General English Placement", time: "2026-10-12 14:22:10", status: "Completed" },
+        { name: "Sarah Jenkins", email: "s.jenkins@talent-global.com", test: "General English Placement", time: "2026-10-12 11:05:44", status: "Completed" },
+        { name: "David Chen", email: "d.chen@edu.org", test: "General English Placement", time: "2026-10-11 19:30:12", status: "In Progress" },
+        { name: "Elena Rostova", email: "elena.r@academics.com", test: "General English Placement", time: "2026-10-11 09:14:02", status: "Completed" },
+        { name: "Marcus Vance", email: "m.vance@techlead.io", test: "General English Placement", time: "2026-10-10 16:45:21", status: "Redeemed" }
+      ],
+      "PRM-1002": [
+        { name: "Priya Sharma", email: "priya.s@delhi.edu", test: "Academic English Proficiency", time: "2026-10-12 15:10:00", status: "Completed" },
+        { name: "Liam O'Connor", email: "liam.oc@dublin.ie", test: "General English Placement", time: "2026-10-12 10:20:15", status: "In Progress" },
+        { name: "Yuki Tanaka", email: "yuki.t@tokyo.ac.jp", test: "Academic English Proficiency", time: "2026-10-11 08:44:19", status: "Completed" }
+      ],
+      "PRM-1003": [
+        { name: "Carlos Mendez", email: "c.mendez@madrid.es", test: "Acoustic Speaking Diagnostic", time: "2026-10-13 09:12:30", status: "Completed" },
+        { name: "Fatima Al-Sayed", email: "fatima.a@dubai.ae", test: "Acoustic Speaking Diagnostic", time: "2026-10-12 21:03:18", status: "Completed" }
+      ]
+    };
+
+    let promoCodes = [...INITIAL_PROMO_CODES];
+    let currentSearch = "";
+    let currentStatusFilter = "ALL";
+    let currentTestFilter = "ALL";
+    let currentDensity = "cozy";
+    let rowsPerPage = 10;
+    let activeDrawerPromoId = null;
+
+    // -------------------------------------------------------------------------
+    // 2. Rendering Table & Filtering
+    // -------------------------------------------------------------------------
+    function renderTable() {
+      const tbody = document.getElementById("promo-table-body");
+      if (!tbody) return;
+
+      // Filter array
+      const filtered = promoCodes.filter(item => {
+        // Status filter
+        if (currentStatusFilter !== "ALL" && item.status !== currentStatusFilter) {
+          return false;
+        }
+        // Test filter
+        if (currentTestFilter !== "ALL") {
+          const matchTest = item.tests.some(t => t.toLowerCase().includes(currentTestFilter.toLowerCase()));
+          if (!matchTest) return false;
+        }
+        // Search query
+        if (currentSearch.trim() !== "") {
+          const q = currentSearch.toLowerCase();
+          const matchCode = item.code.toLowerCase().includes(q);
+          const matchTest = item.tests.some(t => t.toLowerCase().includes(q));
+          if (!matchCode && !matchTest) return false;
+        }
+        return true;
+      });
+
+      // Update Pagination Meta
+      const total = filtered.length;
+      document.getElementById("pag-total").textContent = total;
+      document.getElementById("pag-start").textContent = total > 0 ? "1" : "0";
+      document.getElementById("pag-end").textContent = Math.min(rowsPerPage, total);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-12 text-center text-slate-400">
+              <div class="flex flex-col items-center justify-center gap-2">
+                <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
+                <span class="text-sm font-medium">No promo codes matched your filter criteria</span>
+                <button onclick="resetFilters()" class="text-xs text-cyan-400 hover:underline mt-1 font-semibold">Reset all filters</button>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.slice(0, rowsPerPage).map(item => {
+        // Calculate status badge classes
+        let statusBadgeClass = "status-badge-active";
+        if (item.status === "SCHEDULED") statusBadgeClass = "status-badge-scheduled";
+        else if (item.status === "EXPIRED") statusBadgeClass = "status-badge-expired";
+        else if (item.status === "INACTIVE") statusBadgeClass = "status-badge-inactive";
+
+        // Calculate countdown string
+        const countdownStr = getCountdownLabel(item);
+
+        // Progress percentage for redemptions
+        const pct = item.maxTarget > 0 ? Math.min(100, Math.round((item.redemptions / item.maxTarget) * 100)) : 0;
+
+        // Tests Badges Preview
+        const firstTest = item.tests[0] || "Custom Assessment";
+        const extraTestsCount = item.tests.length - 1;
+
+        return `
+          <tr class="hover:bg-[#131c2f]/70 transition-colors group">
+            
+            <!-- 1. Promo Code -->
+            <td class="px-4 whitespace-nowrap">
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-cyan-300 bg-slate-900/90 px-2.5 py-1 rounded border border-slate-700/60 shadow-sm text-xs tracking-wider whitespace-nowrap">
+                  ${item.code}
+                </span>
+                <button 
+                  onclick="copyCodeToClipboard('${item.code}', this)" 
+                  class="text-slate-500 hover:text-cyan-300 p-1 rounded hover:bg-slate-800 transition-colors"
+                  title="Copy code to clipboard"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" stroke-width="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" stroke-width="2"/></svg>
+                </button>
+              </div>
+            </td>
+
+            <!-- 2. Allocated Tests -->
+            <td class="px-4">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-xs font-medium text-slate-200 bg-slate-800/80 px-2.5 py-0.5 rounded border border-slate-700/60">
+                  ${firstTest}
+                </span>
+                ${extraTestsCount > 0 ? `
+                  <span class="text-[10px] font-bold font-mono text-cyan-300 bg-cyan-950/40 px-1.5 py-0.5 rounded border border-cyan-800/60" title="${item.tests.slice(1).join(', ')}">
+                    +${extraTestsCount} more
+                  </span>
+                ` : ''}
+              </div>
+            </td>
+
+            <!-- 3. Validity Window -->
+            <td class="px-4 whitespace-nowrap">
+              <div class="space-y-0.5">
+                <div class="font-mono text-xs text-slate-300 flex items-center gap-1.5 whitespace-nowrap">
+                  <span class="text-[10px] text-slate-500 font-sans">From:</span> ${item.validFrom.split(' ')[0]}
+                </div>
+                <div class="font-mono text-xs text-slate-400 flex items-center gap-1.5 whitespace-nowrap">
+                  <span class="text-[10px] text-slate-500 font-sans">Until:</span> ${item.validUntil.split(' ')[0]}
+                </div>
+                <div class="text-[10px] font-semibold text-cyan-400 font-sans pt-0.5 whitespace-nowrap">
+                  ${countdownStr}
+                </div>
+              </div>
+            </td>
+
+            <!-- 4. Redemption Limit / User -->
+            <td class="px-4 text-center whitespace-nowrap">
+              <span class="font-mono text-xs font-semibold text-slate-200 bg-slate-900 px-2 py-0.5 rounded border border-slate-800 whitespace-nowrap">
+                ${item.limitPerUser} / student
+              </span>
+            </td>
+
+            <!-- 5. Redemptions Claimed -->
+            <td class="px-4">
+              <div class="w-36 space-y-1">
+                <div class="flex justify-between text-xs font-mono">
+                  <span class="font-bold text-slate-200">${item.redemptions}</span>
+                  <span class="text-slate-500 text-[10px]">of ${item.maxTarget}</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                  <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-1.5 rounded-full" style="width: ${pct}%"></div>
+                </div>
+              </div>
+            </td>
+
+            <!-- 6. Status Badge -->
+            <td class="px-4 text-center">
+              <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold font-sans tracking-wide uppercase ${statusBadgeClass}">
+                ${item.status}
+              </span>
+            </td>
+
+            <!-- 7. Actions Column -->
+            <td class="px-4 text-right">
+              <div class="flex items-center justify-end gap-1.5">
+                <!-- Eye Icon: Open Drawer -->
+                <button 
+                  onclick="openDetailsDrawer('${item.id}')" 
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-cyan-300 hover:bg-slate-800 transition-colors"
+                  title="View Redemption Logs & Audit Trail"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke-width="2"/></svg>
+                </button>
+
+                <!-- Edit Pencil Icon -->
+                <button 
+                  onclick="editPromoCode('${item.id}')" 
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-amber-300 hover:bg-slate-800 transition-colors"
+                  title="Edit Promo Code Configuration"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" stroke-width="2"/><path d="m15 5 4 4" stroke-width="2"/></svg>
+                </button>
+
+                <!-- Duplicate Icon -->
+                <button 
+                  onclick="duplicatePromoCode('${item.id}')" 
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-purple-300 hover:bg-slate-800 transition-colors"
+                  title="Clone / Duplicate Promo Code"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="13" height="13" x="9" y="9" rx="2" ry="2" stroke-width="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke-width="2"/></svg>
+                </button>
+
+                <!-- Toggle Active/Pause -->
+                <button 
+                  onclick="togglePromoStatus('${item.id}')" 
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-300 hover:bg-slate-800 transition-colors"
+                  title="${item.status === 'ACTIVE' ? 'Pause / Deactivate' : 'Activate'}"
+                >
+                  ${item.status === 'ACTIVE' ? `
+                    <svg class="w-4 h-4 text-slate-400 hover:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="4" height="16" x="6" y="4" stroke-width="2"/><rect width="4" height="16" x="14" y="4" stroke-width="2"/></svg>
+                  ` : `
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" stroke-width="2"/></svg>
+                  `}
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Helper: Countdown string
+    function getCountdownLabel(item) {
+      if (item.status === "EXPIRED") return "Expired";
+      if (item.status === "INACTIVE") return "Campaign Paused";
+      const now = new Date("2026-10-13T12:00:00");
+      const start = new Date(item.validFrom.replace(' ', 'T'));
+      const end = new Date(item.validUntil.replace(' ', 'T'));
+
+      if (now < start) {
+        const diffHours = Math.round((start - now) / (1000 * 60 * 60));
+        if (diffHours < 24) return `Starts in ${diffHours} hours`;
+        return `Starts in ${Math.round(diffHours / 24)} days`;
+      }
+      if (now >= start && now <= end) {
+        const diffDays = Math.max(1, Math.round((end - now) / (1000 * 60 * 60 * 24)));
+        return `Expires in ${diffDays} day${diffDays > 1 ? 's' : ''}`;
+      }
+      return "Expired";
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. Filtering & Search Handlers
+    // -------------------------------------------------------------------------
+    function handleSearch(val) {
+      currentSearch = val;
+      renderTable();
+    }
+
+    function handleStatusFilter(val) {
+      currentStatusFilter = val;
+      renderTable();
+    }
+
+    function handleTestFilter(val) {
+      currentTestFilter = val;
+      renderTable();
+    }
+
+    function resetFilters() {
+      currentSearch = "";
+      currentStatusFilter = "ALL";
+      currentTestFilter = "ALL";
+      document.getElementById("search-input").value = "";
+      document.getElementById("status-filter").value = "ALL";
+      document.getElementById("test-filter").value = "ALL";
+      renderTable();
+      showToast("Filters reset to default.");
+    }
+
+    function setDensity(mode) {
+      currentDensity = mode;
+      const table = document.getElementById("promo-table");
+      table.classList.remove("density-compact", "density-cozy", "density-comfortable");
+      table.classList.add(`density-${mode}`);
+
+      // Update button visual styles
+      ["compact", "cozy", "comfortable"].forEach(m => {
+        const btn = document.getElementById(`btn-density-${m}`);
+        if (m === mode) {
+          btn.className = "px-2 py-0.5 rounded text-[11px] font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition-colors";
+        } else {
+          btn.className = "px-2 py-0.5 rounded text-[11px] font-medium text-slate-400 hover:text-white transition-colors";
+        }
+      });
+    }
+
+    function changeRowsPerPage(val) {
+      rowsPerPage = parseInt(val) || 10;
+      renderTable();
+    }
+
+    function changePage(dir) {
+      showToast(`Navigated pagination (${dir})`);
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Modal Dialog Operations: Create & Edit
+    // -------------------------------------------------------------------------
+    function openCreateModal(editId = null) {
+      const modal = document.getElementById("create-modal-overlay");
+      const titleEl = document.getElementById("modal-title");
+      const submitTextEl = document.getElementById("btn-submit-text");
+      const editIdInput = document.getElementById("form-edit-id");
+
+      if (editId) {
+        const item = promoCodes.find(p => p.id === editId);
+        if (!item) return;
+        editIdInput.value = item.id;
+        titleEl.textContent = `Edit Promo Code: ${item.code}`;
+        submitTextEl.textContent = "Save Changes";
+        document.getElementById("form-code").value = item.code;
+        document.getElementById("form-valid-from").value = item.validFrom.replace(" ", "T").slice(0, 16);
+        document.getElementById("form-valid-until").value = item.validUntil.replace(" ", "T").slice(0, 16);
+        document.getElementById("form-limit").value = item.limitPerUser;
+
+        // Checkboxes
+        document.querySelectorAll("input[name='allocated_tests']").forEach(cb => {
+          cb.checked = item.tests.includes(cb.value);
+        });
+      } else {
+        editIdInput.value = "";
+        titleEl.textContent = "Create New Promo Code";
+        submitTextEl.textContent = "Save & Activate Promo Code";
+        generateRandomCode();
+        // Defaults: today to +14 days
+        const now = new Date();
+        const future = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+        document.getElementById("form-valid-from").value = now.toISOString().slice(0, 16);
+        document.getElementById("form-valid-until").value = future.toISOString().slice(0, 16);
+        document.getElementById("form-limit").value = 1;
+        document.querySelectorAll("input[name='allocated_tests']").forEach((cb, idx) => {
+          cb.checked = idx === 0;
+        });
+      }
+
+      updateSelectedTestChips();
+      recalculateStatusPreview();
+      modal.classList.remove("hidden");
+    }
+
+    function closeCreateModal() {
+      document.getElementById("create-modal-overlay").classList.add("hidden");
+    }
+
+    function generateRandomCode() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let randomPart = "";
+      for (let i = 0; i < 6; i++) {
+        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      const fullCode = `AZE-${randomPart}`;
+      document.getElementById("form-code").value = fullCode;
+    }
+
+    function adjustLimit(delta) {
+      const input = document.getElementById("form-limit");
+      let val = parseInt(input.value) || 1;
+      val = Math.max(1, Math.min(50, val + delta));
+      input.value = val;
+    }
+
+    function updateSelectedTestChips() {
+      const container = document.getElementById("selected-tests-container");
+      const checkboxes = document.querySelectorAll("input[name='allocated_tests']:checked");
+      if (checkboxes.length === 0) {
+        container.innerHTML = '<span class="text-xs text-rose-400 font-mono">⚠️ Please select at least one assessment below</span>';
+        return;
+      }
+      container.innerHTML = Array.from(checkboxes).map(cb => `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-cyan-950/60 text-cyan-300 border border-cyan-800/80">
+          <span>${cb.value}</span>
+          <button type="button" onclick="uncheckTest('${cb.value}')" class="text-slate-400 hover:text-white">&times;</button>
+        </span>
+      `).join('');
+    }
+
+    function uncheckTest(val) {
+      document.querySelectorAll("input[name='allocated_tests']").forEach(cb => {
+        if (cb.value === val) cb.checked = false;
+      });
+      updateSelectedTestChips();
+    }
+
+    function recalculateStatusPreview() {
+      const fromVal = document.getElementById("form-valid-from").value;
+      const untilVal = document.getElementById("form-valid-until").value;
+      const badge = document.getElementById("preview-status-badge");
+      const desc = document.getElementById("preview-status-desc");
+
+      if (!fromVal || !untilVal) return;
+
+      const now = new Date("2026-10-13T12:00:00");
+      const start = new Date(fromVal);
+      const end = new Date(untilVal);
+
+      if (end <= start) {
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold status-badge-expired";
+        badge.textContent = "INVALID DATES";
+        desc.textContent = "Valid Until must be later than Valid From";
+        return;
+      }
+
+      if (now < start) {
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold status-badge-scheduled";
+        badge.textContent = "SCHEDULED";
+        desc.textContent = `Activates on ${fromVal.replace("T", " ")}`;
+      } else if (now > end) {
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold status-badge-expired";
+        badge.textContent = "EXPIRED";
+        desc.textContent = "End date is in the past";
+      } else {
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold status-badge-active";
+        badge.textContent = "ACTIVE";
+        desc.textContent = "Ready for immediate redemption";
+      }
+    }
+
+    function handleSavePromoCode(e) {
+      e.preventDefault();
+      const codeInput = document.getElementById("form-code").value.trim().toUpperCase();
+      const validFrom = document.getElementById("form-valid-from").value.replace("T", " ") + ":00";
+      const validUntil = document.getElementById("form-valid-until").value.replace("T", " ") + ":00";
+      const limit = parseInt(document.getElementById("form-limit").value) || 1;
+      const editId = document.getElementById("form-edit-id").value;
+
+      const selectedTests = Array.from(document.querySelectorAll("input[name='allocated_tests']:checked")).map(cb => cb.value);
+      if (selectedTests.length === 0) {
+        alert("Please select at least one assessment test.");
+        return;
+      }
+
+      if (new Date(validUntil) <= new Date(validFrom)) {
+        alert("Valid Until (Expiry) must be strictly later than Valid From.");
+        return;
+      }
+
+      // Calculate status based on dates
+      const now = new Date("2026-10-13T12:00:00");
+      let newStatus = "ACTIVE";
+      if (now < new Date(validFrom)) newStatus = "SCHEDULED";
+      else if (now > new Date(validUntil)) newStatus = "EXPIRED";
+
+      if (editId) {
+        // Update existing
+        const idx = promoCodes.findIndex(p => p.id === editId);
+        if (idx !== -1) {
+          promoCodes[idx] = {
+            ...promoCodes[idx],
+            code: codeInput,
+            tests: selectedTests,
+            validFrom,
+            validUntil,
+            limitPerUser: limit,
+            status: newStatus
+          };
+          showToast(`Updated promo code: ${codeInput}`);
+        }
+      } else {
+        // Create new
+        const newId = `PRM-${Math.floor(1000 + Math.random() * 9000)}`;
+        promoCodes.unshift({
+          id: newId,
+          code: codeInput,
+          tests: selectedTests,
+          validFrom,
+          validUntil,
+          limitPerUser: limit,
+          redemptions: 0,
+          maxTarget: 500,
+          status: newStatus
+        });
+        showToast(`🎉 Created promo code ${codeInput} successfully!`);
+      }
+
+      updateKpiCards();
+      renderTable();
+      closeCreateModal();
+    }
+
+    function editPromoCode(id) {
+      openCreateModal(id);
+    }
+
+    function duplicatePromoCode(id) {
+      const src = promoCodes.find(p => p.id === id);
+      if (!src) return;
+      openCreateModal();
+      document.getElementById("form-code").value = `${src.code}_COPY`;
+      document.querySelectorAll("input[name='allocated_tests']").forEach(cb => {
+        cb.checked = src.tests.includes(cb.value);
+      });
+      updateSelectedTestChips();
+      showToast(`Cloned configuration from ${src.code}`);
+    }
+
+    function togglePromoStatus(id) {
+      const idx = promoCodes.findIndex(p => p.id === id);
+      if (idx === -1) return;
+      const cur = promoCodes[idx].status;
+      if (cur === "ACTIVE") {
+        promoCodes[idx].status = "INACTIVE";
+        showToast(`Paused promo code ${promoCodes[idx].code}`);
+      } else {
+        promoCodes[idx].status = "ACTIVE";
+        showToast(`Re-activated promo code ${promoCodes[idx].code}`);
+      }
+      updateKpiCards();
+      renderTable();
+    }
+
+    function updateKpiCards() {
+      const activeCount = promoCodes.filter(p => p.status === "ACTIVE").length;
+      const scheduledCount = promoCodes.filter(p => p.status === "SCHEDULED").length;
+      const expiredCount = promoCodes.filter(p => p.status === "EXPIRED" || p.status === "INACTIVE").length;
+      const totalRedemptions = promoCodes.reduce((sum, p) => sum + p.redemptions, 0);
+
+      document.getElementById("kpi-active").textContent = activeCount;
+      document.getElementById("kpi-scheduled").textContent = scheduledCount;
+      document.getElementById("kpi-expired").textContent = expiredCount;
+      document.getElementById("kpi-redemptions").textContent = totalRedemptions.toLocaleString();
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Slide-Over Drawer: Details & Redemption Logs
+    // -------------------------------------------------------------------------
+    function openDetailsDrawer(id) {
+      const item = promoCodes.find(p => p.id === id);
+      if (!item) return;
+      activeDrawerPromoId = id;
+
+      document.getElementById("drawer-code").textContent = item.code;
+      document.getElementById("drawer-valid-from").textContent = item.validFrom;
+      document.getElementById("drawer-valid-until").textContent = item.validUntil;
+      document.getElementById("drawer-total-redeemed").textContent = `${item.redemptions} claims`;
+      document.getElementById("drawer-limit").textContent = `${item.limitPerUser} test / student`;
+
+      // Status
+      const statusBadge = document.getElementById("drawer-status-badge");
+      statusBadge.textContent = item.status;
+      statusBadge.className = `px-2 py-0.5 rounded-full text-xs font-semibold ${
+        item.status === 'ACTIVE' ? 'status-badge-active' :
+        item.status === 'SCHEDULED' ? 'status-badge-scheduled' :
+        item.status === 'EXPIRED' ? 'status-badge-expired' : 'status-badge-inactive'
+      }`;
+
+      // Tests list
+      const testsContainer = document.getElementById("drawer-tests-list");
+      testsContainer.innerHTML = item.tests.map(t => `
+        <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-slate-200 border border-slate-700 font-medium">${t}</span>
+      `).join('');
+
+      // Populate Mock Redemption Logs
+      const logsBody = document.getElementById("drawer-logs-body");
+      const logs = MOCK_REDEMPTIONS[id] || [
+        { name: "Julian Thorne", email: "j.thorne@global.com", test: item.tests[0] || "Placement Test", time: "2026-10-12 18:22:04", status: "Completed" },
+        { name: "Sophia Zhang", email: "s.zhang@intake.org", test: item.tests[0] || "Placement Test", time: "2026-10-11 11:45:12", status: "In Progress" },
+        { name: "Tariq Mansoor", email: "tariq.m@campus.ae", test: item.tests[0] || "Placement Test", time: "2026-10-10 14:10:00", status: "Completed" }
+      ];
+
+      logsBody.innerHTML = logs.map(l => `
+        <tr class="hover:bg-slate-900/60 transition-colors">
+          <td class="p-2.5">
+            <div class="font-semibold text-slate-100">${l.name}</div>
+            <div class="text-[10px] text-slate-400 font-mono">${l.email}</div>
+          </td>
+          <td class="p-2.5 text-slate-300">${l.test}</td>
+          <td class="p-2.5 text-slate-400 font-mono text-[11px]">${l.time}</td>
+          <td class="p-2.5">
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${
+              l.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+              l.status === 'In Progress' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-slate-800 text-slate-300'
+            }">${l.status}</span>
+          </td>
+        </tr>
+      `).join('');
+
+      const overlay = document.getElementById("details-drawer-overlay");
+      const drawer = document.getElementById("details-drawer");
+      overlay.classList.remove("hidden");
+      setTimeout(() => {
+        drawer.classList.remove("translate-x-full");
+      }, 10);
+    }
+
+    function closeDetailsDrawer() {
+      const overlay = document.getElementById("details-drawer-overlay");
+      const drawer = document.getElementById("details-drawer");
+      drawer.classList.add("translate-x-full");
+      setTimeout(() => {
+        overlay.classList.add("hidden");
+      }, 300);
+    }
+
+    function copyDrawerCode() {
+      const code = document.getElementById("drawer-code").textContent;
+      navigator.clipboard.writeText(code);
+      showToast(`Copied ${code} to clipboard!`);
+    }
+
+    function exportDrawerLogsCSV() {
+      showToast("Exported redemption audit logs (CSV).");
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. Student Flow Validation Simulator
+    // -------------------------------------------------------------------------
+    let simulatorOpen = true;
+    function toggleSimulator() {
+      const body = document.getElementById("sim-body");
+      const btn = document.getElementById("sim-toggle-btn");
+      simulatorOpen = !simulatorOpen;
+      if (simulatorOpen) {
+        body.classList.remove("hidden");
+        btn.querySelector("svg").classList.remove("rotate-180");
+      } else {
+        body.classList.add("hidden");
+        btn.querySelector("svg").classList.add("rotate-180");
+      }
+    }
+
+    function quickPickActiveCode() {
+      const active = promoCodes.find(p => p.status === "ACTIVE");
+      if (active) {
+        document.getElementById("sim-code-input").value = active.code;
+        showToast(`Loaded active code: ${active.code}`);
+      }
+    }
+
+    function runRedemptionSimulation() {
+      const inputCode = document.getElementById("sim-code-input").value.trim().toUpperCase();
+      const studentVal = document.getElementById("sim-student-select").value;
+      const resBox = document.getElementById("sim-result-box");
+      resBox.classList.remove("hidden");
+
+      // Find code in dataset
+      const found = promoCodes.find(p => p.code === inputCode);
+
+      // Branch 1: Invalid Code
+      if (!found) {
+        resBox.className = "p-3 rounded-lg text-xs font-mono space-y-1 bg-rose-950/40 border border-rose-500/40 text-rose-300";
+        resBox.innerHTML = `
+          <div class="font-bold flex items-center gap-1.5 text-rose-400">
+            <span>❌ REJECTION: INVALID_PROMO_CODE</span>
+          </div>
+          <div>Code '<b>${inputCode}</b>' was not found in active promo registry.</div>
+        `;
+        return;
+      }
+
+      // Branch 2: Inactive / Paused
+      if (found.status === "INACTIVE") {
+        resBox.className = "p-3 rounded-lg text-xs font-mono space-y-1 bg-slate-900 border border-slate-700 text-slate-300";
+        resBox.innerHTML = `
+          <div class="font-bold flex items-center gap-1.5 text-slate-400">
+            <span>⏸️ REJECTION: PROMO_CAMPAIGN_INACTIVE</span>
+          </div>
+          <div>Promo code '${found.code}' is currently paused by platform administrator.</div>
+        `;
+        return;
+      }
+
+      // Branch 3: Expired
+      if (found.status === "EXPIRED") {
+        resBox.className = "p-3 rounded-lg text-xs font-mono space-y-1 bg-rose-950/40 border border-rose-500/40 text-rose-300";
+        resBox.innerHTML = `
+          <div class="font-bold flex items-center gap-1.5 text-rose-400">
+            <span>❌ REJECTION: PROMO_CODE_EXPIRED</span>
+          </div>
+          <div>Validity window expired on ${found.validUntil}. Code is no longer redeemable.</div>
+        `;
+        return;
+      }
+
+      // Branch 4: Scheduled (Not yet active)
+      if (found.status === "SCHEDULED") {
+        resBox.className = "p-3 rounded-lg text-xs font-mono space-y-1 bg-amber-950/40 border border-amber-500/40 text-amber-300";
+        resBox.innerHTML = `
+          <div class="font-bold flex items-center gap-1.5 text-amber-400">
+            <span>⏳ REJECTION: CAMPAIGN_NOT_STARTED</span>
+          </div>
+          <div>Campaign begins on ${found.validFrom}. Redemption window is not yet open.</div>
+        `;
+        return;
+      }
+
+      // Branch 5: Student Limit Exceeded Check
+      if (studentVal === "stu_b") {
+        // Sarah Jenkins: already redeemed 1/1
+        resBox.className = "p-3 rounded-lg text-xs font-mono space-y-1 bg-amber-950/40 border border-amber-500/40 text-amber-300";
+        resBox.innerHTML = `
+          <div class="font-bold flex items-center gap-1.5 text-amber-400">
+            <span>⚠️ REJECTION: REDEMPTION_LIMIT_EXCEEDED</span>
+          </div>
+          <div>Candidate <b>Sarah Jenkins</b> has already claimed this promo code (1 of ${found.limitPerUser} allowed).</div>
+          <div class="text-[10px] text-slate-400">Action: Candidate must checkout via standard credit bundle.</div>
+        `;
+        return;
+      }
+
+      // Branch 6: Success!
+      const studentName = studentVal === "stu_a" ? "Alexander Wright" : "David Chen";
+      const remainingClaims = studentVal === "stu_c" ? 0 : found.limitPerUser - 1;
+      
+      resBox.className = "p-3 rounded-lg text-xs font-mono space-y-1 bg-emerald-950/40 border border-emerald-500/40 text-emerald-300";
+      resBox.innerHTML = `
+        <div class="font-bold flex items-center gap-1.5 text-emerald-400">
+          <span>✅ SUCCESS: PROMO_VOUCHER_ALLOCATED</span>
+        </div>
+        <div>Promo code '<b>${found.code}</b>' verified!</div>
+        <div class="text-[11px] text-slate-200">Allocated: 1x <b>${found.tests[0]}</b></div>
+        <div class="text-[10px] text-slate-400">Issued to ${studentName}. Remaining user allowance: ${remainingClaims}.</div>
+      `;
+
+      // Live increment redemption counter
+      found.redemptions += 1;
+      updateKpiCards();
+      renderTable();
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. Clipboard & Utility Functions
+    // -------------------------------------------------------------------------
+    function copyCodeToClipboard(code, btn) {
+      navigator.clipboard.writeText(code).then(() => {
+        showToast(`Copied ${code} to clipboard!`);
+        if (btn) {
+          const original = btn.innerHTML;
+          btn.innerHTML = `<svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-width="2.5"/></svg>`;
+          setTimeout(() => {
+            btn.innerHTML = original;
+          }, 1500);
+        }
+      });
+    }
+
+    function exportTableToCSV() {
+      const headers = ["Promo Code", "Allocated Tests", "Valid From", "Valid Until", "Limit Per User", "Redemptions", "Status"];
+      const rows = promoCodes.map(p => [
+        p.code,
+        `"${p.tests.join('; ')}"`,
+        p.validFrom,
+        p.validUntil,
+        p.limitPerUser,
+        p.redemptions,
+        p.status
+      ]);
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `aze_promo_codes_export_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Exported Promo Codes table to CSV.");
+    }
+
+    function toggleSidebar() {
+      document.body.classList.toggle("sidebar-collapsed");
+    }
+
+    function toggleDarkMode() {
+      showToast("Theme is locked to enterprise dark mode (#070b19).");
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+      const toast = document.createElement("div");
+      toast.className = "px-4 py-2.5 rounded-lg bg-[#0d1428] border border-cyan-500/40 text-slate-100 text-xs font-semibold shadow-2xl flex items-center gap-2 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto";
+      toast.innerHTML = `
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span>${msg}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.remove("translate-y-2", "opacity-0");
+      }, 10);
+      setTimeout(() => {
+        toast.classList.add("opacity-0", "translate-y-2");
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // -------------------------------------------------------------------------
+    // 8. Application Initialization
+    // -------------------------------------------------------------------------
+    document.addEventListener("DOMContentLoaded", () => {
+      renderTable();
+      updateKpiCards();
+    });
+  </script>
+</body>
+</html>

@@ -1150,13 +1150,19 @@
         <div class="nav-group-title" role="button" tabindex="0" title="Click to collapse / expand">
           <span class="nav-group-name">Admin Portal</span>
           <div class="nav-group-meta">
-            <span class="nav-group-count">4</span>
+            <span class="nav-group-count">5</span>
             <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </div>
         </div>
         <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#promo_codes" class="nav-link" data-key="promo_codes">
+              <span class="nav-label">Promo Codes Management</span>
+              <span class="nav-pill nav-pill-new">New</span>
+            </a>
+          </li>
           <li class="nav-item">
             <a href="#cms_studio" class="nav-link" data-key="cms_studio">
               <span class="nav-label">CMS Studio Portal</span>
@@ -1317,7 +1323,7 @@
 
               <div class="hero-stats-row">
                 <div class="hero-stat-card">
-                  <div class="hero-stat-val">10</div>
+                  <div class="hero-stat-val">11</div>
                   <div class="hero-stat-lbl">Interactive Prototypes</div>
                 </div>
                 <div class="hero-stat-card">
@@ -1477,7 +1483,29 @@
                   </div>
                 </div>
 
-                <!-- 4. Self-Service Demo (Client Portal) -->
+                <!-- 4. Promo Codes Management (Admin Portal) -->
+                <div class="module-card" onclick="window.location.hash='#promo_codes'">
+                  <div class="card-top">
+                    <div class="card-icon-wrap">🏷️</div>
+                    <span class="card-category">Admin Portal</span>
+                  </div>
+                  <h3 class="card-title">Promo Codes Management</h3>
+                  <p class="card-desc">
+                    Enterprise promo code governance for test allocations, campaign validity date windows, per-user limits, real-time candidate redemption logs drawer, and interactive Student Flow QA simulation.
+                  </p>
+                  <div class="card-tags">
+                    <span class="card-tag">Promo Codes</span>
+                    <span class="card-tag">Voucher Limits</span>
+                    <span class="card-tag">Redemption Audit</span>
+                    <span class="card-tag">QA Simulator</span>
+                  </div>
+                  <div class="card-footer">
+                    <span class="card-launch-btn">Explore Prototype →</span>
+                    <a href="promo_codes_wireframe.html" target="_blank" class="card-standalone-link" onclick="event.stopPropagation()">↗ Standalone</a>
+                  </div>
+                </div>
+
+                <!-- 5. Self-Service Demo (Client Portal) -->
                 <div class="module-card" onclick="window.location.hash='#self_service_demo'">
                   <div class="card-top">
                     <div class="card-icon-wrap">✨</div>
@@ -1654,6 +1682,12 @@
         file: 'cms_studio_wireframe.html'
       },
       // Admin Portal
+      'promo_codes': {
+        title: 'Promo Codes Management & Campaign Redemptions',
+        category: 'Admin Portal',
+        desc: 'Enterprise promo code creation, test allocations, campaign validity windows, candidate redemptions audit drawer, and embedded Student Flow Validation Simulator.',
+        file: 'promo_codes_wireframe.html'
+      },
       'cms_studio': {
         title: 'AZE Admin Portal — CMS Studio',
         category: 'Admin Portal',
